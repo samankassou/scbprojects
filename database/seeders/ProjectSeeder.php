@@ -1,0 +1,24 @@
+<?php
+
+namespace Database\Seeders;
+
+use App\Models\Nature;
+use App\Models\Project;
+use Illuminate\Database\Seeder;
+
+class ProjectSeeder extends Seeder
+{
+    /**
+     * Run the database seeds.
+     *
+     * @return void
+     */
+    public function run()
+    {
+        Project::factory(15)
+        ->create()
+        ->each(function($project){
+            $project->natures()->attach([1, 2]);
+        });
+    }
+}
