@@ -37,4 +37,9 @@ class Project extends Model
     {
         return $this->belongsToMany(Step::class);
     }
+
+    public function getStartYearAttribute()
+    {
+        return $this->start_date->year;
+    }
 }

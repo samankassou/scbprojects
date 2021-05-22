@@ -7,78 +7,59 @@
 <section class="section">
     <div class="card">
         <div class="card-body">
-            <h5>Filtrer par:</h5>
-            <select name="" id="" class="form-select w-25">
-                <option value=""></option>
-                <option value="">Reférence</option>
-                <option value="">AMOA</option>
-                <option value="">Sponsor/MOA</option>
-                <option value="">Statut</option>
-                <option value="">Nature</option>
-                <option value="">Année début</option>
-            </select>
-            <div class="d-none flex-wrap">
-                <div class="p-2">
-                    <label for="reference">Reférence:</label> <input class="form-control" id="reference" type="text" placeholder="Entrez une reférence...">
+            <h5>Rechercher:</h5>
+            <div class="row">
+                <div class="col-md-3">
+                    <fieldset class="form-group">
+                        <select class="form-select choices" id="criteria">
+                            <option>dans tous les projets</option>
+                            <option>par Reférence</option>
+                            <option>par AMOA</option>
+                            <option>par Sponsor/MOA</option>
+                            <option>par Année de début</option>
+                            <option>par Statut</option>
+                            <option>par Nature</option>
+                        </select>
+                    </fieldset>
                 </div>
-                <div class="p-2">
-                    <label for="amoa">AMOA:</label> <input class="form-control" id="amoa" type="text" placeholder="Rechercher...">
-                </div>
-                <div class="p-2">
-                    <label for="sponsor">Sponsor/MOA:</label> <input class="form-control" id="sponsor" type="text" placeholder="Rechercher...">
-                </div>
-                <div class="p-2">
-                    <label for="year">Année début:</label> 
-                    <select id="year" class="form-select">
+                <div class="col-md-6">
+                    <input type="text" class="form-control search" id="search" placeholder="Rechercher...">
+                    <input class="form-control search" id="referenceSearch" type="text" placeholder="Entrez une reférence...">
+                    <input class="form-control search" id="amoaSearch" type="text" placeholder="AMOA...">
+                    <input class="form-control search" id="sponsorSearch" type="text" placeholder="Sponsor/MOA...">
+                    <select id="yearSearch" class="form-select search">
                         <option value="">Toutes</option>
-                        <option value="1">2019</option>
-                        <option value="2">2020</option>
+                        @foreach ($years as $year)
+                        <option value="{{ $year }}">{{ $year }}</option>
+                        @endforeach
                     </select>
-                </div>
-                <div class="p-2">
-                    <label for="status">Statut:</label> 
-                    <select id="status" class="form-select">
+                    <select id="statusSearch" class="form-select search">
                         <option value="">Tous</option>
                         <option value="1">En cours</option>
                         <option value="2">En stand-by</option>
                         <option value="3">inachevé</option>
                         <option value="4">Terminé</option>
                     </select>
-                </div>
-                <div class="px-4 py-2">
-                    <label>Nature:</label>
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input" value="" id="">
-                        <label class="form-check-label" for="">Reglémentaire</label>
-                    </div>
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input" value="" id="">
-                        <label class="form-check-label" for="">Business</label>
-                    </div>
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input" value="" id="">
-                        <label class="form-check-label" for="">Gain de productivité</label>
-                    </div>
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input" value="" id="">
-                        <label class="form-check-label" for="">Optimisation d'un process</label>
-                    </div>
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input" value="" id="">
-                        <label class="form-check-label" for="">Réduction d'un risque</label>
-                    </div>
+                    <select id="natureSearch" class="form-select multiple-remove search" multiple>
+                        <option value=""></option>
+                        <option value="">Reglémentaire</option>
+                        <option value="1">Business</option>
+                        <option value="2">Gain de productivité</option>
+                        <option value="3">Optimisation d'un process</option>
+                        <option value="4">Réduction d'un risque</option>
+                    </select>
                 </div>
             </div>
             <div class="card-header d-flex justify-content-between">
-                <h2>Liste des projets({{ count($projects) }})</h2>
+                <h2>Liste des projets</h2>
             </div>
-            <div class="d-flex justify-content-between">
+            <div class="d-flex justify-content-between mb-3">
                 <div>
-                    <button class="btn btn-success m-2">Imprimer</button>
-                    <button class="btn btn-success m-2">Exporter(Excel)</button>
+                    <button class="btn btn-outline-primary m-2">Imprimer</button>
+                    <button class="btn btn-outline-primary m-2">Exporter(Excel)</button>
                 </div>
                 <div>
-                    <a href="{{ route('admin.projects.create') }}" class="btn btn-sm btn-success"><i class="bi bi-plus"></i> Créer</a>
+                    <a href="{{ route('admin.projects.create') }}" class="btn btn-sm btn-primary"><i class="bi bi-plus"></i> Créer</a>
                 </div>
             </div>
             <table class="table table-striped" id="projects-datatable" style="width: 100%">
@@ -125,9 +106,6 @@
                     @endforelse
                 </tbody>
             </table>
-            <div>
-                {{ $projects->links() }}
-            </div>
         </div>
     </div>
 </section>
@@ -167,4 +145,28 @@
 @section('scripts')
 @parent
 <script src="{{ asset('mazer/assets/vendors/choices.js/choices.min.js') }}"></script>
+<script>
+    var table = $('#projects-datatable').DataTable({
+        searching: false,
+        language: {
+            url: "{{ asset('vendor/datatables/lang/French.json') }}"
+        },
+    });
+    var selects = document.querySelectorAll('select.search');
+    selects.forEach(function(element){
+        element = new Choices(element);
+    });
+    $('#criteria').on('change', function(){
+        $('.search').val('');
+        selects.forEach(function(element){
+            //element.setChoiceByValue('');
+    });
+    });
+    $("input[type='text'].search, select.search").on('keyup', function(){
+        console.log("ok");
+    });
+    $("select.search").on('change', function(){
+        console.log("ok");
+    });
+</script>
 @endsection
