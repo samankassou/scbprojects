@@ -2,8 +2,9 @@
 
 namespace Database\Seeders;
 
-use App\Models\Nature;
 use App\Models\Project;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 use Illuminate\Database\Seeder;
 
 class ProjectSeeder extends Seeder
@@ -18,7 +19,10 @@ class ProjectSeeder extends Seeder
         Project::factory(15)
         ->create()
         ->each(function($project){
-            $project->natures()->attach([1, 2]);
+           $natures = Arr::random([1, 2, 3, 4, 5], rand(1, 5));
+            $project->reference = Str::uuid();
+            $project->save();
+            $project->natures()->attach($natures);
         });
     }
 }

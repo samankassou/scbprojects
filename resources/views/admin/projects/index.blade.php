@@ -2,6 +2,7 @@
 @section('styles')
 @parent
 <link rel="stylesheet" href="{{ asset('mazer/assets/vendors/choices.js/choices.min.css') }}">
+<link rel="stylesheet" href="{{ asset('mazer/assets/css/search.css') }}">
 @endsection
 @section('content')
 <section class="section">
@@ -12,44 +13,61 @@
                 <div class="col-md-3">
                     <fieldset class="form-group">
                         <select class="form-select choices" id="criteria">
-                            <option>dans tous les projets</option>
-                            <option>par Reférence</option>
-                            <option>par AMOA</option>
-                            <option>par Sponsor/MOA</option>
-                            <option>par Année de début</option>
-                            <option>par Statut</option>
-                            <option>par Nature</option>
+                            <option value="allSearch">dans tous les projets</option>
+                            <option value="referenceSearch">par Reférence</option>
+                            <option value="amoaSearch">par AMOA</option>
+                            <option value="sponsorSearch">par Sponsor/MOA</option>
+                            <option value="yearSearch">par Année de début</option>
+                            <option value="statusSearch">par Statut</option>
+                            <option value="natureSearch">par Nature(s)</option>
                         </select>
                     </fieldset>
                 </div>
                 <div class="col-md-6">
-                    <input type="text" class="form-control search" id="search" placeholder="Rechercher...">
-                    <input class="form-control search" id="referenceSearch" type="text" placeholder="Entrez une reférence...">
-                    <input class="form-control search" id="amoaSearch" type="text" placeholder="AMOA...">
-                    <input class="form-control search" id="sponsorSearch" type="text" placeholder="Sponsor/MOA...">
-                    <select id="yearSearch" class="form-select search">
-                        <option value="">Toutes</option>
-                        @foreach ($years as $year)
-                        <option value="{{ $year }}">{{ $year }}</option>
-                        @endforeach
-                    </select>
-                    <select id="statusSearch" class="form-select search">
-                        <option value="">Tous</option>
-                        <option value="1">En cours</option>
-                        <option value="2">En stand-by</option>
-                        <option value="3">inachevé</option>
-                        <option value="4">Terminé</option>
-                    </select>
-                    <select id="natureSearch" class="form-select multiple-remove search" multiple>
-                        <option value=""></option>
-                        <option value="">Reglémentaire</option>
-                        <option value="1">Business</option>
-                        <option value="2">Gain de productivité</option>
-                        <option value="3">Optimisation d'un process</option>
-                        <option value="4">Réduction d'un risque</option>
-                    </select>
+                    <div class="search-container active">
+                        <input type="text" class="form-control search" id="allSearch" placeholder="Rechercher un projet...">
+                    </div>
+                    <div class="search-container">
+                        <input class="form-control search" id="referenceSearch" type="text" placeholder="Entrez une reférence...">
+                    </div>
+                    <div class="search-container">
+                        <input class="form-control search" id="amoaSearch" type="text" placeholder="AMOA...">
+                    </div>
+                    <div class="search-container">
+                        <input class="form-control search" id="sponsorSearch" type="text" placeholder="Sponsor/MOA...">
+                    </div>
+                    <div class="search-container">
+                        <select id="yearSearch" class="form-select search">
+                            <option value="">Toutes</option>
+                            @foreach ($years as $year)
+                            <option value="{{ $year }}">{{ $year }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="search-container">
+                        <select id="statusSearch" class="form-select search">
+                            <option value="">Tous</option>
+                            <option value="1">En cours</option>
+                            <option value="2">En stand-by</option>
+                            <option value="3">inachevé</option>
+                            <option value="4">Terminé</option>
+                        </select>
+                    </div>
+                    <div class="search-container">
+                        <select id="natureSearch" class="form-select search" multiple>
+                            <option value=""></option>
+                            @foreach ($natures as $nature)
+                                <option value="{{ $nature->id }}">{{ $nature->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
                 </div>
             </div>
+            @if (session('message'))
+                <div class="alert alert-light-success alert-dismissible color-success">
+                    <i class="bi bi-check-circle"></i> {{ session('message') }}.
+                </div>
+            @endif
             <div class="card-header d-flex justify-content-between">
                 <h2>Liste des projets</h2>
             </div>
@@ -71,14 +89,14 @@
                         <th>Sponsor/MOA</th>
                         <th>Statut</th>
                         <th>Année</th>
-                        <th>Nature</th>
+                        <th>Nature(s)</th>
                         <th style="width: 120px">Options</th>
                     </tr>
                 </thead>
                 <tbody>
                     @forelse ($projects as $project)
                         <tr>
-                            <td></td>
+                            <td>{{ $project->reference }}</td>
                             <td>{{ $project->name }}</td>
                             <td>{{ $project->amoa }}</td>
                             <td>{{ $project->sponsor }}</td>
@@ -146,27 +164,62 @@
 @parent
 <script src="{{ asset('mazer/assets/vendors/choices.js/choices.min.js') }}"></script>
 <script>
-    var table = $('#projects-datatable').DataTable({
+    const table = $('#projects-datatable').DataTable({
         searching: false,
         language: {
             url: "{{ asset('vendor/datatables/lang/French.json') }}"
         },
     });
-    var selects = document.querySelectorAll('select.search');
-    selects.forEach(function(element){
-        element = new Choices(element);
+    const yearSearch = new Choices(document.getElementById('yearSearch'));
+    const statusSearch = new Choices(document.getElementById('statusSearch'));
+    const natureSearch = new Choices(document.getElementById('natureSearch'), {
+        removeItemButton: true
     });
+    
     $('#criteria').on('change', function(){
-        $('.search').val('');
-        selects.forEach(function(element){
-            //element.setChoiceByValue('');
+        //reset all inputs search
+        $("input[type='text'].search").val('');
+        yearSearch.setChoiceByValue('');
+        statusSearch.setChoiceByValue('');
+        natureSearch.removeActiveItems();
+        //remove the active search
+        $('.search-container').removeClass('active');
+        //set the new active box
+        let element = $(this).val();
+        $('#'+element).closest('.search-container').addClass('active');
+
     });
-    });
-    $("input[type='text'].search, select.search").on('keyup', function(){
-        console.log("ok");
+    $("input[type='text'].search").on('keyup', function(){
+        //table.ajax.reload(null, false);
+        console.log(getData());
     });
     $("select.search").on('change', function(){
-        console.log("ok");
+        //table.ajax.reload(null, false);
+        console.log(getData());
     });
+
+    function getData()
+    {
+        const criteria = document.getElementById('criteria').value,
+        all = document.getElementById('allSearch').value,
+        year = yearSearch.getValue().value,
+        reference = document.getElementById('referenceSearch').value,
+        amoa = document.getElementById('amoaSearch').value;
+        const natures = natureSearch.getValue().map(element => {
+            return element.value;
+        });
+        const sponsor = document.getElementById('sponsorSearch').value,
+        status = statusSearch.getValue().value;
+        
+        return {
+            all: all,
+            year: year,
+            reference: reference,
+            amoa: amoa,
+            natures: natures,
+            sponsor: sponsor,
+            status: status
+            };
+    }
 </script>
 @endsection

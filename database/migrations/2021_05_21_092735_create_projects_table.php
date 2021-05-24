@@ -15,6 +15,7 @@ class CreateProjectsTable extends Migration
     {
         Schema::create('projects', function (Blueprint $table) {
             $table->id();
+            $table->string('reference')->nullable();
             $table->string('name');
             $table->string('description');
             $table->date('start_date');
@@ -25,11 +26,12 @@ class CreateProjectsTable extends Migration
             $table->string('moe');
             $table->string('manager');
             $table->integer('cost');
-            $table->enum('status', ['stand-by', 'en cours', 'inachevé', 'terminé']);
+            $table->enum('status', ['en stand-by', 'en cours', 'inachevé', 'terminé']);
             $table->unsignedInteger('progress');
             $table->text('benefits');
             $table->text('documentation')->nullable();
             $table->text('bills')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }
