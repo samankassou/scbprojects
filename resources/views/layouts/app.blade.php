@@ -4,7 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ $title??'inconnu' }} - SCB Projects</title>
+    <title>{{ $title??'inconnu' }} - SCB</title>
+    <!-- favicon -->
+    <link rel="icon" href="{{ asset('front/icon/2.jpg') }}" type="image/gif" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
@@ -34,10 +36,24 @@
                     <ul class="menu">
                         <li class="sidebar-title">Menu</li>
 
+                        <li class="sidebar-item  {{ request()->routeIs('dashboard') ? 'active' : '' }}">
+                            <a href="{{ route('dashboard') }}" class='sidebar-link'>
+                                <i class="bi bi-grid-fill"></i>
+                                <span>Tableau de bord</span>
+                            </a>
+                        </li>
+
                         <li class="sidebar-item  {{ request()->routeIs('admin.projects.*') ? 'active' : '' }}">
                             <a href="{{ route('admin.projects.index') }}" class='sidebar-link'>
                                 <i class="bi bi-grid-fill"></i>
                                 <span>Projets</span>
+                            </a>
+                        </li>
+
+                        <li class="sidebar-item  {{ request()->routeIs('admin.processes.*') ? 'active' : '' }}">
+                            <a href="{{ route('admin.processes.index') }}" class='sidebar-link'>
+                                <i class="bi bi-grid-fill"></i>
+                                <span>Process</span>
                             </a>
                         </li>
 
@@ -114,7 +130,7 @@
                             <div class="col-12 col-md-6 order-md-2 order-first">
                                 <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
                                     <ol class="breadcrumb">
-                                        <li class="breadcrumb-item"><a href="/">SCB Projects</a></li>
+                                        <li class="breadcrumb-item"><a href="/">SCB</a></li>
                                         <li class="breadcrumb-item active" aria-current="page">{{ $title }}
                                         </li>
                                     </ol>

@@ -6,6 +6,13 @@
             <h4 class="card-title">Détails du projet "{{ $project->name }}"</h4>
         </div>
         <div class="card-body">
+            <div class="w-50">
+                <h5>Progression: </h5><br>
+                <div class="progress progress-primary  mb-4">
+                    <div class="progress-bar progress-bar-striped progress-label" role="progressbar" style="width: {{ $project->progress }}%"
+                        aria-valuenow="{{ $project->progress }}" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+            </div>
             <p><strong>Crée le</strong>: {{ $project->created_at->format('l j F H:i:s') }}</p>
             <p><strong>Reférence</strong>: {{ $project->reference }}</p>
             <p><strong>Nom</strong>: {{ $project->name }}</p>

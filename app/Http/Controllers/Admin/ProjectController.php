@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Database\Eloquent\Builder;
 use App\Http\Requests\StoreProjectRequest;
+use App\Http\Requests\UpdateProjectRequest;
 
 class ProjectController extends Controller
 {
@@ -130,7 +131,10 @@ class ProjectController extends Controller
      */
     public function edit(Project $project)
     {
-        return view('admin.projects.edit', compact('project'));
+        $projects = Project::all();
+        $natures = Nature::all();
+        $years = array_unique(Arr::sort($projects->pluck('start_year')));
+        return view('admin.projects.edit', compact('project', 'natures', 'years'));
     }
 
     /**
@@ -140,9 +144,35 @@ class ProjectController extends Controller
      * @param  \App\Models\Project  $project
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Project $project)
+    public function update(UpdateProjectRequest $request, Project $project)
     {
-        //
+        $project->update([
+            'name'          => $request->name,
+            'description'   => $request->description,
+            'start_date'    => $request->start_date,
+            'end_date'      => $request->end_date,
+            'sponsor'       => $request->sponsor,
+            'initiative'    => $request->initiative,
+            'amoa'          => $request->amoa,
+            'moe'           => $request->moe,
+            'manager'       => $request->manager,
+            'cost'          => $request->cost,
+            'status'        => $request->status,
+            'benefits'      => $request->benefits
+        ]);
+        if($request->documentation){
+            $project->documentation = $request->documentation;
+        }
+        if($request->bills){
+            $project->bills = $request->bills;
+        }
+        if($request->progress){
+            $project->progress = $request->progress;
+        }
+        $project->save();
+        $project->natures()->sync($request->natures);
+        return redirect()->route('admin.projects.index')->with('message', 'Projet modifié avec succès!');
+
     }
 
     /**

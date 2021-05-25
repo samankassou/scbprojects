@@ -1,4 +1,4 @@
-@extends('layouts.datatable', ['title' => 'Projets'])
+@extends('layouts.datatable', ['title' => 'Process'])
 @section('styles')
 @parent
 <link rel="stylesheet" href="{{ asset('mazer/assets/vendors/choices.js/choices.min.css') }}">
@@ -37,28 +37,12 @@
                         <input class="form-control search" id="sponsorSearch" type="text" placeholder="Sponsor/MOA...">
                     </div>
                     <div class="search-container">
-                        <select id="yearSearch" class="form-select search">
-                            <option value="">Toutes</option>
-                            @foreach ($years as $year)
-                            <option value="{{ $year }}">{{ $year }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="search-container">
                         <select id="statusSearch" class="form-select search">
                             <option value="">Tous</option>
                             <option value="1">En cours</option>
                             <option value="2">En stand-by</option>
                             <option value="3">inachevé</option>
                             <option value="4">Terminé</option>
-                        </select>
-                    </div>
-                    <div class="search-container">
-                        <select id="natureSearch" class="form-select search" multiple>
-                            <option value=""></option>
-                            @foreach ($natures as $nature)
-                                <option value="{{ $nature->id }}">{{ $nature->name }}</option>
-                            @endforeach
                         </select>
                     </div>
                 </div>
@@ -70,7 +54,7 @@
                 </div>
             @endif
             <div class="card-header d-flex justify-content-between">
-                <h2>Liste des projets</h2>
+                <h2>Liste des process</h2>
             </div>
             <div class="d-flex justify-content-between mb-3">
                 <div>
@@ -78,7 +62,7 @@
                     <button class="btn btn-outline-primary m-2">Exporter(Excel)</button>
                 </div>
                 <div>
-                    <a href="{{ route('admin.projects.create') }}" class="btn btn-sm btn-primary"><i class="bi bi-plus"></i> Créer</a>
+                    <a href="{{ route('admin.processes.create') }}" class="btn btn-sm btn-primary"><i class="bi bi-plus"></i> Créer</a>
                 </div>
             </div>
             <table class="table table-striped" id="projects-datatable" style="width: 100%">
@@ -95,34 +79,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @forelse ($projects as $project)
-                        <tr>
-                            <td>{{ $project->reference }}</td>
-                            <td>{{ $project->name }}</td>
-                            <td>{{ $project->amoa }}</td>
-                            <td>{{ $project->sponsor }}</td>
-                            <td>{{ $project->status }}</td>
-                            <td>{{ $project->start_date->year }}</td>
-                            <td>
-                                @foreach ($project->natures as $nature)
-                                    @if (!$loop->last)
-                                    {{ $nature->name }},
-                                    @else
-                                    {{ $nature->name }}
-                                    @endif
-                                @endforeach
-                            </td>
-                            <td>
-                                <a href="{{ route('admin.projects.show', $project->id) }}" class='btn btn-sm btn-primary'><i class='bi bi-eye'></i></a>
-                                <a href="{{ route('admin.projects.edit', $project->id) }}" class='btn btn-sm btn-warning'><i class='bi bi-pencil'></i></a>
-                                <button onclick="showDeleteProjectModal({{ $project->id }})" class='btn btn-sm btn-danger delete-btn'><i class='bi bi-trash'></i></button>
-                            </td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="8">Aucun projet enregistré</td>
-                        </tr>
-                    @endforelse
+                    
                 </tbody>
             </table>
         </div>
@@ -135,7 +92,6 @@
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
             <form id="delete-project-form" class="modal-content">
                 <div class="modal-header bg-danger">
-                    <input type="hidden" id="projrctId">
                     <h5 class="modal-title white" id="myModalLabel120">
                         Supprimer un projet
                     </h5>
@@ -227,13 +183,12 @@
 
     function showDeleteProjectModal(id)
     {
-        $('#projectId').val(id);
         $('#delete-project-modal').modal('show');
     }
 
     function deleteProject()
     {
-        
+
     }
 </script>
 @endsection

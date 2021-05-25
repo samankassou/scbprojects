@@ -8,7 +8,7 @@
     <div class="card">
         <div class="card-header d-flex justify-content-between">
             <h4 class="card-title">Liste des utilisateurs</h4>
-            <a href="{{ route('admin.users.create') }}" class="btn btn-sm btn-success"><i class="bi bi-plus"></i> Ajouter</a>
+            <a href="{{ route('admin.users.create') }}" class="btn btn-sm btn-outline-primary"><i class="bi bi-plus"></i> Ajouter</a>
         </div>
         <div class="card-body">
             <table class="table table-striped" id="projects-datatable" style="width: 100%">
