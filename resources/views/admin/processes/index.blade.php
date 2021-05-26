@@ -1,4 +1,4 @@
-@extends('layouts.datatable', ['title' => 'Process'])
+@extends('layouts.datatable', ['title' => 'Procédures'])
 @section('styles')
 @parent
 <link rel="stylesheet" href="{{ asset('mazer/assets/vendors/choices.js/choices.min.css') }}">
@@ -54,7 +54,7 @@
                 </div>
             @endif
             <div class="card-header d-flex justify-content-between">
-                <h2>Liste des process</h2>
+                <h2>Liste des procédures</h2>
             </div>
             <div class="d-flex justify-content-between mb-3">
                 <div>
@@ -69,12 +69,11 @@
                 <thead>
                     <tr>
                         <th>Ref.</th>
+                        <th>Version</th>
                         <th>Nom</th>
-                        <th>AMOA</th>
-                        <th>Sponsor/MOA</th>
                         <th>Statut</th>
-                        <th>Année</th>
-                        <th>Nature(s)</th>
+                        <th>Date de création</th>
+                        <th>Pôle</th>
                         <th style="width: 120px">Options</th>
                     </tr>
                 </thead>

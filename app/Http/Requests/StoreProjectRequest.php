@@ -33,7 +33,9 @@ class StoreProjectRequest extends FormRequest
             'amoa'          => 'required',
             'moe'           => 'required',
             'natures'       => 'array',
+            'steps'         => 'array',
             'manager'       => 'required',
+            'progress'      => 'required|integer|between:0,100',
             'cost'          => 'required|integer',
             'status'        => 'required',
             'benefits'      => 'required',
@@ -50,21 +52,23 @@ class StoreProjectRequest extends FormRequest
     public function attributes()
     {
         return [
-            'name' => 'Nom du projet',
-            'description' => 'Description',
-            'start_date' => 'Date de début',
-            'end_date' => 'Date de fin',
-            'sponsor' => 'Sponsor/MOA',
-            'initiative' => 'Initiative',
-            'amoa' => 'AMOA',
-            'moe' => 'MOE',
-            'natures' => 'Nature(s)',
-            'manager' => 'Chef de projet',
-            'cost' => 'Coût',
-            'status' => 'Statut',
-            'benefits' => 'Gains/Impact',
+            'name'          => 'Nom du projet',
+            'description'   => 'Description',
+            'start_date'    => 'Date de début',
+            'end_date'      => 'Date de fin',
+            'sponsor'       => 'Sponsor/MOA',
+            'initiative'    => 'Initiative',
+            'amoa'          => 'AMOA',
+            'moe'           => 'MOE',
+            'natures'       => 'Nature(s)',
+            'steps'         => 'Etape(s)',
+            'manager'       => 'Chef de projet',
+            'progress'      => 'Progression',
+            'cost'          => 'Coût',
+            'status'        => 'Statut',
+            'benefits'      => 'Gains/Impact',
             'documentation' => 'Documentation',
-            'bills' => 'Factures'
+            'bills'         => 'Factures'
         ];
     }
 }

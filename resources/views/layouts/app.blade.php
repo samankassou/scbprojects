@@ -53,7 +53,7 @@
                         <li class="sidebar-item  {{ request()->routeIs('admin.processes.*') ? 'active' : '' }}">
                             <a href="{{ route('admin.processes.index') }}" class='sidebar-link'>
                                 <i class="bi bi-grid-fill"></i>
-                                <span>Process</span>
+                                <span>Procédures</span>
                             </a>
                         </li>
 

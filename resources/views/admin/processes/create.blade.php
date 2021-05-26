@@ -1,4 +1,4 @@
-@extends('layouts.app', ['title' => 'Création d\'un process'])
+@extends('layouts.app', ['title' => 'Création d\'une procédure'])
 @section('styles')
 @parent
 <link rel="stylesheet" href="{{ asset('mazer/assets/vendors/choices.js/choices.min.css') }}">
@@ -7,7 +7,7 @@
 <section class="section">
     <div class="card">
         <div class="card-header d-flex justify-content-between">
-            <h4 class="card-title">Création d'un process</h4>
+            <h4 class="card-title">Création d'une procédure</h4>
         </div>
         <div class="card-body">
             <form action="{{ route('admin.processes.store') }}" method="POST">

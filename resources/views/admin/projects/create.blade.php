@@ -13,7 +13,6 @@
             <form action="{{ route('admin.projects.store') }}" method="POST">
                 @csrf
                 <div class="row justify-content-center">
-
                     <div class="col-md-8">
                         <label for="name">Nom:</label>
                         <div class="form-group">
@@ -28,7 +27,7 @@
 
                         <label for="description">Description:</label>
                         <div class="form-group">
-                            <textarea id="description" name="description" class="form-control @error('description') is-invalid @enderror" rows="3"></textarea>
+                            <textarea id="description" name="description" class="form-control @error('description') is-invalid @enderror" rows="3">{{ old('description') }}</textarea>
                             @error('description')
                                 <div class="invalid-feedback">
                                     <i class="bx bx-radio-circle"></i>
@@ -41,7 +40,7 @@
                             <div class="col-md-6">
                                 <label for="start_date">Date début:</label>
                                 <div class="form-group">
-                                    <input id="start_date" type="date" name="start_date" class="form-control @error('start_date') is-invalid @enderror">
+                                    <input id="start_date" type="date" name="start_date" value="{{ old('start_date') }}" class="form-control @error('start_date') is-invalid @enderror">
                                     @error('start_date')
                                         <div class="invalid-feedback">
                                             <i class="bx bx-radio-circle"></i>
@@ -53,7 +52,7 @@
                             <div class="col-md-6">
                                 <label for="end_date">Date fin:</label>
                                 <div class="form-group">
-                                    <input id="end_date" type="date" name="end_date" class="form-control @error('end_date') is-invalid @enderror">
+                                    <input id="end_date" type="date" name="end_date" value="{{ old('end_date') }}" class="form-control @error('end_date') is-invalid @enderror">
                                     @error('end_date')
                                         <div class="invalid-feedback">
                                             <i class="bx bx-radio-circle"></i>
@@ -66,7 +65,7 @@
 
                         <label for="sponsor">Sponsor/MOA:</label>
                         <div class="form-group">
-                            <input id="sponsor" type="text" name="sponsor" class="form-control @error('sponsor') is-invalid @enderror">
+                            <input id="sponsor" type="text" name="sponsor" value="{{ old('sponsor') }}" class="form-control @error('sponsor') is-invalid @enderror">
                             @error('sponsor')
                                 <div class="invalid-feedback">
                                     <i class="bx bx-radio-circle"></i>
@@ -90,6 +89,21 @@
                             @enderror
                         </fieldset>
 
+                        <label for="natures">Etape(s) réalisée(s): </label>
+                        <fieldset class="form-group">
+                            <select id="steps" class="form-select choices multiple-remove @error('steps') is-invalid @enderror" multiple name="steps[]">
+                                @foreach ($steps as $step)
+                                    <option value="{{ $step->id }}">{{ $step->name }}</option>
+                                @endforeach
+                            </select>
+                            @error('steps')
+                                <div class="invalid-feedback">
+                                    <i class="bx bx-radio-circle"></i>
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </fieldset>
+
                         <label for="initiative">Initiative:</label>
                         <div class="form-group">
                             <select id="initiative" class="form-select @error('initiative') is-invalid @enderror" name="initiative">
@@ -106,8 +120,19 @@
 
                         <label for="amoa">AMOA:</label>
                         <div class="form-group">
-                            <input id="amoa" type="text" name="amoa" class="form-control @error('amoa') is-invalid @enderror">
+                            <input id="amoa" type="text" name="amoa" value="{{ old('amoa') }}" class="form-control @error('amoa') is-invalid @enderror">
                             @error('amoa')
+                                <div class="invalid-feedback">
+                                    <i class="bx bx-radio-circle"></i>
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
+
+                        <label for="amoa">Progression(%):</label>
+                        <div class="form-group">
+                            <input id="amoa" type="text" name="progress" value="{{ old('progress') }}" class="form-control @error('progress') is-invalid @enderror">
+                            @error('progress')
                                 <div class="invalid-feedback">
                                     <i class="bx bx-radio-circle"></i>
                                     {{ $message }}
@@ -117,7 +142,7 @@
 
                         <label for="moe">MOE:</label>
                         <div class="form-group">
-                            <input id="moe" type="text" name="moe" class="form-control @error('moe') is-invalid @enderror">
+                            <input id="moe" type="text" name="moe" value="{{ old('moe') }}" class="form-control @error('moe') is-invalid @enderror">
                             @error('moe')
                                 <div class="invalid-feedback">
                                     <i class="bx bx-radio-circle"></i>
@@ -128,7 +153,7 @@
 
                         <label for="manager">Chef de projet:</label>
                         <div class="form-group">
-                            <input id="manager" type="text" name="manager" class="form-control @error('manager') is-invalid @enderror">
+                            <input id="manager" type="text" name="manager" value="{{ old('manager') }}" class="form-control @error('manager') is-invalid @enderror">
                             @error('manager')
                                 <div class="invalid-feedback">
                                     <i class="bx bx-radio-circle"></i>
@@ -139,7 +164,7 @@
 
                         <label for="cost">Coût du projet:</label>
                         <div class="form-group">
-                            <input id="cost" type="number" name="cost" class="form-control @error('manager') is-invalid @enderror">
+                            <input id="cost" type="number" name="cost" value="{{ old('cost') }}" class="form-control @error('manager') is-invalid @enderror">
                             @error('cost')
                                 <div class="invalid-feedback">
                                     <i class="bx bx-radio-circle"></i>
@@ -166,7 +191,7 @@
 
                         <label for="benefits">Gains/Impact:</label>
                         <div class="form-group">
-                            <textarea id="benefits" name="benefits" class="form-control @error('benefits') is-invalid @enderror" rows="3"></textarea>
+                            <textarea id="benefits" name="benefits" class="form-control @error('benefits') is-invalid @enderror" rows="3">{{ old('benefits') }}</textarea>
                             @error('benefits')
                                 <div class="invalid-feedback">
                                     <i class="bx bx-radio-circle"></i>
@@ -177,7 +202,7 @@
 
                         <label for="documentation">Documentation du projet:</label>
                         <div class="form-group">
-                            <textarea id="documentation" name="documentation" class="form-control @error('documentation') is-invalid @enderror" rows="3"></textarea>
+                            <textarea id="documentation" name="documentation" class="form-control @error('documentation') is-invalid @enderror" rows="3">{{ old('documentation') }}</textarea>
                             @error('documentation')
                                 <div class="invalid-feedback">
                                     <i class="bx bx-radio-circle"></i>
@@ -188,7 +213,7 @@
 
                         <label for="bills">Factures:</label>
                         <div class="form-group">
-                            <textarea id="bills" name="bills" class="form-control @error('bills') is-invalid @enderror" rows="3"></textarea>
+                            <textarea id="bills" name="bills" class="form-control @error('bills') is-invalid @enderror" rows="3">{{ old('bills') }}</textarea>
                             @error('bills')
                                 <div class="invalid-feedback">
                                     <i class="bx bx-radio-circle"></i>

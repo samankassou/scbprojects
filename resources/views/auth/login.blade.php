@@ -28,18 +28,18 @@
             
 		        <div class="login-wrap">
 		            <div class="form-group @error('email') has-error @enderror">
-                  <input type="email" name="email" class="form-control" value="{{ old('email') }}" placeholder="Adresse email" autofocus>
+                  <input type="text" name="email" class="form-control" value="{{ old('email') }}" placeholder="Adresse email">
                   @error('email')
-                    <p class="text-center text-danger mt-2">{{ $message }}</p>
+                    <small class="text-danger mt-2">{{ $message }}</small>
                   @enderror
                 </div>
                 <div class="form-group @error('password') has-error @enderror">
                   <input type="password" name="password" class="form-control" placeholder="Mot de passe">
                   @error('password')
-                    <p class="text-center text-danger">{{ $message }}</p>
+                    <small class="text-danger">{{ $message }}</small>
                   @enderror
                 </div>
-		            <br><input type="checkbox" name="remember"> Ce souvenir de moi !<br><br>
+		            <br><input type="checkbox" name="remember"> Se souvenir de moi !<br><br>
 		            <input class="btn btn-theme btn-block" type="submit">
 		        </div>
 		      </form>	  	

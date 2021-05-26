@@ -60,8 +60,9 @@ class ProjectController extends Controller
         }
         $projects = Project::all();
         $natures = Nature::all();
+        $steps = Step::all();
         $years = array_unique(Arr::sort($projects->pluck('start_year')));
-        return view('admin.projects.index', compact('projects', 'natures', 'years'));
+        return view('admin.projects.index', compact('projects', 'natures', 'years', 'steps'));
     }
 
     /**
@@ -93,7 +94,7 @@ class ProjectController extends Controller
             'initiative'    => $request->initiative,
             'amoa'          => $request->amoa,
             'moe'           => $request->moe,
-            'progress'      => 0,
+            'progress'      => $request->progress,
             'manager'       => $request->manager,
             'cost'          => $request->cost,
             'status'        => $request->status,
@@ -108,6 +109,9 @@ class ProjectController extends Controller
         $project->reference = Str::upper(Str::random(3)).'-'.$project->start_year.'-'.$project->id;
         $project->save();
         $project->natures()->attach($request->natures);
+        if(count($request->steps)){
+            $project->steps()->attach($request->steps);
+        }
         
         return redirect()->route('admin.projects.index')->with('message', 'Projet crée avec succès!');
     }
