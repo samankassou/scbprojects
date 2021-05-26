@@ -8,4 +8,13 @@ use Illuminate\Database\Eloquent\Model;
 class Domain extends Model
 {
     use HasFactory;
+
+    public $timestamps = false;
+
+    protected $fillable = ['name'];
+
+    public function macroprecesses()
+    {
+        return $this->hasMany(Macroprocess::class);
+    }
 }

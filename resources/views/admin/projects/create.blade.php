@@ -91,7 +91,7 @@
 
                         <label for="natures">Etape(s) réalisée(s): </label>
                         <fieldset class="form-group">
-                            <select id="steps" class="form-select choices multiple-remove @error('steps') is-invalid @enderror" multiple name="steps[]">
+                            <select id="steps" class="form-select multiple-remove @error('steps') is-invalid @enderror" multiple name="steps[]">
                                 @foreach ($steps as $step)
                                     <option value="{{ $step->id }}">{{ $step->name }}</option>
                                 @endforeach
@@ -232,9 +232,15 @@
             </form>
         </div>
     </div>
-</section>
+</section >
 @endsection
 @section('scripts')
 @parent
 <script src="{{ asset('mazer/assets/vendors/choices.js/choices.min.js') }}"></script>
+<script>
+    const stepsChoice = new Choices(document.getElementById('steps'), {
+        maxItemCount: -1,
+        removeItemButton: true
+    });
+</script>
 @endsection

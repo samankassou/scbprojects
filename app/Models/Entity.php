@@ -8,4 +8,13 @@ use Illuminate\Database\Eloquent\Model;
 class Entity extends Model
 {
     use HasFactory;
+
+    public $timestamps = false;
+
+    protected $fillable = ['name'];
+
+    public function pole()
+    {
+        return $this->belongsTo(Pole::class);
+    }
 }

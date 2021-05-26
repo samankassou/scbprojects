@@ -17,7 +17,13 @@ class DatabaseSeeder extends Seeder
         $this->call([
             NatureSeeder::class,
             StepSeeder::class,
-            ProjectSeeder::class
+            ProjectSeeder::class,
+            DomainSeeder::class,
+            MacroprocessSeeder::class,
+            MethodSeeder::class,
+            PoleSeeder::class,
+            EntitySeeder::class,
+            ProcessSeeder::class
         ]);
     }
 }
