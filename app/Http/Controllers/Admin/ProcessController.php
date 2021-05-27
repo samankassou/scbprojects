@@ -99,7 +99,9 @@ class ProcessController extends Controller
      */
     public function edit(Process $process)
     {
-        //
+        $domains = Domain::all();
+        $poles = Pole::all();
+        return view('admin.processes.edit', compact('process', 'domains', 'poles'));
     }
 
     /**

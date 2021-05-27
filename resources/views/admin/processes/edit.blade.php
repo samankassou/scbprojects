@@ -1,4 +1,4 @@
-@extends('layouts.app', ['title' => 'Création d\'une procédure'])
+@extends('layouts.app', ['title' => 'Modification d\'une procédure'])
 @section('styles')
 @parent
 <link rel="stylesheet" href="{{ asset('mazer/assets/vendors/choices.js/choices.min.css') }}">
@@ -7,22 +7,20 @@
 <section class="section">
     <div class="card">
         <div class="card-header d-flex justify-content-between">
-            <h4 class="card-title">Création d'une procédure</h4>
+            <h4 class="card-title">Modification de la procédure "{{ $process->name }}"</h4>
         </div>
         <div class="card-body">
-            <form action="{{ route('admin.processes.store') }}" method="POST">
+            <form action="{{ route('admin.processes.update', $process->id) }}" method="POST">
+                @method('PATCH')
                 @csrf
                 <div class="row justify-content-center">
-
-                    
-
                     <div class="col-md-8">
 
                         <label for="status">Domaine:</label>
                         <div class="form-group">
                             <select id="domain" class="form-select @error('domain') is-invalid @enderror" name="domain">
                                 @foreach ($domains as $domain)
-                                    <option value="{{ $domain->id }}">{{ $domain->name }}</option>
+                                    <option value="{{ $domain->id }}" @if(old('domain', $process->id) == $domain->id) selected @endif>{{ $domain->name }}</option>
                                 @endforeach
                             </select>
                             @error('domain')
@@ -61,7 +59,7 @@
 
                         <label for="name">Intitulé:</label>
                         <div class="form-group">
-                            <input type="text" name="name" value="{{ old('name') }}" class="form-control @error('name') is-invalid @enderror">
+                            <input type="text" name="name" value="{{ old('name', $process->name) }}" class="form-control @error('name') is-invalid @enderror">
                             @error('name')
                                 <div class="invalid-feedback">
                                     <i class="bx bx-radio-circle"></i>
@@ -89,7 +87,7 @@
 
                         <label for="reference">Reférence:</label>
                         <div class="form-group">
-                            <input type="text" name="reference" value="{{ old('reference') }}" class="form-control @error('reference') is-invalid @enderror">
+                            <input type="text" name="reference" value="{{ old('reference', $process->reference) }}" class="form-control @error('reference') is-invalid @enderror">
                             @error('reference')
                                 <div class="invalid-feedback">
                                     <i class="bx bx-radio-circle"></i>
@@ -100,7 +98,7 @@
 
                         <label for="version">No. de version:</label>
                         <div class="form-group">
-                            <input type="text" name="version" value="{{ old('version') }}" class="form-control @error('version') is-invalid @enderror">
+                            <input type="text" name="version" value="{{ old('version', $process->version) }}" class="form-control @error('version') is-invalid @enderror">
                             @error('version')
                                 <div class="invalid-feedback">
                                     <i class="bx bx-radio-circle"></i>
@@ -113,7 +111,7 @@
                         <div class="form-group">
                             <select id="pole" class="form-select @error('pole') is-invalid @enderror" name="pole">
                                 @foreach ($poles as $pole)
-                                    <option value="{{ $pole->id }}">{{ $pole->name }}</option>
+                                    <option value="{{ $pole->id }}" @if(old('pole', $process->id) == $pole->id) selected @endif>{{ $pole->name }}</option>
                                 @endforeach
                             </select>
                             @error('pole')
@@ -141,7 +139,7 @@
                             <div class="col-md-6">
                                 <label for="creation_date">Créée le:</label>
                                 <div class="form-group">
-                                    <input id="creation_date" type="date" name="creation_date" class="form-control @error('creation_date') is-invalid @enderror">
+                                    <input id="creation_date" type="date" name="creation_date" value="{{ old('creation_date', $process->creation_date->format('Y-m-d')) }}" class="form-control @error('creation_date') is-invalid @enderror">
                                     @error('creation_date')
                                         <div class="invalid-feedback">
                                             <i class="bx bx-radio-circle"></i>
@@ -153,7 +151,7 @@
                             <div class="col-md-6">
                                 <label for="created_by">Par:</label>
                                 <div class="form-group">
-                                    <input id="created_by" type="text" name="created_by" class="form-control @error('created_by') is-invalid @enderror">
+                                    <input id="created_by" type="text" name="created_by" value="{{ old('created_by', $process->created_by) }}" class="form-control @error('created_by') is-invalid @enderror">
                                     @error('created_by')
                                         <div class="invalid-feedback">
                                             <i class="bx bx-radio-circle"></i>
@@ -168,7 +166,7 @@
                             <div class="col-md-6">
                                 <label for="written_date">Redigée le:</label>
                                 <div class="form-group">
-                                    <input id="written_date" type="date" name="written_date" class="form-control @error('written_date') is-invalid @enderror">
+                                    <input id="written_date" type="date" name="written_date" value="{{ old('written_date', $process->written_date->format('Y-m-d')) }}" class="form-control @error('written_date') is-invalid @enderror">
                                     @error('written_date')
                                         <div class="invalid-feedback">
                                             <i class="bx bx-radio-circle"></i>
@@ -180,7 +178,7 @@
                             <div class="col-md-6">
                                 <label for="written_by">Par:</label>
                                 <div class="form-group">
-                                    <input id="written_by" type="text" name="written_by" class="form-control @error('written_by') is-invalid @enderror">
+                                    <input id="written_by" type="text" name="written_by" value="{{ old('written_by', $process->written_by) }}" class="form-control @error('written_by') is-invalid @enderror">
                                     @error('written_by')
                                         <div class="invalid-feedback">
                                             <i class="bx bx-radio-circle"></i>
@@ -195,7 +193,7 @@
                             <div class="col-md-6">
                                 <label for="validation_date">Validée le:</label>
                                 <div class="form-group">
-                                    <input id="validation_date" type="date" name="validation_date" class="form-control @error('validation_date') is-invalid @enderror">
+                                    <input id="validation_date" type="date" name="validation_date" value="{{ old('validation_date', $process->validation_date->format('Y-m-d')) }}" class="form-control @error('validation_date') is-invalid @enderror">
                                     @error('validation_date')
                                         <div class="invalid-feedback">
                                             <i class="bx bx-radio-circle"></i>
@@ -207,7 +205,7 @@
                             <div class="col-md-6">
                                 <label for="validated_by">Par:</label>
                                 <div class="form-group">
-                                    <input id="validated_by" type="text" name="validated_by" class="form-control @error('validated_by') is-invalid @enderror">
+                                    <input id="validated_by" type="text" name="validated_by" value="{{ old('validated_by', $process->validated_by) }}" class="form-control @error('validated_by') is-invalid @enderror">
                                     @error('validated_by')
                                         <div class="invalid-feedback">
                                             <i class="bx bx-radio-circle"></i>
@@ -222,7 +220,7 @@
                             <div class="col-md-6">
                                 <label for="approved_date">Approuvée le:</label>
                                 <div class="form-group">
-                                    <input id="approved_date" type="date" name="approved_date" class="form-control @error('approved_date') is-invalid @enderror">
+                                    <input id="approved_date" type="date" name="approved_date" value="{{ old('approved_date', $process->approved_date->format('Y-m-d')) }}" class="form-control @error('approved_date') is-invalid @enderror">
                                     @error('approved_date')
                                         <div class="invalid-feedback">
                                             <i class="bx bx-radio-circle"></i>
@@ -234,7 +232,7 @@
                             <div class="col-md-6">
                                 <label for="approved_by">Par:</label>
                                 <div class="form-group">
-                                    <input id="approved_by" type="text" name="approved_by" class="form-control @error('approved_by') is-invalid @enderror">
+                                    <input id="approved_by" type="text" name="approved_by" value="{{ old('approved_by', $process->approved_by) }}" class="form-control @error('approved_by') is-invalid @enderror">
                                     @error('approved_by')
                                         <div class="invalid-feedback">
                                             <i class="bx bx-radio-circle"></i>
@@ -248,8 +246,8 @@
                         <label for="state">Etat:</label>
                         <div class="form-group">
                             <select id="state" class="form-select @error('state') is-invalid @enderror" name="state">
-                                <option value="Créé">Créé</option>
-                                <option value="Revu">Revu</option>
+                                <option value="Créé" @if(old('state') == 'Créé') selected @endif>Créé</option>
+                                <option value="Revu" @if(old('state') == 'Revu') selected @endif>Revu</option>
                             </select>
                             @error('state')
                                 <div class="invalid-feedback">
@@ -261,7 +259,7 @@
 
                         <label for="reasons_for_creation">Raison(s) de la création:</label>
                         <div class="form-group">
-                            <textarea id="reasons_for_creation" name="reasons_for_creation" class="form-control @error('reasons_for_creation') is-invalid @enderror" rows="3"></textarea>
+                            <textarea id="reasons_for_creation" name="reasons_for_creation" class="form-control @error('reasons_for_creation') is-invalid @enderror" rows="3">{{ old('reasons_for_creation', $process->reasons_for_creation) }}</textarea>
                             @error('reasons_for_creation')
                                 <div class="invalid-feedback">
                                     <i class="bx bx-radio-circle"></i>
@@ -272,7 +270,7 @@
 
                         <label for="reasons_for_modification">Raison(s) de la modification:</label>
                         <div class="form-group">
-                            <textarea id="reasons_for_modification" name="reasons_for_modification" class="form-control @error('reasons_for_modification') is-invalid @enderror" rows="3"></textarea>
+                            <textarea id="reasons_for_modification" name="reasons_for_modification" class="form-control @error('reasons_for_modification') is-invalid @enderror" rows="3">{{ old('reasons_for_modification', $process->reasons_for_modification) }}</textarea>
                             @error('reasons_for_modification')
                                 <div class="invalid-feedback">
                                     <i class="bx bx-radio-circle"></i>
@@ -281,10 +279,10 @@
                             @enderror
                         </div>
 
-                        <label for="reasons_for_modification">Modification(s) apportée(s):</label>
+                        <label for="modifications">Modification(s) apportée(s):</label>
                         <div class="form-group">
-                            <textarea id="reasons_for_modification" name="reasons_for_modification" class="form-control @error('reasons_for_modification') is-invalid @enderror" rows="3"></textarea>
-                            @error('reasons_for_modification')
+                            <textarea id="modifications" name="modifications" class="form-control @error('modifications') is-invalid @enderror" rows="3"></textarea>
+                            @error('modifications')
                                 <div class="invalid-feedback">
                                     <i class="bx bx-radio-circle"></i>
                                     {{ $message }}
@@ -294,7 +292,7 @@
 
                         <label for="appendices">Annexes:</label>
                         <div class="form-group">
-                            <textarea id="appendices" name="appendices" class="form-control @error('appendices') is-invalid @enderror" rows="3"></textarea>
+                            <textarea id="appendices" name="appendices" class="form-control @error('appendices') is-invalid @enderror" rows="3">{{ old('appendices', $process->appendices) }}</textarea>
                             @error('appendices')
                                 <div class="invalid-feedback">
                                     <i class="bx bx-radio-circle"></i>

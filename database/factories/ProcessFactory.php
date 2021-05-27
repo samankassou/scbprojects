@@ -56,6 +56,7 @@ class ProcessFactory extends Factory
                 'reasons_for_creation' => $this->faker->paragraph(),
                 'reasons_for_modification' => $this->faker->paragraph(),
                 'appendices' => $this->faker->paragraph(),
+                'modifications' => $this->faker->paragraph(),
                 'method_id' => Method::all()->random()->id,
                 'entity_id' => Entity::all()->random()->id,
         ];
