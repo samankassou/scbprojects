@@ -9,7 +9,13 @@ class Process extends Model
 {
     use HasFactory;
 
-    public $timestamps = false;
+    protected $dates = [
+        'creation_date',
+        'written_date',
+        'approved_date',
+        'validation_date',
+        'diffusion_date'
+    ];
 
     protected $fillable = [
         'name',

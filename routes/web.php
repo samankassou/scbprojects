@@ -27,6 +27,9 @@ Route::group([
     'prefix' => 'admin'
 ], function(){
     Route::resource('/projects', ProjectController::class);
+    Route::get('/processes/poles/{id}/entities', [ProcessController::class, 'getEntities'])->name('processes.poles.entities');
+    Route::get('/processes/macroprocesses/{id}/methods', [ProcessController::class, 'getMethods'])->name('processes.macroprocesses.methods');
+    Route::get('/processes/domains/{id}/macroprocesses', [ProcessController::class, 'getMacroprocesses'])->name('processes.domains.macroprocesses');
     Route::resource('/processes', ProcessController::class);
     Route::resource('/users', UserController::class);
 });

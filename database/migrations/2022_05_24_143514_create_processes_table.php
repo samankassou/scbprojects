@@ -19,6 +19,7 @@ class CreateProcessesTable extends Migration
             $table->foreignId('method_id')->constrained();
             $table->string('version');
             $table->string('type');
+            $table->string('reference');
             $table->string('status');
             $table->string('created_by');
             $table->string('written_by');

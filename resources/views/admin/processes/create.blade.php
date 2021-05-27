@@ -14,8 +14,52 @@
                 @csrf
                 <div class="row justify-content-center">
 
+                    
+
                     <div class="col-md-8">
-                        <label for="name">Nom:</label>
+
+                        <label for="status">Domaine:</label>
+                        <div class="form-group">
+                            <select id="domain" class="form-select @error('domain') is-invalid @enderror" name="domain">
+                                @foreach ($domains as $domain)
+                                    <option value="{{ $domain->id }}">{{ $domain->name }}</option>
+                                @endforeach
+                            </select>
+                            @error('domain')
+                                <div class="invalid-feedback">
+                                    <i class="bx bx-radio-circle"></i>
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
+
+                        <label for="status">Macroprocessus:</label>
+                        <div class="form-group">
+                            <select id="macroprocess" class="form-select @error('macroprocess') is-invalid @enderror" name="macroprocess">
+                                
+                            </select>
+                            @error('macroprocess')
+                                <div class="invalid-feedback">
+                                    <i class="bx bx-radio-circle"></i>
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
+
+                        <label for="method">Processus:</label>
+                        <div class="form-group">
+                            <select id="method" class="form-select @error('method') is-invalid @enderror" name="method">
+                                
+                            </select>
+                            @error('method')
+                                <div class="invalid-feedback">
+                                    <i class="bx bx-radio-circle"></i>
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
+
+                        <label for="name">Intitulé:</label>
                         <div class="form-group">
                             <input type="text" name="name" value="{{ old('name') }}" class="form-control @error('name') is-invalid @enderror">
                             @error('name')
@@ -26,10 +70,66 @@
                             @enderror
                         </div>
 
-                        <label for="description">Description:</label>
+                        <label for="type">Type:</label>
                         <div class="form-group">
-                            <textarea id="description" name="description" class="form-control @error('description') is-invalid @enderror" rows="3"></textarea>
-                            @error('description')
+                            <select id="type" class="form-select @error('type') is-invalid @enderror" name="type">
+                                <option value="Note circulaire">Note circulaire</option>
+                                <option value="Instruction à durée limitée">Instruction à durée limitée</option>
+                                <option value="Note de procédure">Note de procédure</option>
+                                <option value="Note de fonctionnement">Note de fonctionnement</option>
+                                <option value="Fiche de décision">Fiche de décision</option>
+                            </select>
+                            @error('type')
+                                <div class="invalid-feedback">
+                                    <i class="bx bx-radio-circle"></i>
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
+
+                        <label for="reference">Reférence:</label>
+                        <div class="form-group">
+                            <input type="text" name="reference" value="{{ old('reference') }}" class="form-control @error('reference') is-invalid @enderror">
+                            @error('reference')
+                                <div class="invalid-feedback">
+                                    <i class="bx bx-radio-circle"></i>
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
+
+                        <label for="version">No. de version:</label>
+                        <div class="form-group">
+                            <input type="text" name="version" value="{{ old('version') }}" class="form-control @error('version') is-invalid @enderror">
+                            @error('version')
+                                <div class="invalid-feedback">
+                                    <i class="bx bx-radio-circle"></i>
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
+
+                        <label for="pole">Pôle:</label>
+                        <div class="form-group">
+                            <select id="pole" class="form-select @error('pole') is-invalid @enderror" name="pole">
+                                @foreach ($poles as $pole)
+                                    <option value="{{ $pole->id }}">{{ $pole->name }}</option>
+                                @endforeach
+                            </select>
+                            @error('pole')
+                                <div class="invalid-feedback">
+                                    <i class="bx bx-radio-circle"></i>
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
+
+                        <label for="entity">Entité:</label>
+                        <div class="form-group">
+                            <select id="entity" class="form-select @error('entity') is-invalid @enderror" name="entity">
+                                
+                            </select>
+                            @error('entity')
                                 <div class="invalid-feedback">
                                     <i class="bx bx-radio-circle"></i>
                                     {{ $message }}
@@ -39,10 +139,10 @@
 
                         <div class="row">
                             <div class="col-md-6">
-                                <label for="start_date">Date début:</label>
+                                <label for="creation_date">Créée le:</label>
                                 <div class="form-group">
-                                    <input id="start_date" type="date" name="start_date" class="form-control @error('start_date') is-invalid @enderror">
-                                    @error('start_date')
+                                    <input id="creation_date" type="date" name="creation_date" class="form-control @error('creation_date') is-invalid @enderror">
+                                    @error('creation_date')
                                         <div class="invalid-feedback">
                                             <i class="bx bx-radio-circle"></i>
                                             {{ $message }}
@@ -51,10 +151,10 @@
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <label for="end_date">Date fin:</label>
+                                <label for="created_by">Par:</label>
                                 <div class="form-group">
-                                    <input id="end_date" type="date" name="end_date" class="form-control @error('end_date') is-invalid @enderror">
-                                    @error('end_date')
+                                    <input id="created_by" type="text" name="created_by" class="form-control @error('created_by') is-invalid @enderror">
+                                    @error('created_by')
                                         <div class="invalid-feedback">
                                             <i class="bx bx-radio-circle"></i>
                                             {{ $message }}
@@ -64,24 +164,94 @@
                             </div>
                         </div>
 
-                        <label for="sponsor">Sponsor/MOA:</label>
-                        <div class="form-group">
-                            <input id="sponsor" type="text" name="sponsor" class="form-control @error('sponsor') is-invalid @enderror">
-                            @error('sponsor')
-                                <div class="invalid-feedback">
-                                    <i class="bx bx-radio-circle"></i>
-                                    {{ $message }}
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label for="written_date">Redigée le:</label>
+                                <div class="form-group">
+                                    <input id="written_date" type="date" name="written_date" class="form-control @error('written_date') is-invalid @enderror">
+                                    @error('written_date')
+                                        <div class="invalid-feedback">
+                                            <i class="bx bx-radio-circle"></i>
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
                                 </div>
-                            @enderror
+                            </div>
+                            <div class="col-md-6">
+                                <label for="written_by">Par:</label>
+                                <div class="form-group">
+                                    <input id="written_by" type="text" name="written_by" class="form-control @error('written_by') is-invalid @enderror">
+                                    @error('written_by')
+                                        <div class="invalid-feedback">
+                                            <i class="bx bx-radio-circle"></i>
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
+                                </div>
+                            </div>
                         </div>
 
-                        <label for="initiative">Initiative:</label>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label for="validation_date">Validée le:</label>
+                                <div class="form-group">
+                                    <input id="validation_date" type="date" name="validation_date" class="form-control @error('validation_date') is-invalid @enderror">
+                                    @error('validation_date')
+                                        <div class="invalid-feedback">
+                                            <i class="bx bx-radio-circle"></i>
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="validated_by">Par:</label>
+                                <div class="form-group">
+                                    <input id="validated_by" type="text" name="validated_by" class="form-control @error('validated_by') is-invalid @enderror">
+                                    @error('validated_by')
+                                        <div class="invalid-feedback">
+                                            <i class="bx bx-radio-circle"></i>
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label for="approved_date">Approuvée le:</label>
+                                <div class="form-group">
+                                    <input id="approved_date" type="date" name="approved_date" class="form-control @error('approved_date') is-invalid @enderror">
+                                    @error('approved_date')
+                                        <div class="invalid-feedback">
+                                            <i class="bx bx-radio-circle"></i>
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="approved_by">Par:</label>
+                                <div class="form-group">
+                                    <input id="approved_by" type="text" name="approved_by" class="form-control @error('approved_by') is-invalid @enderror">
+                                    @error('approved_by')
+                                        <div class="invalid-feedback">
+                                            <i class="bx bx-radio-circle"></i>
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
+
+                        <label for="state">Etat:</label>
                         <div class="form-group">
-                            <select id="initiative" class="form-select @error('initiative') is-invalid @enderror" name="initiative">
-                                <option value="local">local</option>
-                                <option value="groupe">groupe</option>
+                            <select id="state" class="form-select @error('state') is-invalid @enderror" name="state">
+                                <option value="Créé">Créé</option>
+                                <option value="Revu">Revu</option>
                             </select>
-                            @error('initiative')
+                            @error('state')
                                 <div class="invalid-feedback">
                                     <i class="bx bx-radio-circle"></i>
                                     {{ $message }}
@@ -89,10 +259,10 @@
                             @enderror
                         </div>
 
-                        <label for="amoa">AMOA:</label>
+                        <label for="reasons_for_creation">Raison(s) de la création:</label>
                         <div class="form-group">
-                            <input id="amoa" type="text" name="amoa" class="form-control @error('amoa') is-invalid @enderror">
-                            @error('amoa')
+                            <textarea id="reasons_for_creation" name="reasons_for_creation" class="form-control @error('reasons_for_creation') is-invalid @enderror" rows="3"></textarea>
+                            @error('reasons_for_creation')
                                 <div class="invalid-feedback">
                                     <i class="bx bx-radio-circle"></i>
                                     {{ $message }}
@@ -100,10 +270,10 @@
                             @enderror
                         </div>
 
-                        <label for="moe">MOE:</label>
+                        <label for="reasons_for_modification">Raison(s) de la modification:</label>
                         <div class="form-group">
-                            <input id="moe" type="text" name="moe" class="form-control @error('moe') is-invalid @enderror">
-                            @error('moe')
+                            <textarea id="reasons_for_modification" name="reasons_for_modification" class="form-control @error('reasons_for_modification') is-invalid @enderror" rows="3"></textarea>
+                            @error('reasons_for_modification')
                                 <div class="invalid-feedback">
                                     <i class="bx bx-radio-circle"></i>
                                     {{ $message }}
@@ -111,10 +281,10 @@
                             @enderror
                         </div>
 
-                        <label for="manager">Chef de projet:</label>
+                        <label for="reasons_for_modification">Modification(s) apportée(s):</label>
                         <div class="form-group">
-                            <input id="manager" type="text" name="manager" class="form-control @error('manager') is-invalid @enderror">
-                            @error('manager')
+                            <textarea id="reasons_for_modification" name="reasons_for_modification" class="form-control @error('reasons_for_modification') is-invalid @enderror" rows="3"></textarea>
+                            @error('reasons_for_modification')
                                 <div class="invalid-feedback">
                                     <i class="bx bx-radio-circle"></i>
                                     {{ $message }}
@@ -122,10 +292,10 @@
                             @enderror
                         </div>
 
-                        <label for="cost">Coût du projet:</label>
+                        <label for="files">Pièce jointe:</label>
                         <div class="form-group">
-                            <input id="cost" type="number" name="cost" class="form-control @error('manager') is-invalid @enderror">
-                            @error('cost')
+                            <input id="files" type="file" name="files" class="form-control @error('files') is-invalid @enderror">
+                            @error('files')
                                 <div class="invalid-feedback">
                                     <i class="bx bx-radio-circle"></i>
                                     {{ $message }}
@@ -133,54 +303,6 @@
                             @enderror
                         </div>
 
-                        <label for="status">Statut du projet:</label>
-                        <div class="form-group">
-                            <select id="status" class="form-select @error('status') is-invalid @enderror" name="status">
-                                <option value="en cours">en cours</option>
-                                <option value="inachevé">inachevé</option>
-                                <option value="en stand-by">en stand-by</option>
-                                <option value="terminé">terminé</option>
-                            </select>
-                            @error('status')
-                                <div class="invalid-feedback">
-                                    <i class="bx bx-radio-circle"></i>
-                                    {{ $message }}
-                                </div>
-                            @enderror
-                        </div>
-
-                        <label for="benefits">Gains/Impact:</label>
-                        <div class="form-group">
-                            <textarea id="benefits" name="benefits" class="form-control @error('benefits') is-invalid @enderror" rows="3"></textarea>
-                            @error('benefits')
-                                <div class="invalid-feedback">
-                                    <i class="bx bx-radio-circle"></i>
-                                    {{ $message }}
-                                </div>
-                            @enderror
-                        </div>
-
-                        <label for="documentation">Documentation du projet:</label>
-                        <div class="form-group">
-                            <textarea id="documentation" name="documentation" class="form-control @error('documentation') is-invalid @enderror" rows="3"></textarea>
-                            @error('documentation')
-                                <div class="invalid-feedback">
-                                    <i class="bx bx-radio-circle"></i>
-                                    {{ $message }}
-                                </div>
-                            @enderror
-                        </div>
-
-                        <label for="bills">Factures:</label>
-                        <div class="form-group">
-                            <textarea id="bills" name="bills" class="form-control @error('bills') is-invalid @enderror" rows="3"></textarea>
-                            @error('bills')
-                                <div class="invalid-feedback">
-                                    <i class="bx bx-radio-circle"></i>
-                                    {{ $message }}
-                                </div>
-                            @enderror
-                        </div>
 
                         <div class="form-group d-flex justify-content-between">
                             <button type="submit" class="btn btn-primary">Enregistrer</button>
@@ -197,4 +319,84 @@
 @section('scripts')
 @parent
 <script src="{{ asset('mazer/assets/vendors/choices.js/choices.min.js') }}"></script>
+<script src="{{ asset('vendor/datatables/js/jquery-3.5.1.js') }}"></script>
+<script>
+    $(function(){
+        let domain = $('#domain').val();
+        let pole = $('#pole').val();
+        fillMacroprocesses(domain);
+        fillEntities(pole);
+        $('#domain').on('change', function(e){
+            fillMacroprocesses($(this).val());
+        });
+        $('#macroprocess').on('change', function(e){
+            fillMethods($(this).val());
+        });
+        $('#pole').on('change', function(e){
+            fillEntities($(this).val());
+        });
+    });
+
+    function fillMacroprocesses(domain)
+    {
+        $.ajax({
+            url: "/admin/processes/domains/"+domain+"/macroprocesses",
+            success: function(response){
+                console.log(response);
+                let macroprocesses = response.macroprocesses;
+                let html = '';
+                macroprocesses.forEach(macroprocess => {
+                    html+= `<option value="${macroprocess.id}">${macroprocess.name}</option>`;
+                });
+
+                $('#macroprocess').html(html);
+                let macroprocess = $('#macroprocess').val();
+                fillMethods(macroprocess);
+            },
+            error: function(response){
+                console.log(response);
+            }
+        });
+    }
+
+    function fillMethods(macroprocess)
+    {
+        $.ajax({
+            url: "/admin/processes/macroprocesses/"+macroprocess+"/methods",
+            success: function(response){
+                console.log(response);
+                let methods = response.methods;
+                let html = '';
+                methods.forEach(method => {
+                    html+= `<option value="${method.id}">${method.name}</option>`;
+                });
+
+                $('#method').html(html);
+            },
+            error: function(response){
+                console.log(response);
+            }
+        });
+    }
+
+    function fillEntities(pole)
+    {
+        $.ajax({
+            url: "/admin/processes/poles/"+pole+"/entities",
+            success: function(response){
+                console.log(response);
+                let entities = response.entities;
+                let html = '';
+                entities.forEach(entity => {
+                    html+= `<option value="${entity.id}">${entity.name}</option>`;
+                });
+
+                $('#entity').html(html);
+            },
+            error: function(response){
+                console.log(response);
+            }
+        });
+    }
+</script>
 @endsection

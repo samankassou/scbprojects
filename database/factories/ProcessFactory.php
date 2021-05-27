@@ -25,6 +25,7 @@ class ProcessFactory extends Factory
     {
         return [
               'name' => $this->faker->sentence(),
+              'reference' => $this->faker->numberBetween(1, 1000),
               'version' => $this->faker->numberBetween(1, 3),
               'type' => $this->faker->randomElement([
                   'Note de procédure',
@@ -55,8 +56,8 @@ class ProcessFactory extends Factory
                 'reasons_for_creation' => $this->faker->paragraph(),
                 'reasons_for_modification' => $this->faker->paragraph(),
                 'appendices' => $this->faker->paragraph(),
-                'method_id' => Method::inRandomOrder()->first()->id,
-                'entity_id' => Entity::inRandomOrder()->first()->id,
+                'method_id' => Method::all()->random()->id,
+                'entity_id' => Entity::all()->random()->id,
         ];
     }
 }

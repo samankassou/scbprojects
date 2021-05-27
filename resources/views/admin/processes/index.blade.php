@@ -12,8 +12,8 @@
             <div class="row">
                 <div class="col-md-3">
                     <fieldset class="form-group">
-                        <select class="form-select choices" id="criteria">
-                            <option value="allSearch">dans tous les projets</option>
+                        <select class="form-select choices" id="searchType">
+                            <option value="allSearch">dans toutes les procédures</option>
                             <option value="referenceSearch">par Reférence</option>
                             <option value="amoaSearch">par AMOA</option>
                             <option value="sponsorSearch">par Sponsor/MOA</option>
@@ -25,7 +25,7 @@
                 </div>
                 <div class="col-md-6">
                     <div class="search-container active">
-                        <input type="text" class="form-control search" id="allSearch" placeholder="Rechercher un projet...">
+                        <input type="text" class="form-control search" id="allSearch" placeholder="Rechercher une procédure...">
                     </div>
                     <div class="search-container">
                         <input class="form-control search" id="referenceSearch" type="text" placeholder="Entrez une reférence...">
@@ -65,12 +65,12 @@
                     <a href="{{ route('admin.processes.create') }}" class="btn btn-sm btn-primary"><i class="bi bi-plus"></i> Créer</a>
                 </div>
             </div>
-            <table class="table table-striped" id="projects-datatable" style="width: 100%">
+            <table class="table table-striped" id="processes-datatable" style="width: 100%">
                 <thead>
                     <tr>
                         <th>Ref.</th>
                         <th>Version</th>
-                        <th>Nom</th>
+                        <th>Intitulé</th>
                         <th>Statut</th>
                         <th>Date de création</th>
                         <th>Pôle</th>
@@ -78,21 +78,35 @@
                     </tr>
                 </thead>
                 <tbody>
-                    
+                    @foreach ($processes as $process)
+                        <tr>
+                            <td>{{ $process->reference }}</td>
+                            <td>{{ $process->version }}</td>
+                            <td>{{ $process->name }}</td>
+                            <td>{{ $process->status }}</td>
+                            <td>{{ $process->creation_date->format('d/m/Y') }}</td>
+                            <td>{{ $process->entity->pole->name }}</td>
+                            <td>
+                                <a href="{{ route('admin.processes.show', $process->id) }}" class='btn btn-sm btn-primary'><i class='bi bi-eye'></i></a>
+                                <a href="{{ route('admin.processes.edit', $process->id) }}" class='btn btn-sm btn-warning'><i class='bi bi-pencil'></i></a>
+                                <button onclick="showDeleteProcessModal({{ $process->id }})" class='btn btn-sm btn-danger delete-btn'><i class='bi bi-trash'></i></button>
+                            </td>
+                        </tr>
+                    @endforeach
                 </tbody>
             </table>
         </div>
     </div>
 </section>
-{{-- Delete project modal --}}
+{{-- Delete process modal --}}
 <div class="modal-danger me-1 mb-1 d-inline-block">
     <!--Danger theme Modal -->
-    <div class="modal fade text-left" id="delete-project-modal" tabindex="-1" aria-labelledby="myModalLabel120" aria-hidden="true" style="display: none;">
+    <div class="modal fade text-left" id="delete-process-modal" tabindex="-1" aria-labelledby="myModalLabel120" aria-hidden="true" style="display: none;">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
-            <form id="delete-project-form" class="modal-content">
+            <form id="delete-process-form" class="modal-content">
                 <div class="modal-header bg-danger">
                     <h5 class="modal-title white" id="myModalLabel120">
-                        Supprimer un projet
+                        Supprimer une procédure
                     </h5>
                     <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                         <i data-feather="x"></i>
@@ -106,7 +120,7 @@
                         <i class="bx bx-x d-block d-sm-none"></i>
                         <span class="d-none d-sm-block">Annuler</span>
                     </button>
-                    <button id="delete-project-btn" type="button" class="btn btn-danger ml-1">
+                    <button id="delete-process-btn" type="button" class="btn btn-danger ml-1">
                         <i class="bx bx-check d-block d-sm-none"></i>
                         <span class="d-none d-sm-block">supprimer</span>
                     </button>
@@ -115,14 +129,14 @@
         </div>
     </div>
 </div>
-{{--! Delete project modal --}}
+{{--! Delete process modal --}}
 @endsection
 @section('scripts')
 @parent
 <script src="{{ asset('mazer/assets/vendors/choices.js/choices.min.js') }}"></script>
 <script>
-    $('#delete-project-btn').on('click', deleteProject);
-    const table = $('#projects-datatable').DataTable({
+    $('#delete-process-btn').on('click', deleteProcess);
+    const table = $('#processes-datatable').DataTable({
         searching: false,
         language: {
             url: "{{ asset('vendor/datatables/lang/French.json') }}"
@@ -134,7 +148,7 @@
         removeItemButton: true
     });
     
-    $('#criteria').on('change', function(){
+    $('#searchType').on('change', function(){
         //reset all inputs search
         $("input[type='text'].search").val('');
         yearSearch.setChoiceByValue('');
@@ -158,7 +172,7 @@
 
     function getData()
     {
-        const criteria = document.getElementById('criteria').value,
+        const searchType = document.getElementById('searchType').value,
         all = document.getElementById('allSearch').value,
         year = yearSearch.getValue().value,
         reference = document.getElementById('referenceSearch').value,
@@ -180,12 +194,12 @@
             };
     }
 
-    function showDeleteProjectModal(id)
+    function showDeleteProcessModal(id)
     {
-        $('#delete-project-modal').modal('show');
+        $('#delete-process-modal').modal('show');
     }
 
-    function deleteProject()
+    function deleteProcess()
     {
 
     }
