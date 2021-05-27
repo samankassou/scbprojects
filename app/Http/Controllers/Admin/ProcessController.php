@@ -88,7 +88,7 @@ class ProcessController extends Controller
      */
     public function show(Process $process)
     {
-        //
+        return view('admin.processes.show', compact('process'));
     }
 
     /**
