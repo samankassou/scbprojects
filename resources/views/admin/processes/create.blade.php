@@ -303,17 +303,6 @@
                             @enderror
                         </div>
 
-                        <label for="files">Pièce jointe:</label>
-                        <div class="form-group">
-                            <input id="files" type="file" name="files" class="form-control @error('files') is-invalid @enderror">
-                            @error('files')
-                                <div class="invalid-feedback">
-                                    <i class="bx bx-radio-circle"></i>
-                                    {{ $message }}
-                                </div>
-                            @enderror
-                        </div>
-
 
                         <div class="form-group d-flex justify-content-between">
                             <button type="submit" class="btn btn-primary">Enregistrer</button>

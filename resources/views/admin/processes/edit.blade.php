@@ -111,7 +111,7 @@
                         <div class="form-group">
                             <select id="pole" class="form-select @error('pole') is-invalid @enderror" name="pole">
                                 @foreach ($poles as $pole)
-                                    <option value="{{ $pole->id }}" @if(old('pole', $process->id) == $pole->id) selected @endif>{{ $pole->name }}</option>
+                                    <option value="{{ $pole->id }}" @if(old('pole', $process->entity->pole->id) == $pole->id) selected @endif>{{ $pole->name }}</option>
                                 @endforeach
                             </select>
                             @error('pole')
@@ -294,17 +294,6 @@
                         <div class="form-group">
                             <textarea id="appendices" name="appendices" class="form-control @error('appendices') is-invalid @enderror" rows="3">{{ old('appendices', $process->appendices) }}</textarea>
                             @error('appendices')
-                                <div class="invalid-feedback">
-                                    <i class="bx bx-radio-circle"></i>
-                                    {{ $message }}
-                                </div>
-                            @enderror
-                        </div>
-
-                        <label for="files">Pièce jointe:</label>
-                        <div class="form-group">
-                            <input id="files" type="file" name="files" class="form-control @error('files') is-invalid @enderror">
-                            @error('files')
                                 <div class="invalid-feedback">
                                     <i class="bx bx-radio-circle"></i>
                                     {{ $message }}

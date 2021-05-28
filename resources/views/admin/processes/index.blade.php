@@ -8,22 +8,44 @@
 <section class="section">
     <div class="card">
         <div class="card-body">
-            <h5>Rechercher:</h5>
-            <div class="row">
-                <div class="col-md-3">
+            <div class="row justify-content-center">
+                <div class="col-md-8 d-flex">
+                    <p class="h4 mr-2">Rechercher: </p>
+                    <div id="searchBar" class="input-group mb-3">
+                        <button class="btn btn-primary dropdown-toggle" type="button"
+                            data-bs-toggle="dropdown"
+                            aria-expanded="false">dans toutes les procédures</button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#">dans toutes les procédures</a></li>
+                            <li><a class="dropdown-item" href="#">par Intitulé</a></li>
+                            <li><a class="dropdown-item" href="#">par Date de diffusion</a></li>
+                            <li><a class="dropdown-item" href="#">par Domaine</a>
+                            <li><a class="dropdown-item" href="#">par Macroprocessus</a>
+                            <li><a class="dropdown-item" href="#">par Processus</a>
+                            <li><a class="dropdown-item" href="#">par Pôle</a>
+                            <li><a class="dropdown-item" href="#">par Entité</a>
+                            </li>
+                        </ul>
+                        <input type="text" class="form-control"
+                            aria-label="Rechercher une procédure" placeholder="Rechercher une procédure">
+                    </div>
+                </div>
+                <div class="col-md-4 d-none">
                     <fieldset class="form-group">
                         <select class="form-select choices" id="searchType">
                             <option value="allSearch">dans toutes les procédures</option>
-                            <option value="referenceSearch">par Reférence</option>
-                            <option value="amoaSearch">par AMOA</option>
-                            <option value="sponsorSearch">par Sponsor/MOA</option>
-                            <option value="yearSearch">par Année de début</option>
-                            <option value="statusSearch">par Statut</option>
-                            <option value="natureSearch">par Nature(s)</option>
+                            <option value="">par Intitulé</option>
+                            <option value="">par Date de diffusion</option>
+                            <option value="">par Statut</option>
+                            <option value="">par Domaine</option>
+                            <option value="">par Macroprocessus</option>
+                            <option value="">par Processus</option>
+                            <option value="">par Pôle</option>
+                            <option value="">par Entité</option>
                         </select>
                     </fieldset>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-6 d-none">
                     <div class="search-container active">
                         <input type="text" class="form-control search" id="allSearch" placeholder="Rechercher une procédure...">
                     </div>
@@ -58,7 +80,6 @@
             </div>
             <div class="d-flex justify-content-between mb-3">
                 <div>
-                    <button class="btn btn-outline-primary m-2">Imprimer</button>
                     <button class="btn btn-outline-primary m-2">Exporter(Excel)</button>
                 </div>
                 <div>
@@ -136,6 +157,9 @@
 <script src="{{ asset('mazer/assets/vendors/choices.js/choices.min.js') }}"></script>
 <script>
     $('#delete-process-btn').on('click', deleteProcess);
+    $('#searchBar button, #searchBar li a').on('click', ()=>{
+        console.log($(this).html());
+    });
     const table = $('#processes-datatable').DataTable({
         searching: false,
         language: {
@@ -192,6 +216,10 @@
             sponsor: sponsor,
             status: status
             };
+            // return {
+            //     search_type: searchType,
+            //     value: value
+            // };
     }
 
     function showDeleteProcessModal(id)

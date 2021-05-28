@@ -10,7 +10,7 @@
         <div class="card-body">
             <h5>Rechercher:</h5>
             <div class="row">
-                <div class="col-md-3">
+                <div class="col-md-4">
                     <fieldset class="form-group">
                         <select class="form-select choices" id="criteria">
                             <option value="allSearch">dans tous les projets</option>
@@ -74,7 +74,6 @@
             </div>
             <div class="d-flex justify-content-between mb-3">
                 <div>
-                    <button class="btn btn-outline-primary m-2">Imprimer</button>
                     <button class="btn btn-outline-primary m-2">Exporter(Excel)</button>
                 </div>
                 <div>

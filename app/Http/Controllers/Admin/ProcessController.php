@@ -2,14 +2,16 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
+use App\Models\Pole;
 use App\Models\Domain;
 use App\Models\Entity;
-use App\Models\Macroprocess;
 use App\Models\Method;
-use App\Models\Pole;
 use App\Models\Process;
+use App\Models\Macroprocess;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreProcessRequest;
+use App\Http\Requests\UpdateProcessRequest;
 
 class ProcessController extends Controller
 {
@@ -75,7 +77,7 @@ class ProcessController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreProcessRequest $request)
     {
         dd($request->all());
     }
@@ -111,7 +113,7 @@ class ProcessController extends Controller
      * @param  \App\Models\Process  $process
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Process $process)
+    public function update(UpdateProcessRequest $request, Process $process)
     {
         //
     }
