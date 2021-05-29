@@ -24,7 +24,20 @@ class StoreProcessRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'method' => 'required|exists:methods,id',
+            'name' => 'required',
+            'type' => 'required',
+            'reference' => 'required',
+            'version' => 'required',
+            'entity' => 'required|exists:entities,id',
+            'creation_date' => 'required|date',
+            'written_date' => 'required|date',
+            'validation_date' => 'required|date',
+            'approved_date' => 'required|date',
+            'created_by' => 'required',
+            'written_by' => 'required',
+            'validated_by' => 'required',
+            'approved_by' => 'required',
         ];
     }
 }

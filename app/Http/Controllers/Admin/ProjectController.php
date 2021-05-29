@@ -65,6 +65,23 @@ class ProjectController extends Controller
         return view('admin.projects.index', compact('projects', 'natures', 'years', 'steps'));
     }
 
+    public function showByRef(Request $request)
+    {
+        $project = Project::firstWhere('reference', $request->reference);
+        abort_if(!$project, 404, 'Reférence incorrecte ou projet inexistant');
+        return view('admin.projects.show_by_ref', compact('project'));
+    }
+
+    public function search(Request $request)
+    {
+        $project = Project::firstWhere('reference', $request->reference);
+        $success = $project ? true : false;
+        return response()->json([
+            'success' => $success,
+            'project' => $project
+            ]);
+    }
+
     /**
      * Show the form for creating a new resource.
      *

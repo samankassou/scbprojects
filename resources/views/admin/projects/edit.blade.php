@@ -7,7 +7,7 @@
 <section class="section">
     <div class="card">
         <div class="card-header d-flex justify-content-between">
-            <h4 class="card-title">Modification du projet {{ $project->name }}</h4>
+            <h4 class="card-title">Modification du projet "{{ $project->name }}"</h4>
         </div>
         <div class="card-body">
             <form action="{{ route('admin.projects.update', $project->id) }}" method="POST">

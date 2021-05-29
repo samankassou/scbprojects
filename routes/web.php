@@ -22,6 +22,8 @@ Route::get('/', fn()=>view('home'));
 Route::get('/login', fn()=>view('auth.login'))->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login');
 Route::get('/dashboard', [HomeController::class, 'index'])->name('dashboard');
+Route::get('/projects/showByRef/{reference}', [ProjectController::class, 'showByRef'])->name('projects.showByRef');
+Route::get('/projects/search/{reference}', [ProjectController::class, 'search'])->name('projects.search');
 Route::group([
     'as' => 'admin.',
     'prefix' => 'admin'

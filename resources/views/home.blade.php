@@ -19,7 +19,7 @@
   <!-- bootstrap css -->
   <link rel="stylesheet" href="{{ asset('front/css/bootstrap.min.css') }}">
   <!-- style css -->
-  <link rel="stylesheet" href="{{ asset('front/css/styls.css') }}">
+  <link rel="stylesheet" href="{{ asset('front/css/styles.css') }}">
   <!-- Responsive-->
   <link rel="stylesheet" href="{{ asset('front/css/responsive.css') }}">  
   <!-- Scrollbar Custom CSS -->
@@ -85,15 +85,17 @@
                   <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
                     <div class="text-bg">
                      <span>ORGANISATION ET PROJETS</span><hr>
-                          <form class="Vegetable">
-                          <input class="Vegetable_fom" placeholder="Saisir la Référence du Projet" type="text" name=" Recherche">
+                          <form id="search-form" class="Vegetable">
+                          <input id="search-input" class="Vegetable_fom" placeholder="Saisir la Référence du Projet" type="text" name=" Recherche">
                           <button class="Search_btn">Recherche </button> 
                           </form>
+                          <div id="result">
                            <a href="{{ route('admin.processes.index') }}">Gestion Process</a> <a href="{{ route('admin.projects.index') }}">Gestion Projets</a><hr>
-                          <h1 class="btn">SCB Cameroun</h1>
+                            <h1 class="btn">SCB Cameroun</h1>
                           <p>Lorem ipsum dolor sit am et, consec tetur adipi scing elit. Sed
                               sodales enim ut rhoncus lorem ipsum ese terds. Lorem ipsum dolor sit
                               am et, consec tetur adipi scing elit. Sed sodales enim ut rhoncus . </p>
+                          </div>
                         </div><hr>
                         </div>
                         <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
@@ -130,6 +132,67 @@
           <!-- sidebar -->
           <script src="{{ asset('front/js/jquery.mCustomScrollbar.concat.min.js') }}"></script>
           <script src="{{ asset('front/js/custom.js') }}"></script>
+          <script>
+            $(function(){
+              $('#search-form').on('submit', function(e){
+                e.preventDefault();
+                let searchWord = $('#search-input').val();
+                if(searchWord.length > 2){
+                  $.ajax({
+                    url: '/projects/search/'+searchWord,
+                    success: function(response){
+                      if(response.success){
+                        let project = response.project;
+                        let start_date = new Date(project.start_date);
+                        let end_date = new Date(project.end_date);
+                        let html = `
+                          <div class="card">
+                            <div class="card-content">
+                              <div class="card-body">
+                                <h2 class="card-title" style="text-align: center; text-decoration-color: rgb(0, 0, 0)"><strong>Resultat de la recherche</strong></h2>
+                                <h4 class="card-title" style= "text-align: center;">
+                                  <div style= "text-align: left;"><strong>Nom du Projet:</strong><br></div>
+                                  ${project.name}
+                                </h4>
+                                <h4 class="card-title" style= "text-align: center;">
+                                  <div style= "text-align: left;"><strong>Chef du Projet:</strong><br></div>
+                                  ${project.manager}
+                                </h4>
+                                <h4 class="card-title" style= "text-align: center;">
+                                  <div style= "text-align: left;"><strong>Description du Projet:</strong><br></div>
+                                  ${project.description}
+                                </h4>
+                                <h4 class="card-title" style= "text-align: center;">
+                                  <div style= "text-align: left;"><strong>Dates de Début et de Fin:</strong><br></div>
+                                  ${start_date.toLocaleDateString()}  /  ${end_date.toLocaleDateString()}
+                                </h4>
+                              </div>
+                            </div>
+                            <div class="card-footer d-flex justify-content-between">
+                                <span><button class="btn btn-light-primary"><a href="/projects/showByRef/${project.reference}">Ouvrir</a></button></span>
+                                <button class="btn btn-light-primary"><a href="#">Imprimer</a></button>
+                            </div>
+                          </div>
+                            `;
+                          $('#result').html(html);
+
+                      }else{
+                        let html = `
+                          <div class="d-flex justify-content-center align-items-center" style="width: 300px;">
+                              <img class="img-fluid" src="{{ asset('front/images/9.jpg') }}" alt="#" />
+                          </div>
+                        `;
+                        $('#result').html(html);
+                      }
+                    },
+                    error: function(response){
+                      console.log(response);
+                    }
+                  });
+                }
+              });
+            });
+          </script>
 
 
 </body>
