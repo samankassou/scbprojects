@@ -23,7 +23,8 @@ class DatabaseSeeder extends Seeder
             MethodSeeder::class,
             PoleSeeder::class,
             EntitySeeder::class,
-            ProcessSeeder::class
+            ProcessSeeder::class,
+            UserSeeder::class
         ]);
     }
 }

@@ -17,21 +17,34 @@ use App\Http\Controllers\HomeController;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
 Route::get('/', fn()=>view('home'));
-Route::get('/login', fn()=>view('auth.login'))->name('login');
-Route::post('/login', [AuthController::class, 'login'])->name('login');
-Route::get('/dashboard', [HomeController::class, 'index'])->name('dashboard');
-Route::get('/projects/showByRef/{reference}', [ProjectController::class, 'showByRef'])->name('projects.showByRef');
+Route::get('/projects/show/{reference}', [ProjectController::class, 'showByRef'])->name('projects.show');
 Route::get('/projects/search/{reference}', [ProjectController::class, 'search'])->name('projects.search');
+
 Route::group([
-    'as' => 'admin.',
-    'prefix' => 'admin'
+    'middleware' => 'guest'
 ], function(){
-    Route::resource('/projects', ProjectController::class);
-    Route::get('/processes/poles/{id}/entities', [ProcessController::class, 'getEntities'])->name('processes.poles.entities');
-    Route::get('/processes/macroprocesses/{id}/methods', [ProcessController::class, 'getMethods'])->name('processes.macroprocesses.methods');
-    Route::get('/processes/domains/{id}/macroprocesses', [ProcessController::class, 'getMacroprocesses'])->name('processes.domains.macroprocesses');
-    Route::resource('/processes', ProcessController::class);
-    Route::resource('/users', UserController::class);
+    Route::get('/login', fn()=>view('auth.login'))->name('login');
+    Route::post('/login', [AuthController::class, 'login'])->name('login');
+});
+
+Route::group([
+    'middleware' => 'auth'
+], function(){
+    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+    Route::get('/dashboard', [HomeController::class, 'index'])->name('dashboard');
+    Route::group([
+        'as' => 'admin.',
+        'prefix' => 'admin',
+    ], function(){
+
+        Route::resource('/projects', ProjectController::class);
+        
+        Route::get('/processes/poles/{id}/entities', [ProcessController::class, 'getEntities'])->name('processes.poles.entities');
+        Route::get('/processes/macroprocesses/{id}/methods', [ProcessController::class, 'getMethods'])->name('processes.macroprocesses.methods');
+        Route::get('/processes/domains/{id}/macroprocesses', [ProcessController::class, 'getMacroprocesses'])->name('processes.domains.macroprocesses');
+        Route::resource('/processes', ProcessController::class);
+        
+        Route::resource('/users', UserController::class);
+    });
 });

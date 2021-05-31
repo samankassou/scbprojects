@@ -10,7 +10,7 @@
             <h4 class="card-title">Modification de la procédure "{{ $process->name }}"</h4>
         </div>
         <div class="card-body">
-            <form action="{{ route('admin.processes.update', $process->id) }}" method="POST">
+            <form id="edit-form" action="{{ route('admin.processes.update', $process->id) }}" method="POST" data-process-id="{{ $process->id }}">
                 @method('PATCH')
                 @csrf
                 <div class="row justify-content-center">
@@ -257,26 +257,30 @@
                             @enderror
                         </div>
 
-                        <label for="reasons_for_creation">Raison(s) de la création:</label>
-                        <div class="form-group">
-                            <textarea id="reasons_for_creation" name="reasons_for_creation" class="form-control @error('reasons_for_creation') is-invalid @enderror" rows="3">{{ old('reasons_for_creation', $process->reasons_for_creation) }}</textarea>
-                            @error('reasons_for_creation')
-                                <div class="invalid-feedback">
-                                    <i class="bx bx-radio-circle"></i>
-                                    {{ $message }}
-                                </div>
-                            @enderror
+                        <div class="reasons created" @if(!$process->reasons_for_creation) style="display: none" @endif>
+                            <label for="reasons_for_creation">Raison(s) de la création:</label>
+                            <div class="form-group">
+                                <textarea id="reasons_for_creation" name="reasons_for_creation" class="form-control @error('reasons_for_creation') is-invalid @enderror" rows="3">{{ old('reasons_for_creation', $process->reasons_for_creation) }}</textarea>
+                                @error('reasons_for_creation')
+                                    <div class="invalid-feedback">
+                                        <i class="bx bx-radio-circle"></i>
+                                        {{ $message }}
+                                    </div>
+                                @enderror
+                            </div>
                         </div>
 
-                        <label for="reasons_for_modification">Raison(s) de la modification:</label>
-                        <div class="form-group">
-                            <textarea id="reasons_for_modification" name="reasons_for_modification" class="form-control @error('reasons_for_modification') is-invalid @enderror" rows="3">{{ old('reasons_for_modification', $process->reasons_for_modification) }}</textarea>
-                            @error('reasons_for_modification')
-                                <div class="invalid-feedback">
-                                    <i class="bx bx-radio-circle"></i>
-                                    {{ $message }}
-                                </div>
-                            @enderror
+                        <div class="reasons reviewed" @if(!$process->reasons_for_modification) style="display: none" @endif>
+                            <label for="reasons_for_modification">Raison(s) de la modification:</label>
+                            <div class="form-group">
+                                <textarea id="reasons_for_modification" name="reasons_for_modification" class="form-control @error('reasons_for_modification') is-invalid @enderror" rows="3">{{ old('reasons_for_modification', $process->reasons_for_modification) }}</textarea>
+                                @error('reasons_for_modification')
+                                    <div class="invalid-feedback">
+                                        <i class="bx bx-radio-circle"></i>
+                                        {{ $message }}
+                                    </div>
+                                @enderror
+                            </div>
                         </div>
 
                         <label for="modifications">Modification(s) apportée(s):</label>
@@ -333,6 +337,7 @@
         $('#pole').on('change', function(e){
             fillEntities($(this).val());
         });
+        $('#state').on('change', switchReasonInput);
     });
 
     function fillMacroprocesses(domain)
@@ -340,7 +345,6 @@
         $.ajax({
             url: "/admin/processes/domains/"+domain+"/macroprocesses",
             success: function(response){
-                console.log(response);
                 let macroprocesses = response.macroprocesses;
                 let html = '';
                 macroprocesses.forEach(macroprocess => {
@@ -362,7 +366,6 @@
         $.ajax({
             url: "/admin/processes/macroprocesses/"+macroprocess+"/methods",
             success: function(response){
-                console.log(response);
                 let methods = response.methods;
                 let html = '';
                 methods.forEach(method => {
@@ -382,7 +385,6 @@
         $.ajax({
             url: "/admin/processes/poles/"+pole+"/entities",
             success: function(response){
-                console.log(response);
                 let entities = response.entities;
                 let html = '';
                 entities.forEach(entity => {
@@ -393,6 +395,27 @@
             },
             error: function(response){
                 console.log(response);
+            }
+        });
+    }
+
+    function switchReasonInput(e)
+    {
+        $('.reasons textarea').val('');
+        $('.reasons').hide();
+        const id = $('#edit-form').data("process-id");
+        
+        $.ajax({
+            url: "/admin/processes/"+id,
+            success: function(response){
+                let process = response.process;
+                if(e.target.value == "Revu"){
+                    $('.reviewed textarea').val(process.reasons_for_modification);
+                    $('.reviewed').show();
+                }else{
+                    $('.created textarea').val(process.reasons_for_creation);
+                    $('.created').show();
+                }
             }
         });
     }

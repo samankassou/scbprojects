@@ -49,7 +49,7 @@
               <div class="full">
                 <div class="center-desk">
                   <div class="logo">
-                    <a href="index.php"><img src="{{ asset('front/images/4.png') }}" alt="#" /></a>
+                    <a href="/"><img src="{{ asset('front/images/4.png') }}" alt="#" /></a>
                   </div>
                 </div>
               </div>
@@ -61,9 +61,13 @@
                   <nav class="main-menu ">
                     <ul class="menu-area-main">
                       <li class="active"> <a href="/">Acceuil</a> </li>
-                      <li> <a href="{{ route('login') }}">Connexion</a> </li>
-                     
-                     <li> <a href="{{ route('login') }}"><img src="{{ asset('front/icon/logos.png') }}" alt="login.php" /></a></li>
+                      @guest
+                          <li> <a href="{{ route('login') }}">Connexion</a> </li>
+                          <li> <a href="{{ route('login') }}"><img src="{{ asset('front/icon/logos.png') }}" alt="login" /></a></li>
+                      @endguest
+                      @auth
+                        <li> <a href="{{ route('dashboard') }}">Tableau de bord</a> </li>
+                      @endauth
                      </ul>
                    </nav>
                  </div>
@@ -115,7 +119,7 @@
             <div class="footer ">
               <div class="copyright">
                 <div class="container">
-                  <p>Copyright © 2021 SCB Cameroun <a href=" ">All right reserved </a></p>
+                  <p>Copyright © 2021 SCB Cameroun <a href="scbcameroun.net">All right reserved </a></p>
                 </div>
               </div>
             </div>
@@ -169,7 +173,7 @@
                               </div>
                             </div>
                             <div class="card-footer d-flex justify-content-between">
-                                <span><button class="btn btn-light-primary"><a href="/projects/showByRef/${project.reference}">Ouvrir</a></button></span>
+                                <span><button class="btn btn-light-primary"><a href="/projects/show/${project.reference}">Ouvrir</a></button></span>
                                 <button class="btn btn-light-primary"><a href="#">Imprimer</a></button>
                             </div>
                           </div>

@@ -17,10 +17,24 @@
                         <th>No</th>
                         <th>Nom(s)</th>
                         <th>Email</th>
-                        <th>Rôle</th>
                         <th>Statut</th>
                         <th style="width: 100px">Options</th>
                     </tr>
+                    @forelse ($users as $user)
+                        <tr>
+                            <td>{{ $loop->index + 1 }}</td>
+                            <td>{{ $user->name }}</td>
+                            <td>{{ $user->email }}</td>
+                            <td>{{ $user->status ? "Actif" : "Inactif" }}</td>
+                            <td>
+
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="5" class="text-center">Aucun utilisateur enregistré</td>
+                        </tr>
+                    @endforelse
                 </thead>
             </table>
         </div>

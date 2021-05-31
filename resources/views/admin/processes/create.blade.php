@@ -259,32 +259,36 @@
                             @enderror
                         </div>
 
-                        <label for="reasons_for_creation">Raison(s) de la création:</label>
-                        <div class="form-group">
-                            <textarea id="reasons_for_creation" name="reasons_for_creation" class="form-control @error('reasons_for_creation') is-invalid @enderror" rows="3"></textarea>
-                            @error('reasons_for_creation')
-                                <div class="invalid-feedback">
-                                    <i class="bx bx-radio-circle"></i>
-                                    {{ $message }}
-                                </div>
-                            @enderror
+                        <div class="reasons created">
+                            <label for="reasons_for_creation">Raison(s) de la création:</label>
+                            <div class="form-group">
+                                <textarea id="reasons_for_creation" name="reasons_for_creation" class="form-control @error('reasons_for_creation') is-invalid @enderror" rows="3"></textarea>
+                                @error('reasons_for_creation')
+                                    <div class="invalid-feedback">
+                                        <i class="bx bx-radio-circle"></i>
+                                        {{ $message }}
+                                    </div>
+                                @enderror
+                            </div>
                         </div>
 
-                        <label for="reasons_for_modification">Raison(s) de la modification:</label>
-                        <div class="form-group">
-                            <textarea id="reasons_for_modification" name="reasons_for_modification" class="form-control @error('reasons_for_modification') is-invalid @enderror" rows="3"></textarea>
-                            @error('reasons_for_modification')
-                                <div class="invalid-feedback">
-                                    <i class="bx bx-radio-circle"></i>
-                                    {{ $message }}
-                                </div>
-                            @enderror
+                        <div class="reasons reviewed">
+                            <label for="reasons_for_modification">Raison(s) de la modification:</label>
+                            <div class="form-group">
+                                <textarea id="reasons_for_modification" name="reasons_for_modification" class="form-control @error('reasons_for_modification') is-invalid @enderror" rows="3"></textarea>
+                                @error('reasons_for_modification')
+                                    <div class="invalid-feedback">
+                                        <i class="bx bx-radio-circle"></i>
+                                        {{ $message }}
+                                    </div>
+                                @enderror
+                            </div>
                         </div>
 
-                        <label for="reasons_for_modification">Modification(s) apportée(s):</label>
+                        <label for="modifications">Modification(s) apportée(s):</label>
                         <div class="form-group">
-                            <textarea id="reasons_for_modification" name="reasons_for_modification" class="form-control @error('reasons_for_modification') is-invalid @enderror" rows="3"></textarea>
-                            @error('reasons_for_modification')
+                            <textarea id="modifications" name="modifications" class="form-control @error('modifications') is-invalid @enderror" rows="3"></textarea>
+                            @error('modifications')
                                 <div class="invalid-feedback">
                                     <i class="bx bx-radio-circle"></i>
                                     {{ $message }}
@@ -335,6 +339,8 @@
         $('#pole').on('change', function(e){
             fillEntities($(this).val());
         });
+        $('#state').on('change', switchReasonInput);
+        $('.reviewed').hide();
     });
 
     function fillMacroprocesses(domain)
@@ -342,7 +348,6 @@
         $.ajax({
             url: "/admin/processes/domains/"+domain+"/macroprocesses",
             success: function(response){
-                console.log(response);
                 let macroprocesses = response.macroprocesses;
                 let html = '';
                 macroprocesses.forEach(macroprocess => {
@@ -364,7 +369,6 @@
         $.ajax({
             url: "/admin/processes/macroprocesses/"+macroprocess+"/methods",
             success: function(response){
-                console.log(response);
                 let methods = response.methods;
                 let html = '';
                 methods.forEach(method => {
@@ -384,7 +388,6 @@
         $.ajax({
             url: "/admin/processes/poles/"+pole+"/entities",
             success: function(response){
-                console.log(response);
                 let entities = response.entities;
                 let html = '';
                 entities.forEach(entity => {
@@ -397,6 +400,17 @@
                 console.log(response);
             }
         });
+    }
+
+    function switchReasonInput(e)
+    {
+        $('.reasons textarea').val('');
+        $('.reasons').hide();
+        if(e.target.value == "Revu"){
+            $('.reviewed').show();
+        }else{
+            $('.created').show();
+        }
     }
 </script>
 @endsection

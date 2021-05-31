@@ -88,8 +88,11 @@ class ProcessController extends Controller
      * @param  \App\Models\Process  $process
      * @return \Illuminate\Http\Response
      */
-    public function show(Process $process)
+    public function show(Request $request, Process $process)
     {
+        if($request->ajax()){
+            return response()->json(['process' => $process]);
+        }
         return view('admin.processes.show', compact('process'));
     }
 
