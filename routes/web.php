@@ -38,6 +38,7 @@ Route::group([
         'prefix' => 'admin',
     ], function(){
 
+        Route::post('projects/list', [ProjectController::class, 'ajaxList']);
         Route::resource('/projects', ProjectController::class);
         
         Route::get('/processes/poles/{id}/entities', [ProcessController::class, 'getEntities'])->name('processes.poles.entities');

@@ -93,36 +93,6 @@
                         <th style="width: 120px">Options</th>
                     </tr>
                 </thead>
-                <tbody>
-                    @forelse ($projects as $project)
-                        <tr>
-                            <td>{{ $project->reference }}</td>
-                            <td>{{ $project->name }}</td>
-                            <td>{{ $project->amoa }}</td>
-                            <td>{{ $project->sponsor }}</td>
-                            <td>{{ $project->status }}</td>
-                            <td>{{ $project->start_date->year }}</td>
-                            <td>
-                                @foreach ($project->natures as $nature)
-                                    @if (!$loop->last)
-                                    {{ $nature->name }},
-                                    @else
-                                    {{ $nature->name }}
-                                    @endif
-                                @endforeach
-                            </td>
-                            <td>
-                                <a href="{{ route('admin.projects.show', $project->id) }}" class='btn btn-sm btn-primary'><i class='bi bi-eye'></i></a>
-                                <a href="{{ route('admin.projects.edit', $project->id) }}" class='btn btn-sm btn-warning'><i class='bi bi-pencil'></i></a>
-                                <button onclick="showDeleteProjectModal({{ $project->id }})" class='btn btn-sm btn-danger delete-btn'><i class='bi bi-trash'></i></button>
-                            </td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="8">Aucun projet enregistré</td>
-                        </tr>
-                    @endforelse
-                </tbody>
             </table>
         </div>
     </div>
@@ -171,6 +141,46 @@
         language: {
             url: "{{ asset('vendor/datatables/lang/French.json') }}"
         },
+        responsive: true,
+        processing: true,
+        serverSide: true,
+        ajax: {
+            url: "/admin/projects/list",
+            type: "POST",
+            data: {
+                _token: $('meta[name="csrf-token"]').attr('content')
+            }
+        },
+        columns: [
+            {data: 'reference', name: 'reference'},
+            {data: 'name', name: 'name'},
+            {data: 'amoa', name: 'amoa'},
+            {data: 'sponsor', name: 'sponsor'},
+            {data: 'status', name: 'status'},
+            {data: 'start_year', name: 'start_year'},
+            {
+                data: 'natures',
+                name: 'natures',
+                orderable: false, 
+                searchable: false,
+                render: function(natures){
+                    let naturesNames = "";
+                    if(natures.length){
+                        for(nature of natures){
+                            naturesNames += nature.name + ", ";
+                        }
+                        return naturesNames.slice(0, -1);
+                    }
+                    return "Aucune";
+                }
+            },
+            {
+                data: 'action', 
+                name: 'action', 
+                orderable: false, 
+                searchable: false
+            },
+        ]
     });
     const yearSearch = new Choices(document.getElementById('yearSearch'));
     const statusSearch = new Choices(document.getElementById('statusSearch'));

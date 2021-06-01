@@ -32,7 +32,7 @@ class StoreProjectRequest extends FormRequest
             'initiative'    => 'required',
             'amoa'          => 'required',
             'moe'           => 'required',
-            'natures'       => 'array',
+            'natures.*'     => 'required|exists:natures',
             'steps'         => 'array',
             'manager'       => 'required',
             'progress'      => 'required|integer|between:0,100',

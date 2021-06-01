@@ -9,6 +9,7 @@ class Project extends Model
 {
     use HasFactory;
     protected $dates = ['start_date', 'end_date'];
+    protected $appends = ['start_year'];
 
     protected $fillable = [
         'name',

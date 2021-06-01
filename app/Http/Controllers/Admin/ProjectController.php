@@ -12,6 +12,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Database\Eloquent\Builder;
 use App\Http\Requests\StoreProjectRequest;
 use App\Http\Requests\UpdateProjectRequest;
+use Yajra\DataTables\DataTables;
 
 class ProjectController extends Controller
 {
@@ -22,6 +23,7 @@ class ProjectController extends Controller
      */
     public function index(Request $request)
     {
+        
         if($request->ajax()){
             $query = Project::query();
             if($request->all && ($request->all != ''))
@@ -57,6 +59,16 @@ class ProjectController extends Controller
                 }
             }
             $projects = $query->get();
+
+            return Datatables::of($projects)
+                ->addIndexColumn()
+                ->addColumn('action', function($project){
+                    $actionBtns = "<button class='btn btn-sm btn-warning' data-bs-toggle='modal' data-bs-target='#edit-classroom-modal' onclick='showEditClassroomModal(".$project->id.")'><i class='bi bi-pencil'></i></button>";
+                    $actionBtns .= "<button class='btn btn-sm btn-danger' data-bs-toggle='modal' data-bs-target='#delete-project-modal' onclick='showDeleteprojectModal(".$project->id.")'><i class='bi bi-trash'></i></button>";
+                    return $actionBtns;
+                })
+                ->rawColumns(['action'])
+                ->make(true);
         }
         $projects = Project::all();
         $natures = Nature::all();
@@ -80,6 +92,56 @@ class ProjectController extends Controller
             'success' => $success,
             'project' => $project
             ]);
+    }
+
+    public function ajaxList(Request $request)
+    {
+        $query = Project::query();
+        if($request->all && ($request->all != ''))
+        {
+            $word = '%'.$request->all.'%';
+            $query->where('amoa', 'LIKE', $word);
+            $query->orWhere('sponsor', 'LIKE', $word);
+            $query->orWhere('reference', 'LIKE', $word);
+            $query->orWhere('status', 'LIKE', $word);
+            $query->orWhere('name', 'LIKE', $word);
+
+        }else{
+            if($request->amoa && ($request->amoa != '')){
+                $query->where('amoa', 'LIKE', '%'.$request->amoa.'%');
+            }
+            if($request->sponsor && ($request->sponsor != '')){
+                $query->where('sponsor', 'LIKE', '%'.$request->sponsor.'%');
+            }
+            if($request->reference && ($request->reference != '')){
+                $query->where('reference', 'LIKE', '%'.$request->reference.'%');
+            }
+            if($request->status && ($request->status != '')){
+                $query->where('status', $request->status);
+            }
+            if($request->year && ($request->year != '')){
+                $query->whereYear('start_date', $request->year);
+            }
+            if($request->natures && (count($request->natures) != 0)){
+                $natures = $request->natures;
+                $query->whereHas('natures', function(Builder $q) use($natures){
+                    $q->whereIn('id', $natures);
+                });
+            }
+        }
+        //$projects = $query->get();
+        $projects = Project::with(['natures'])->get();
+
+        return Datatables::of($projects)
+            ->addIndexColumn()
+            ->addColumn('action', function($project){
+                $actionBtns = "<button class='btn btn-sm btn-warning' data-bs-toggle='modal' data-bs-target='#edit-classroom-modal' onclick='showEditClassroomModal(".$project->id.")'><i class='bi bi-pencil'></i></button> ";
+                $actionBtns .= "<button class='btn btn-sm btn-danger' data-bs-toggle='modal' data-bs-target='#delete-project-modal' onclick='showDeleteprojectModal(".$project->id.")'><i class='bi bi-trash'></i></button>";
+                return $actionBtns;
+            })
+            ->rawColumns(['action'])
+            ->make(true);
+        
     }
 
     /**
