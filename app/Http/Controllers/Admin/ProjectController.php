@@ -135,8 +135,9 @@ class ProjectController extends Controller
         return Datatables::of($projects)
             ->addIndexColumn()
             ->addColumn('action', function($project){
-                $actionBtns = "<button class='btn btn-sm btn-warning' data-bs-toggle='modal' data-bs-target='#edit-classroom-modal' onclick='showEditClassroomModal(".$project->id.")'><i class='bi bi-pencil'></i></button> ";
-                $actionBtns .= "<button class='btn btn-sm btn-danger' data-bs-toggle='modal' data-bs-target='#delete-project-modal' onclick='showDeleteprojectModal(".$project->id.")'><i class='bi bi-trash'></i></button>";
+                $actionBtns = "<a href=".route('admin.projects.show', $project->id)." class='btn btn-sm btn-primary'><i class='bi bi-eye'></i></a> ";
+                $actionBtns .= "<a href=".route('admin.projects.edit', $project->id)." class='btn btn-sm btn-warning'><i class='bi bi-pencil'></i></a> ";
+                $actionBtns .= "<button class='btn btn-sm btn-danger' onclick='showDeleteProjectModal(".$project->id.")'><i class='bi bi-trash'></i></button>";
                 return $actionBtns;
             })
             ->rawColumns(['action'])
@@ -188,9 +189,9 @@ class ProjectController extends Controller
         $project->reference = Str::upper(Str::random(3)).'-'.$project->start_year.'-'.$project->id;
         $project->save();
         $project->natures()->attach($request->natures);
-        if(count($request->steps)){
-            $project->steps()->attach($request->steps);
-        }
+       
+        $project->steps()->attach($request->steps);
+        
         
         return redirect()->route('admin.projects.index')->with('message', 'Projet crée avec succès!');
     }
@@ -266,6 +267,10 @@ class ProjectController extends Controller
      */
     public function destroy(Project $project)
     {
-        //
+        $project->natures()->detach();
+        $project->steps()->detach();
+        $project->delete();
+
+        return response()->json(['message' => 'Project deleted!']);
     }
 }

@@ -104,7 +104,7 @@
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
             <form id="delete-project-form" class="modal-content">
                 <div class="modal-header bg-danger">
-                    <input type="hidden" id="projrctId">
+                    <input type="hidden" id="projectId">
                     <h5 class="modal-title white" id="myModalLabel120">
                         Supprimer un projet
                     </h5>
@@ -135,6 +135,13 @@
 @parent
 <script src="{{ asset('mazer/assets/vendors/choices.js/choices.min.js') }}"></script>
 <script>
+    $(function () {
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+    });
     $('#delete-project-btn').on('click', deleteProject);
     const table = $('#projects-datatable').DataTable({
         searching: false,
@@ -148,7 +155,8 @@
             url: "/admin/projects/list",
             type: "POST",
             data: {
-                _token: $('meta[name="csrf-token"]').attr('content')
+                _token: $('meta[name="csrf-token"]').attr('content'),
+                year: 2019
             }
         },
         columns: [
@@ -242,7 +250,35 @@
 
     function deleteProject()
     {
-        
+        $(this).addClass('disabled')
+        .html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Suppression...')
+        .attr('disabled', true);
+        let id = $('#projectId').val();
+        $.ajax({
+            url: "/admin/projects/"+id,
+            method: "POST",
+            data: {_method: "DELETE"},
+            success: (response)=>{                
+                table.ajax.reload(null, false);
+                Toastify({
+                    text: "Projet supprimée avec succès!",
+                    duration: 3000,
+                    close:true,
+                    gravity:"top",
+                    position: "right",
+                    backgroundColor: "#4fbe87",
+                }).showToast();
+                
+            },
+            error: (response)=>{
+                console.log(response);
+            },
+            complete: ()=>{
+                $('#delete-project-btn').removeClass('disabled').text('Supprimer').attr('disabled', false);
+                $('#delete-project-modal').modal('hide');
+            }
+        });
+        return false;
     }
 </script>
 @endsection
