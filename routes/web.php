@@ -1,11 +1,11 @@
 <?php
 
-use App\Http\Controllers\Admin\ProcessController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Admin\ProjectController;
-use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\ProcessController;
+use App\Http\Controllers\Admin\ProjectController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,6 +20,7 @@ use App\Http\Controllers\HomeController;
 Route::get('/', fn()=>view('home'));
 Route::get('/projects/show/{reference}', [ProjectController::class, 'showByRef'])->name('projects.show');
 Route::get('/projects/search/{reference}', [ProjectController::class, 'search'])->name('projects.search');
+
 
 Route::group([
     'middleware' => 'guest'
@@ -38,7 +39,8 @@ Route::group([
         'prefix' => 'admin',
     ], function(){
 
-        Route::post('projects/list', [ProjectController::class, 'ajaxList']);
+        Route::get('/projects/export', [ProjectController::class, 'export'])->name('projects.export');
+        Route::post('/projects/list', [ProjectController::class, 'ajaxList']);
         Route::resource('/projects', ProjectController::class);
         
         Route::get('/processes/poles/{id}/entities', [ProcessController::class, 'getEntities'])->name('processes.poles.entities');

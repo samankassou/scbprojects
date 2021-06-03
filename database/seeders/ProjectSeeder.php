@@ -16,7 +16,7 @@ class ProjectSeeder extends Seeder
      */
     public function run()
     {
-        Project::factory(15)
+        Project::factory(45)
         ->create()
         ->each(function($project){
            $natures = Arr::random([1, 2, 3, 4, 5], rand(1, 5));

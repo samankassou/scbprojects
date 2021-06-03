@@ -13,31 +13,47 @@
                 <div class="col-md-4">
                     <fieldset class="form-group">
                         <select class="form-select choices" id="criteria">
-                            <option value="allSearch">dans tous les projets</option>
-                            <option value="referenceSearch">par Reférence</option>
-                            <option value="amoaSearch">par AMOA</option>
-                            <option value="sponsorSearch">par Sponsor/MOA</option>
-                            <option value="yearSearch">par Année de début</option>
-                            <option value="statusSearch">par Statut</option>
-                            <option value="natureSearch">par Nature(s)</option>
+                            <option value="all">dans tous les projets</option>
+                            <option value="reference">par Reférence</option>
+                            <option value="amoa">par AMOA</option>
+                            <option value="sponsor">par Sponsor/MOA</option>
+                            <option value="year">par Année de début</option>
+                            <option value="status">par Statut</option>
+                            <option value="natures">par Nature(s)</option>
                         </select>
                     </fieldset>
                 </div>
                 <div class="col-md-6">
                     <div class="search-container active">
-                        <input type="text" class="form-control search" id="allSearch" placeholder="Rechercher un projet...">
+                        <div class="choices">
+                            <div class="choices__inner">
+                                <input type="text" class="form-control all search choices__input" id="allSearch" placeholder="Rechercher un projet...">
+                            </div>
+                        </div>
                     </div>
                     <div class="search-container">
-                        <input class="form-control search" id="referenceSearch" type="text" placeholder="Entrez une reférence...">
+                        <div class="choices">
+                            <div class="choices__inner">
+                                <input class="form-control reference search choices__input" id="referenceSearch" type="text" placeholder="Entrez une reférence...">
+                            </div>
+                        </div>
                     </div>
                     <div class="search-container">
-                        <input class="form-control search" id="amoaSearch" type="text" placeholder="AMOA...">
+                        <div class="choices">
+                            <div class="choices__inner">
+                                <input class="form-control amoa search choices__input" id="amoaSearch" type="text" placeholder="AMOA...">
+                            </div>
+                        </div>
                     </div>
                     <div class="search-container">
-                        <input class="form-control search" id="sponsorSearch" type="text" placeholder="Sponsor/MOA...">
+                        <div class="choices">
+                            <div class="choices__inner">
+                                <input class="form-control sponsor search choices__input" id="sponsorSearch" type="text" placeholder="Sponsor/MOA...">
+                            </div>
+                        </div>
                     </div>
                     <div class="search-container">
-                        <select id="yearSearch" class="form-select search">
+                        <select id="yearSearch" class="form-select year search">
                             <option value="">Toutes</option>
                             @foreach ($years as $year)
                             <option value="{{ $year }}">{{ $year }}</option>
@@ -45,17 +61,17 @@
                         </select>
                     </div>
                     <div class="search-container">
-                        <select id="statusSearch" class="form-select search">
+                        <select id="statusSearch" class="form-select status search">
                             <option value="">Tous</option>
-                            <option value="1">En cours</option>
-                            <option value="2">En stand-by</option>
-                            <option value="3">inachevé</option>
-                            <option value="4">Terminé</option>
+                            <option value="en cours">En cours</option>
+                            <option value="inachevé">En stand-by</option>
+                            <option value="en stand-by">inachevé</option>
+                            <option value="terminé">Terminé</option>
                         </select>
                     </div>
                     <div class="search-container">
-                        <select id="natureSearch" class="form-select search" multiple>
-                            <option value=""></option>
+                        <select id="natureSearch" class="form-select natures search" multiple>
+                            <option placeholder>Choisir une ou plusieurs nature(s)</option>
                             @foreach ($natures as $nature)
                                 <option value="{{ $nature->id }}">{{ $nature->name }}</option>
                             @endforeach
@@ -74,7 +90,7 @@
             </div>
             <div class="d-flex justify-content-between mb-3">
                 <div>
-                    <button class="btn btn-outline-primary m-2">Exporter(Excel)</button>
+                    <button id="export-btn" class="btn btn-outline-primary m-2">Exporter(Excel)</button>
                 </div>
                 <div>
                     <a href="{{ route('admin.projects.create') }}" class="btn btn-sm btn-primary"><i class="bi bi-plus"></i> Créer</a>
@@ -135,6 +151,7 @@
 @parent
 <script src="{{ asset('mazer/assets/vendors/choices.js/choices.min.js') }}"></script>
 <script>
+    let token = $('meta[name="csrf-token"]').attr('content');
     $(function () {
         $.ajaxSetup({
             headers: {
@@ -142,7 +159,6 @@
             }
         });
     });
-    $('#delete-project-btn').on('click', deleteProject);
     const table = $('#projects-datatable').DataTable({
         searching: false,
         language: {
@@ -155,8 +171,13 @@
             url: "/admin/projects/list",
             type: "POST",
             data: {
-                _token: $('meta[name="csrf-token"]').attr('content'),
-                year: 2019
+                _token: token,
+                search_type: function(){
+                    return getData().search_type;
+                },
+                search: function(){
+                    return getData().search;
+                }
             }
         },
         columns: [
@@ -190,6 +211,8 @@
             },
         ]
     });
+    $('#delete-project-btn').on('click', deleteProject);
+    $('#export-btn').on('click', exportToExcel);
     const yearSearch = new Choices(document.getElementById('yearSearch'));
     const statusSearch = new Choices(document.getElementById('statusSearch'));
     const natureSearch = new Choices(document.getElementById('natureSearch'), {
@@ -205,41 +228,57 @@
         //remove the active search
         $('.search-container').removeClass('active');
         //set the new active box
-        let element = $(this).val();
-        $('#'+element).closest('.search-container').addClass('active');
+        let criteria = $(this).val();
+        $('.'+criteria).closest('.search-container').addClass('active');
+        table.ajax.reload(null, false);
 
     });
     $("input[type='text'].search").on('keyup', function(){
-        //table.ajax.reload(null, false);
-        console.log(getData());
+        table.ajax.reload(null, false);
     });
     $("select.search").on('change', function(){
-        //table.ajax.reload(null, false);
-        console.log(getData());
+        table.ajax.reload(null, false);
     });
 
     function getData()
     {
-        const criteria = document.getElementById('criteria').value,
-        all = document.getElementById('allSearch').value,
-        year = yearSearch.getValue().value,
-        reference = document.getElementById('referenceSearch').value,
-        amoa = document.getElementById('amoaSearch').value;
-        const natures = natureSearch.getValue().map(element => {
-            return element.value;
-        });
-        const sponsor = document.getElementById('sponsorSearch').value,
-        status = statusSearch.getValue().value;
+        let criteria = $('#criteria').val();
+        let search_type = criteria;
         
-        return {
-            all: all,
-            year: year,
-            reference: reference,
-            amoa: amoa,
-            natures: natures,
-            sponsor: sponsor,
-            status: status
-            };
+        if(criteria == "all"){
+            search = $('#allSearch').val();
+        }
+        if(criteria == "reference"){
+            search = $('#referenceSearch').val();
+        }
+        if(criteria == "sponsor"){
+            search = $('#sponsorSearch').val();
+        }
+        if(criteria == "amoa"){
+            search = $('#amoaSearch').val();
+        }
+        if(criteria == "year"){
+            search = yearSearch.getValue().value;
+        }
+        if(criteria == "status"){
+            search = status = statusSearch.getValue().value;
+        }
+        if(criteria == "natures"){
+            const natures = natureSearch.getValue().map(element => {
+                return parseInt(element.value);
+            });
+            search = JSON.stringify(natures);
+        }
+            return {
+            search_type: search_type,
+            search: search};
+    }
+
+    function exportToExcel()
+    {
+        let search_type = getData().search_type,
+        search = getData().search;
+        window.location = "/admin/projects/export?search_type="+search_type+"&search="+search;
     }
 
     function showDeleteProjectModal(id)

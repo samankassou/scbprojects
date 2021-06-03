@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Exports\ProjectsExport;
 use App\Models\Step;
 use App\Models\Nature;
 use App\Models\Project;
@@ -9,9 +10,10 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Database\Eloquent\Builder;
 use App\Http\Requests\StoreProjectRequest;
 use App\Http\Requests\UpdateProjectRequest;
+use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
 use Yajra\DataTables\DataTables;
 
 class ProjectController extends Controller
@@ -23,53 +25,6 @@ class ProjectController extends Controller
      */
     public function index(Request $request)
     {
-        
-        if($request->ajax()){
-            $query = Project::query();
-            if($request->all && ($request->all != ''))
-            {
-                $word = '%'.$request->all.'%';
-                $query->where('amoa', 'LIKE', $word);
-                $query->orWhere('sponsor', 'LIKE', $word);
-                $query->orWhere('reference', 'LIKE', $word);
-                $query->orWhere('status', 'LIKE', $word);
-                $query->orWhere('name', 'LIKE', $word);
-
-            }else{
-                if($request->amoa && ($request->amoa != '')){
-                    $query->where('amoa', 'LIKE', '%'.$request->amoa.'%');
-                }
-                if($request->sponsor && ($request->sponsor != '')){
-                    $query->where('sponsor', 'LIKE', '%'.$request->sponsor.'%');
-                }
-                if($request->reference && ($request->reference != '')){
-                    $query->where('reference', 'LIKE', '%'.$request->reference.'%');
-                }
-                if($request->status && ($request->status != '')){
-                    $query->where('status', $request->status);
-                }
-                if($request->year && ($request->year != '')){
-                    $query->whereYear('start_date', $request->year);
-                }
-                if($request->natures && (count($request->natures) != 0)){
-                    $natures = $request->natures;
-                    $query->whereHas('natures', function(Builder $q) use($natures){
-                        $q->whereIn('id', $natures);
-                    });
-                }
-            }
-            $projects = $query->get();
-
-            return Datatables::of($projects)
-                ->addIndexColumn()
-                ->addColumn('action', function($project){
-                    $actionBtns = "<button class='btn btn-sm btn-warning' data-bs-toggle='modal' data-bs-target='#edit-classroom-modal' onclick='showEditClassroomModal(".$project->id.")'><i class='bi bi-pencil'></i></button>";
-                    $actionBtns .= "<button class='btn btn-sm btn-danger' data-bs-toggle='modal' data-bs-target='#delete-project-modal' onclick='showDeleteprojectModal(".$project->id.")'><i class='bi bi-trash'></i></button>";
-                    return $actionBtns;
-                })
-                ->rawColumns(['action'])
-                ->make(true);
-        }
         $projects = Project::all();
         $natures = Nature::all();
         $steps = Step::all();
@@ -96,41 +51,12 @@ class ProjectController extends Controller
 
     public function ajaxList(Request $request)
     {
-        $query = Project::query();
-        if($request->all && ($request->all != ''))
-        {
-            $word = '%'.$request->all.'%';
-            $query->where('amoa', 'LIKE', $word);
-            $query->orWhere('sponsor', 'LIKE', $word);
-            $query->orWhere('reference', 'LIKE', $word);
-            $query->orWhere('status', 'LIKE', $word);
-            $query->orWhere('name', 'LIKE', $word);
+        $query = $this->projectQuery($request);
 
-        }else{
-            if($request->amoa && ($request->amoa != '')){
-                $query->where('amoa', 'LIKE', '%'.$request->amoa.'%');
-            }
-            if($request->sponsor && ($request->sponsor != '')){
-                $query->where('sponsor', 'LIKE', '%'.$request->sponsor.'%');
-            }
-            if($request->reference && ($request->reference != '')){
-                $query->where('reference', 'LIKE', '%'.$request->reference.'%');
-            }
-            if($request->status && ($request->status != '')){
-                $query->where('status', $request->status);
-            }
-            if($request->year && ($request->year != '')){
-                $query->whereYear('start_date', $request->year);
-            }
-            if($request->natures && (count($request->natures) != 0)){
-                $natures = $request->natures;
-                $query->whereHas('natures', function(Builder $q) use($natures){
-                    $q->whereIn('id', $natures);
-                });
-            }
-        }
-        //$projects = $query->get();
-        $projects = Project::with(['natures'])->get();
+        $projects = $query->get();
+        $projects->each(function($project){
+            $project->natures = $project->natures;
+        });
 
         return Datatables::of($projects)
             ->addIndexColumn()
@@ -143,6 +69,18 @@ class ProjectController extends Controller
             ->rawColumns(['action'])
             ->make(true);
         
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function export(Request $request)
+    {
+        $projects = $this->projectQuery($request)->get();
+        $fileName = 'liste_des_projects_'.today()->format('d-m-Y').'.xlsx';
+        return Excel::download(new ProjectsExport($projects), $fileName);
     }
 
     /**
@@ -273,4 +211,63 @@ class ProjectController extends Controller
 
         return response()->json(['message' => 'Project deleted!']);
     }
+
+    public function projectQuery($request)
+    {
+        $query = Project::query();
+        $search = "%".$request->search."%";
+        if($request->search_type == "all" && !empty($request->search))
+        {
+            $query->where('amoa', 'LIKE', $search);
+            $query->orWhere('sponsor', 'LIKE', $search);
+            $query->orWhere('reference', 'LIKE', $search);
+            $query->orWhere('status', 'LIKE', $search);
+            $query->orWhere('name', 'LIKE', $search);
+            $query->orWhere(function($query) use($request){
+                $query->WhereYear('start_date', $request->search);
+            });
+            $query->orWhere(function($query) use($search){
+                $query->whereHas('natures', function($query) use($search){
+                    $query->where('name', 'LIKE', $search);
+                });
+            });
+
+        }
+        if($request->search_type == "amoa" && !empty($request->search)){
+            $query->where('amoa', 'LIKE', $search);
+        }
+        if($request->search_type == "sponsor" && !empty($request->search)){
+            $query->where('sponsor', 'LIKE', $search);
+        }
+        if($request->search_type == "reference" && !empty($request->search)){
+            $query->where('reference', 'LIKE', $search);
+        }
+        if($request->search_type == "status" && !empty($request->search)){
+            $query->where('status', $request->search);
+        }
+        if($request->search_type == "year" && !empty($request->search)){
+            $query->whereYear('start_date', $request->search);
+        }
+        if($request->search_type == "natures"){
+            //get array of ids
+            $natures = json_decode($request->search);
+            if(!empty($natures)){
+                //foreach($natures as $nature){
+                    $query->whereHas('natures', function($query) use($natures){
+                        $query->whereIn('natures.id', $natures);
+                    }, '=');
+                //}
+                // $query = DB::table('projects')
+                // ->where('natures.id', 1)
+                // ->leftJoin('nature_project', 'projects.id', '=', 'nature_project.project_id')
+                // ->leftJoin('natures', 'natures.id', '=', 'nature_project.nature_id')
+                // ->select('projects.*', 'natures.*');
+
+
+            }
+        }
+        return $query;
+    }
 }
+
+
