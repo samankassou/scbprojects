@@ -43,25 +43,57 @@
                             </a>
                         </li>
 
-                        <li class="sidebar-item  {{ request()->routeIs('admin.projects.*') ? 'active' : '' }}">
-                            <a href="{{ route('admin.projects.index') }}" class='sidebar-link'>
-                                <i class="bi bi-grid-fill"></i>
+                        <li class="sidebar-item  has-sub {{ request()->routeIs('admin.projects.*') ? 'active' : '' }}">
+                            <a href="#" class='sidebar-link'>
+                                <i class="bi bi-stack"></i>
                                 <span>Projets</span>
                             </a>
+                            <ul class="submenu {{ request()->routeIs('admin.projects.*') ? 'active' : '' }}">
+                                <li class="submenu-item {{ request()->routeIs('admin.projects.create') ? 'active' : '' }}">
+                                    <a href="{{ route('admin.projects.create') }}">Créer un Projet</a>
+                                </li>
+                                <li class="submenu-item {{ request()->routeIs('admin.projects.index') ? 'active' : '' }}">
+                                    <a href="{{ route('admin.projects.index') }}">Liste des Projets</a>
+                                </li>
+                                <li class="submenu-item {{ request()->routeIs('admin.projects.deleted') ? 'active' : '' }}">
+                                    <a href="{{ route('admin.projects.deleted') }}">Projets Supprimés</a>
+                                </li>
+                            </ul>
                         </li>
-
-                        <li class="sidebar-item  {{ request()->routeIs('admin.processes.*') ? 'active' : '' }}">
-                            <a href="{{ route('admin.processes.index') }}" class='sidebar-link'>
-                                <i class="bi bi-grid-fill"></i>
+                        
+                        
+                        <li class="sidebar-item  has-sub {{ request()->routeIs('admin.processes.*') ? 'active' : '' }}">
+                            <a href="#" class='sidebar-link'>
+                                <i class="bi bi-stack"></i>
                                 <span>Procédures</span>
                             </a>
+                            <ul class="submenu {{ request()->routeIs('admin.processes.*') ? 'active' : '' }}">
+                                <li class="submenu-item {{ request()->routeIs('admin.processes.create') ? 'active' : '' }}">
+                                    <a href="{{ route('admin.processes.create') }}">Créer une Procédure</a>
+                                </li>
+                                <li class="submenu-item {{ request()->routeIs('admin.processes.index') ? 'active' : '' }}">
+                                    <a href="{{ route('admin.processes.index') }}">Liste des Procédures</a>
+                                </li>
+                                <li class="submenu-item ">
+                                    <a href="#">Procédures Supprimées</a>
+                                </li>
+                            </ul>
                         </li>
-
-                        <li class="sidebar-item  {{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
-                            <a href="{{ route('admin.users.index') }}" class='sidebar-link'>
-                                <i class="bi bi-people"></i>
-                                <span>Utilisateurs</span>
+                        
+                        
+                        <li class="sidebar-item  has-sub {{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
+                            <a href="#" class='sidebar-link'>
+                                <i class="bi bi-people-fill"></i>
+                                <span>Utilisateur</span>
                             </a>
+                            <ul class="submenu {{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
+                                <li class="submenu-item {{ request()->routeIs('admin.users.create') ? 'active' : '' }}">
+                                    <a href="{{ route('admin.users.create') }}">Créer un Utilisateur</a>
+                                </li>
+                                <li class="submenu-item {{ request()->routeIs('admin.users.index') ? 'active' : '' }}">
+                                    <a href="{{ route('admin.users.index') }}">liste des Utilisateurs</a>
+                                </li>
+                            </ul>
                         </li>
                         
                     </ul>

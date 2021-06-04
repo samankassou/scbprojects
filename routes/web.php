@@ -18,6 +18,7 @@ use App\Http\Controllers\Admin\ProjectController;
 |
 */
 Route::get('/', fn()=>view('home'));
+Route::get('/projects/export/{reference}', [ProjectController::class, 'exportPdf'])->name('projects.pdf');
 Route::get('/projects/show/{reference}', [ProjectController::class, 'showByRef'])->name('projects.show');
 Route::get('/projects/search/{reference}', [ProjectController::class, 'search'])->name('projects.search');
 
@@ -41,6 +42,10 @@ Route::group([
 
         Route::get('/projects/export', [ProjectController::class, 'export'])->name('projects.export');
         Route::post('/projects/list', [ProjectController::class, 'ajaxList']);
+        Route::post('/projects/restore/{id}', [ProjectController::class, 'restore'])->name('projects.restore');
+        Route::post('/projects/delete/{id}', [ProjectController::class, 'delete'])->name('projects.forcedelete');
+        Route::get('/projects/deleted', [ProjectController::class, 'deleted'])->name('projects.deleted');
+        Route::post('/projects/deleted', [ProjectController::class, 'ajaxDeletedList'])->name('projects.deleted');
         Route::resource('/projects', ProjectController::class);
         
         Route::get('/processes/poles/{id}/entities', [ProcessController::class, 'getEntities'])->name('processes.poles.entities');

@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Project extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
     protected $dates = ['start_date', 'end_date'];
     protected $appends = ['start_year'];
 

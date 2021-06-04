@@ -12,6 +12,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreProjectRequest;
 use App\Http\Requests\UpdateProjectRequest;
+use Barryvdh\DomPDF\PDF;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 use Yajra\DataTables\DataTables;
@@ -32,6 +34,20 @@ class ProjectController extends Controller
         return view('admin.projects.index', compact('projects', 'natures', 'years', 'steps'));
     }
 
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function deleted(Request $request)
+    {
+        $projects = Project::all();
+        $natures = Nature::all();
+        $steps = Step::all();
+        $years = array_unique(Arr::sort($projects->pluck('start_year')));
+        return view('admin.projects.deleted.index', compact('projects', 'natures', 'years', 'steps'));
+    }
+
     public function showByRef(Request $request)
     {
         $project = Project::firstWhere('reference', $request->reference);
@@ -49,6 +65,17 @@ class ProjectController extends Controller
             ]);
     }
 
+    public function exportPdf(Request $request)
+    {
+        $project = Project::firstWhere('reference', $request->reference);
+        abort_if(!$project, 404, 'Reférence incorrecte ou projet inexistant');
+        $pdf = App::make('dompdf.wrapper');
+        $pdf->loadView('admin.projects.pdf.show', compact('project'));
+        $fileName = 'projet_'.$project->reference.'_'.today()->format('d-m-Y').'.pdf';
+        return $pdf->stream($fileName);
+
+    }
+
     public function ajaxList(Request $request)
     {
         $query = $this->projectQuery($request);
@@ -61,9 +88,34 @@ class ProjectController extends Controller
         return Datatables::of($projects)
             ->addIndexColumn()
             ->addColumn('action', function($project){
-                $actionBtns = "<a href=".route('admin.projects.show', $project->id)." class='btn btn-sm btn-primary'><i class='bi bi-eye'></i></a> ";
-                $actionBtns .= "<a href=".route('admin.projects.edit', $project->id)." class='btn btn-sm btn-warning'><i class='bi bi-pencil'></i></a> ";
-                $actionBtns .= "<button class='btn btn-sm btn-danger' onclick='showDeleteProjectModal(".$project->id.")'><i class='bi bi-trash'></i></button>";
+                $actionBtns = "<a href=".route('admin.projects.show', $project->id)." class='btn btn-sm btn-primary' title='Détails'><i class='bi bi-eye'></i></a> ";
+                $actionBtns .= "<a href=".route('projects.pdf', $project->reference)." class='btn btn-sm btn-secondary' title='Imprimer'><i class='bi bi-printer'></i></a> ";
+                $actionBtns .= "<a href=".route('admin.projects.edit', $project->id)." class='btn btn-sm btn-warning' title='Editer'><i class='bi bi-pencil'></i></a> ";
+                $actionBtns .= "<button class='btn btn-sm btn-danger' onclick='showDeleteProjectModal(".$project->id.")' title='Supprimer'><i class='bi bi-trash'></i></button>";
+                return $actionBtns;
+            })
+            ->rawColumns(['action'])
+            ->make(true);
+        
+    }
+
+    public function ajaxDeletedList(Request $request)
+    {
+        // $query = $this->projectQuery($request);
+
+        // $projects = $query->get();
+        // $projects->each(function($project){
+        //     $project->natures = $project->natures;
+        // });
+        $projects = Project::onlyTrashed()->with(['natures'])->get();
+        
+
+        return Datatables::of($projects)
+            ->addIndexColumn()
+            ->addColumn('action', function($project){
+                $actionBtns = "<a href=".route('admin.projects.show', $project->id)." class='btn btn-sm btn-primary' title='Détails'><i class='bi bi-eye'></i></a> ";
+                $actionBtns .= "<button class='btn btn-sm btn-secondary' onclick='restoreProject(".$project->id.")' title='Restaurer'><i class='bi bi-cloud-upload'></i></button> ";
+                $actionBtns .= "<button class='btn btn-sm btn-danger' onclick='showDeleteProjectModal(".$project->id.")' title='Supprimer'><i class='bi bi-trash'></i></button>";
                 return $actionBtns;
             })
             ->rawColumns(['action'])
@@ -205,11 +257,48 @@ class ProjectController extends Controller
      */
     public function destroy(Project $project)
     {
-        $project->natures()->detach();
-        $project->steps()->detach();
+        //$project->natures()->detach();
+        //$project->steps()->detach();
         $project->delete();
 
         return response()->json(['message' => 'Project deleted!']);
+    }
+
+    /**
+     * Delete definitly the specified resource from storage.
+     *
+     * @param  \App\Models\Project  $project
+     * @return \Illuminate\Http\Response
+     */
+    public function delete($id)
+    {
+        $project = Project::withTrashed()
+        ->firstWhere('id', $id);
+        if($project){
+            $project->natures()->detach();
+            $project->steps()->detach();
+            $project->forceDelete();
+        }
+
+        return response()->json(['message' => 'Project deleted!']);
+    }
+
+
+    /**
+     * Restore the specified resource from storage.
+     *
+     * @param  \App\Models\Project  $project
+     * @return \Illuminate\Http\Response
+     */
+    public function restore($id)
+    {
+        $project = Project::withTrashed()
+        ->firstWhere('id', $id);
+        if($project){
+            $project->restore();
+        }
+
+        return response()->json(['message' => 'Project restored!']);
     }
 
     public function projectQuery($request)

@@ -90,10 +90,17 @@
             </div>
             <div class="d-flex justify-content-between mb-3">
                 <div>
-                    <button id="export-btn" class="btn btn-outline-primary m-2">Exporter(Excel)</button>
+                    <button id="export-btn" class="btn btn-outline-primary m-2">
+                        <i class='bi bi-file-spreadsheet'></i>
+                        <span>Exporter(Excel)</span>
+                    </button>
+                    <button id="import-btn" class="btn btn-outline-primary m-2">
+                        <i class='bi bi-download'></i>
+                        <span>Importer(Excel)</span>
+                    </button>
                 </div>
                 <div>
-                    <a href="{{ route('admin.projects.create') }}" class="btn btn-sm btn-primary"><i class="bi bi-plus"></i> Créer</a>
+                    <a href="{{ route('admin.projects.create') }}" class="btn btn-sm btn-outline-primary"><i class="bi bi-plus"></i> Créer</a>
                 </div>
             </div>
             <table class="table table-striped" id="projects-datatable" style="width: 100%">
@@ -106,7 +113,7 @@
                         <th>Statut</th>
                         <th>Année</th>
                         <th>Nature(s)</th>
-                        <th style="width: 120px">Options</th>
+                        <th style="width: 140px">Options</th>
                     </tr>
                 </thead>
             </table>

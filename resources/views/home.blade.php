@@ -174,7 +174,7 @@
                             </div>
                             <div class="card-footer d-flex justify-content-between">
                                 <span><button class="btn btn-light-primary"><a href="/projects/show/${project.reference}">Ouvrir</a></button></span>
-                                <button class="btn btn-light-primary"><a href="#">Imprimer</a></button>
+                                <button class="btn btn-light-primary"><a href="/projects/export/${project.reference}">Imprimer</a></button>
                             </div>
                           </div>
                             `;

@@ -4,11 +4,24 @@
     <meta charset="utf-8">
 
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="{{ asset('front/css/bootstrap-4.0.0/dist/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('front/css/bootstrap-4.0.0/dst/css/bootstrap.min.css') }}">
     <!-- Custom Style -->
-    <link rel="stylesheet" href="{{ asset('front/css/bootstrap-4.0.0/style.css') }}">
+    <link rel="stylesheet" href="{{ asset('front/css/bootstrap-4.0.0/stle.css') }}">
 
     <title>Projet: {{ $project->reference }}</title>
+    <style>
+
+
+.logo img {
+    height: 60px;
+}
+
+.top-left p {
+    margin: 0;
+}
+
+
+    </style>
 </head>
 <body>
     <div class="my-5 page" size="A4">
@@ -17,18 +30,19 @@
                 <div class="logo">
                     <img src="{{ asset('front/images/4.png') }}" alt="" class="img-fluid">
                 </div>
-                <div class="top-left">
+                <div class="top-left" style="float: right">
+                    
                     <div class="graphic-path">
                         <p>Ref-No:</p>
                     </div>
                     <div class="position-relative">
                         <p><span>{{ $project->reference }}</span></p>
-                    </div>
+                    </div><img src="{{ asset('wave.svg') }}" alt="" style="float: rigth; height: 60px;">
                 </div>
-            </section>
+            </section><br><br><br><br><br><hr><h2 style="text-align: center;"><strong>ORGANISATION ET PROJETS</strong></h2><hr>
             <section class="top-content bb d-flex justify-content-between">
                 <div class="top-left">
-                    <h4><strong>Nom du Projet:</strong></h4><h2> &nbsp;&nbsp;&nbsp;&nbsp; {{ $project->name }}</h2>
+                    <h4><strong>Nom du Projet:</strong></h4>&nbsp;&nbsp;&nbsp;&nbsp;<h2 style="text-align: center; text-decoration: underline;">  {{ $project->name }}</h2>
                 </div>
             </section>
             <section class="store-user mt-5">
@@ -93,4 +107,3 @@
         </div>
     </div>
 </body>
-

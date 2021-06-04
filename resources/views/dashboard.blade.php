@@ -15,7 +15,7 @@
                                 </div>
                                 <div class="col-md-8">
                                     <h6 class="text-muted font-semibold">Utilisateurs</h6>
-                                    <h6 class="font-extrabold mb-0">10</h6>
+                                    <h6 class="font-extrabold mb-0">{{ $totals['users'] }}</h6>
                                 </div>
                             </div>
                         </div>
@@ -65,8 +65,8 @@
                                     </div>
                                 </div>
                                 <div class="col-md-8">
-                                    <h6 class="text-muted font-semibold"></h6>
-                                    <h6 class="font-extrabold mb-0">8</h6>
+                                    <h6 class="text-muted font-semibold">Projets supprimés</h6>
+                                    <h6 class="font-extrabold mb-0">{{ $totals['deleted_projects'] }}</h6>
                                 </div>
                             </div>
                         </div>
