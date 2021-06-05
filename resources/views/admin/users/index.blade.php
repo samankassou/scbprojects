@@ -207,12 +207,34 @@
 
     function toggleUserStatus(id)
     {
+        
+        if(id == {{ auth()->user()->id }}){
+            Toastify({
+                text: "Vous ne pouvez pas désactiver le compte actuel!",
+                close:true,
+                gravity:"top",
+                position: "right",
+                backgroundColor: "#ff0000",
+            }).showToast();
+            table.ajax.reload(null, false);
+            return;
+        }
         $.ajax({
                 method: "POST",
-                url: "/admin/users/"+id+"/toggleUserStatus",
+                url: "/admin/users/"+id+"/toggleStatus",
                 dataType: "JSON",
                 success: function(response){
                     console.log(response);
+                    table.ajax.reload(null, false);
+                    let message = response.user.status ? "Compte activé avec succès!" : "Compte désactivé avec succès!";
+                    Toastify({
+                        text: message,
+                        duration: 3000,
+                        close:true,
+                        gravity:"top",
+                        position: "right",
+                        backgroundColor: "#4fbe87",
+                    }).showToast();
                 },
                 error: function(response){
                     console.log(response);

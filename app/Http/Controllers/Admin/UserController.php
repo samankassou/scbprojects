@@ -26,7 +26,7 @@ class UserController extends Controller
             ->addColumn('status', function($user){
                 $checked =  ($user->status) ? "checked" : "";
                 $title = ($user->status) ? "Désactiver" : "Activer";
-                $btn = "<div class='form-check form-switch' title=$title data-id=$user->id>
+                $btn = "<div class='form-check form-switch' title=$title onclick='toggleUserStatus($user->id)'>
                             <input class='form-check-input' style='cursor: pointer' type='checkbox' $checked>
                         </div>";
                 return $btn;
@@ -105,6 +105,25 @@ class UserController extends Controller
     public function update(Request $request, User $user)
     {
         //
+    }
+
+    /**
+     * Update the user's status.
+     *
+     * @param  \App\Models\User  $user
+     * @return \Illuminate\Http\Response
+     */
+    public function toggleStatus(User $user)
+    {
+        if(auth()->user()->id == $user->id){
+            return response()->json(['message' => 'You cannot remove this user']);
+        }
+        $user->status = !$user->status;
+        $user->save();
+        return response()->json([
+            'message' => 'User\'s status updated!',
+            'user' => $user,
+            ]);
     }
 
     /**

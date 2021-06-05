@@ -73,6 +73,7 @@ Route::group([
         Route::group([
             'middleware' => ['role:admin']
         ],function(){
+            Route::post('/users/{user}/toggleStatus', [UserController::class, 'toggleStatus']);
             Route::resource('/users', UserController::class);
         });
     });
