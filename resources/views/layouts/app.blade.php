@@ -43,15 +43,18 @@
                             </a>
                         </li>
 
+                        @permission('view-projects')
                         <li class="sidebar-item  has-sub {{ request()->routeIs('admin.projects.*') ? 'active' : '' }}">
                             <a href="#" class='sidebar-link'>
                                 <i class="bi bi-stack"></i>
                                 <span>Projets</span>
                             </a>
                             <ul class="submenu {{ request()->routeIs('admin.projects.*') ? 'active' : '' }}">
+                                @permission('create-project')
                                 <li class="submenu-item {{ request()->routeIs('admin.projects.create') ? 'active' : '' }}">
                                     <a href="{{ route('admin.projects.create') }}">Créer un Projet</a>
                                 </li>
+                                @endpermission
                                 <li class="submenu-item {{ request()->routeIs('admin.projects.index') ? 'active' : '' }}">
                                     <a href="{{ route('admin.projects.index') }}">Liste des Projets</a>
                                 </li>
@@ -60,17 +63,21 @@
                                 </li>
                             </ul>
                         </li>
+                        @endpermission
                         
                         
+                        @permission('view-processes')
                         <li class="sidebar-item  has-sub {{ request()->routeIs('admin.processes.*') ? 'active' : '' }}">
                             <a href="#" class='sidebar-link'>
                                 <i class="bi bi-stack"></i>
                                 <span>Procédures</span>
                             </a>
                             <ul class="submenu {{ request()->routeIs('admin.processes.*') ? 'active' : '' }}">
+                                @permission('create-process')
                                 <li class="submenu-item {{ request()->routeIs('admin.processes.create') ? 'active' : '' }}">
                                     <a href="{{ route('admin.processes.create') }}">Créer une Procédure</a>
                                 </li>
+                                @endpermission
                                 <li class="submenu-item {{ request()->routeIs('admin.processes.index') ? 'active' : '' }}">
                                     <a href="{{ route('admin.processes.index') }}">Liste des Procédures</a>
                                 </li>
@@ -79,22 +86,17 @@
                                 </li>
                             </ul>
                         </li>
+                        @endpermission
                         
                         
-                        <li class="sidebar-item  has-sub {{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
-                            <a href="#" class='sidebar-link'>
+                        @role('admin')
+                        <li class="sidebar-item {{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
+                            <a href="{{ route('admin.users.index') }}" class='sidebar-link'>
                                 <i class="bi bi-people-fill"></i>
-                                <span>Utilisateur</span>
+                                <span>Liste des Utilisateurs</span>
                             </a>
-                            <ul class="submenu {{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
-                                <li class="submenu-item {{ request()->routeIs('admin.users.create') ? 'active' : '' }}">
-                                    <a href="{{ route('admin.users.create') }}">Créer un Utilisateur</a>
-                                </li>
-                                <li class="submenu-item {{ request()->routeIs('admin.users.index') ? 'active' : '' }}">
-                                    <a href="{{ route('admin.users.index') }}">liste des Utilisateurs</a>
-                                </li>
-                            </ul>
                         </li>
+                        @endrole
                         
                     </ul>
                 </div>
@@ -123,7 +125,7 @@
                                     <div class="user-menu d-flex">
                                         <div class="user-name text-end me-3">
                                             <h6 class="mb-0 text-gray-600">{{ auth()->user()->name }}</h6>
-                                            <p class="mb-0 text-sm text-gray-600">{{ auth()->user()->name }}</p>
+                                            <p class="mb-0 text-sm text-gray-600">{{ auth()->user()->roles[0]->display_name }}</p>
                                         </div>
                                         <div class="user-img d-flex align-items-center">
                                             <div class="avatar avatar-md">

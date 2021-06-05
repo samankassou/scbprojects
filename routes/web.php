@@ -39,20 +39,41 @@ Route::group([
         'as' => 'admin.',
         'prefix' => 'admin',
     ], function(){
+        Route::group([
+            'middleware' => ['permission:view-project|view-projects']
+        ], function(){
+            Route::get('/projects/export', [ProjectController::class, 'export'])->name('projects.export');
+            Route::post('/projects/list', [ProjectController::class, 'ajaxList']);
+            
+            Route::get('/projects/deleted', [ProjectController::class, 'deleted'])->name('projects.deleted');
+            Route::post('/projects/deleted', [ProjectController::class, 'ajaxDeletedList'])->name('projects.deleted');
+            Route::resource('/projects', ProjectController::class);
 
-        Route::get('/projects/export', [ProjectController::class, 'export'])->name('projects.export');
-        Route::post('/projects/list', [ProjectController::class, 'ajaxList']);
-        Route::post('/projects/restore/{id}', [ProjectController::class, 'restore'])->name('projects.restore');
-        Route::post('/projects/delete/{id}', [ProjectController::class, 'delete'])->name('projects.forcedelete');
-        Route::get('/projects/deleted', [ProjectController::class, 'deleted'])->name('projects.deleted');
-        Route::post('/projects/deleted', [ProjectController::class, 'ajaxDeletedList'])->name('projects.deleted');
-        Route::resource('/projects', ProjectController::class);
+            Route::group([
+                'middleware' => ['permission:delete-project']
+            ], function(){
+                Route::post('/projects/delete/{id}', [ProjectController::class, 'delete'])->name('projects.forcedelete');
+            });
+            Route::group([
+                'middleware' => ['permission:restore-project']
+            ], function(){
+                Route::post('/projects/restore/{id}', [ProjectController::class, 'restore'])->name('projects.restore');
+            });
+        });
         
-        Route::get('/processes/poles/{id}/entities', [ProcessController::class, 'getEntities'])->name('processes.poles.entities');
-        Route::get('/processes/macroprocesses/{id}/methods', [ProcessController::class, 'getMethods'])->name('processes.macroprocesses.methods');
-        Route::get('/processes/domains/{id}/macroprocesses', [ProcessController::class, 'getMacroprocesses'])->name('processes.domains.macroprocesses');
-        Route::resource('/processes', ProcessController::class);
+        Route::group([
+            'middleware' => ['permission:view-processes|view-process']
+        ], function(){
+            Route::get('/processes/poles/{id}/entities', [ProcessController::class, 'getEntities'])->name('processes.poles.entities');
+            Route::get('/processes/macroprocesses/{id}/methods', [ProcessController::class, 'getMethods'])->name('processes.macroprocesses.methods');
+            Route::get('/processes/domains/{id}/macroprocesses', [ProcessController::class, 'getMacroprocesses'])->name('processes.domains.macroprocesses');
+            Route::resource('/processes', ProcessController::class);
+        });
         
-        Route::resource('/users', UserController::class);
+        Route::group([
+            'middleware' => ['role:admin']
+        ],function(){
+            Route::resource('/users', UserController::class);
+        });
     });
 });

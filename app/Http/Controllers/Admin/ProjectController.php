@@ -108,14 +108,17 @@ class ProjectController extends Controller
         //     $project->natures = $project->natures;
         // });
         $projects = Project::onlyTrashed()->with(['natures'])->get();
+        $user = auth()->user();
         
 
         return Datatables::of($projects)
             ->addIndexColumn()
-            ->addColumn('action', function($project){
+            ->addColumn('action', function($project) use($user){
                 $actionBtns = "<a href=".route('admin.projects.show', $project->id)." class='btn btn-sm btn-primary' title='Détails'><i class='bi bi-eye'></i></a> ";
-                $actionBtns .= "<button class='btn btn-sm btn-secondary' onclick='restoreProject(".$project->id.")' title='Restaurer'><i class='bi bi-cloud-upload'></i></button> ";
-                $actionBtns .= "<button class='btn btn-sm btn-danger' onclick='showDeleteProjectModal(".$project->id.")' title='Supprimer'><i class='bi bi-trash'></i></button>";
+                if($user->isAbleTo('restore-project')){
+                    $actionBtns .= "<button class='btn btn-sm btn-secondary' onclick='restoreProject(".$project->id.")' title='Restaurer'><i class='bi bi-cloud-upload'></i></button> ";
+                    $actionBtns .= "<button class='btn btn-sm btn-danger' onclick='showDeleteProjectModal(".$project->id.")' title='Supprimer'><i class='bi bi-trash'></i></button>";
+                }
                 return $actionBtns;
             })
             ->rawColumns(['action'])
@@ -257,8 +260,6 @@ class ProjectController extends Controller
      */
     public function destroy(Project $project)
     {
-        //$project->natures()->detach();
-        //$project->steps()->detach();
         $project->delete();
 
         return response()->json(['message' => 'Project deleted!']);

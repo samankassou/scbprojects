@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Yajra\DataTables\DataTables;
 
 class UserController extends Controller
 {
@@ -13,10 +14,30 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $users = User::all();
-        return view('admin.users.index', compact('users'));
+        if($request->ajax()){
+            $users = User::with(['roles'])->get();
+            return Datatables::of($users)
+            ->addIndexColumn()
+            ->addColumn('status', function($user){
+                $checked =  ($user->status) ? "checked" : "";
+                $title = ($user->status) ? "Désactiver" : "Activer";
+                $btn = "<div class='form-check form-switch' title=$title data-id=$user->id>
+                            <input class='form-check-input' style='cursor: pointer' type='checkbox' $checked>
+                        </div>";
+                return $btn;
+            })
+            ->addColumn('action', function($user){
+                $actionBtns = "<a href=".route('admin.users.show', $user->id)." title='Détail' data-id=".$user->id." class='btn btn-sm btn-primary'><i class='bi bi-eye'></i></a> ";
+                $actionBtns .= "<button class='btn btn-sm btn-warning' title='Modifier' data-id=".$user->id."><i class='bi bi-pencil'></i></button> ";
+                $actionBtns .= "<button class='btn btn-sm btn-danger' title='Supprimer' onclick='showDeleteUserModal($user->id)'><i class='bi bi-trash'></i></button>";
+                return $actionBtns;
+            })
+            ->rawColumns(['status', 'action'])
+            ->make(true);
+        }
+        return view('admin.users.index');
     }
 
     /**
@@ -82,6 +103,10 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
-        //
+        if(auth()->user()->id == $user->id){
+            return response()->json(['message' => 'You cannot delete this user']);
+        }
+        $user->delete();
+        return response()->json(['message' => 'User deleted!']);
     }
 }
