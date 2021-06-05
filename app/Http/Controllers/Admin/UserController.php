@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
+use App\Models\Role;
 use App\Models\User;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreUserRequest;
 
 class UserController extends Controller
 {
@@ -37,7 +40,8 @@ class UserController extends Controller
             ->rawColumns(['status', 'action'])
             ->make(true);
         }
-        return view('admin.users.index');
+        $usersRoles = Role::all();
+        return view('admin.users.index', compact('usersRoles'));
     }
 
     /**
@@ -56,9 +60,17 @@ class UserController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreUserRequest $request)
     {
-        //
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'status' => 1,
+            'password' => bcrypt($request->password),
+            'remember_token' => Str::random(10),
+        ]);
+        $user->roles()->attach([$request->role]);
+        return response()->json(['message' => 'User saved successfully!']);
     }
 
     /**
