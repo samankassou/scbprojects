@@ -4,16 +4,6 @@
     <div class="card">
         <div class="card-header d-flex justify-content-between">
             <h4 class="card-title">Détails du projet "{{ $project->name }}"</h4>
-            <div>
-                <a href="{{ route('projects.pdf', $project->reference) }}" class="btn btn-outline-primary m-2">
-                    <i class="bi bi-printer"></i>
-                    <span>Imprimer</span>
-                </a>
-                <a href="{{ route('admin.projects.edit', $project->id) }}" class="btn btn-outline-primary m-2">
-                    <i class="bi bi-pencil"></i>
-                    <span>Editer</span>
-                </a>
-            </div>
         </div>
         <div class="card-body">
             <div class="w-50">
@@ -37,17 +27,6 @@
             <p><strong>Documentation du projet</strong>: {{ $project->documentation }}</p>
             <p><strong>Facture</strong>: {{ $project->bills }}</p>
             <p><strong>Gains/Impact</strong>: {{ $project->benefits }}</p>
-            @if ($project->modifications->count())
-            <div>
-                <h4>Historique des modifications</h4>
-                @foreach ($project->modifications as $modification)
-                <p>
-                    le {{ $modification->created_at->format('d/m/Y') }} à  {{ $modification->created_at->format('H:i:s') }}
-                    par <strong>{{ $modification->author->name }}</strong>
-                </p>
-                @endforeach
-                @endif
-            </div>
         </div>
     </div>
 </section>

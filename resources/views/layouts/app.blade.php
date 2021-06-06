@@ -58,8 +58,8 @@
                                 <li class="submenu-item {{ request()->routeIs('admin.projects.index') ? 'active' : '' }}">
                                     <a href="{{ route('admin.projects.index') }}">Liste des Projets</a>
                                 </li>
-                                <li class="submenu-item {{ request()->routeIs('admin.projects.deleted') ? 'active' : '' }}">
-                                    <a href="{{ route('admin.projects.deleted') }}">Projets Supprimés</a>
+                                <li class="submenu-item {{ request()->routeIs('admin.projects.deleted.*') ? 'active' : '' }}">
+                                    <a href="{{ route('admin.projects.deleted.index') }}">Projets Supprimés</a>
                                 </li>
                             </ul>
                         </li>

@@ -2,21 +2,23 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Exports\ProjectsExport;
 use App\Models\Step;
+use App\Models\User;
 use App\Models\Nature;
 use App\Models\Project;
+use Barryvdh\DomPDF\PDF;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Exports\ProjectsExport;
+use Yajra\DataTables\DataTables;
+use Illuminate\Support\Facades\DB;
+use App\Models\ProjectModification;
+use Illuminate\Support\Facades\App;
 use App\Http\Controllers\Controller;
+use Maatwebsite\Excel\Facades\Excel;
 use App\Http\Requests\StoreProjectRequest;
 use App\Http\Requests\UpdateProjectRequest;
-use Barryvdh\DomPDF\PDF;
-use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\DB;
-use Maatwebsite\Excel\Facades\Excel;
-use Yajra\DataTables\DataTables;
 
 class ProjectController extends Controller
 {
@@ -82,7 +84,7 @@ class ProjectController extends Controller
 
         $projects = $query->get();
         $projects->each(function($project){
-            $project->natures = $project->natures;
+            $project->load(['natures', 'writer']);
         });
 
         return Datatables::of($projects)
@@ -107,14 +109,14 @@ class ProjectController extends Controller
         // $projects->each(function($project){
         //     $project->natures = $project->natures;
         // });
-        $projects = Project::onlyTrashed()->with(['natures'])->get();
+        $projects = Project::onlyTrashed()->with(['natures', 'deleter'])->get();
         $user = auth()->user();
         
 
         return Datatables::of($projects)
             ->addIndexColumn()
             ->addColumn('action', function($project) use($user){
-                $actionBtns = "<a href=".route('admin.projects.show', $project->id)." class='btn btn-sm btn-primary' title='Détails'><i class='bi bi-eye'></i></a> ";
+                $actionBtns = "<a href=".route('admin.projects.deleted.show', $project->id)." class='btn btn-sm btn-primary' title='Détails'><i class='bi bi-eye'></i></a> ";
                 if($user->isAbleTo('restore-project')){
                     $actionBtns .= "<button class='btn btn-sm btn-secondary' onclick='restoreProject(".$project->id.")' title='Restaurer'><i class='bi bi-cloud-upload'></i></button> ";
                     $actionBtns .= "<button class='btn btn-sm btn-danger' onclick='showDeleteProjectModal(".$project->id.")' title='Supprimer'><i class='bi bi-trash'></i></button>";
@@ -159,19 +161,20 @@ class ProjectController extends Controller
     public function store(StoreProjectRequest $request)
     {
         $project = Project::create([
-            'name'          => $request->name,
-            'description'   => $request->description,
-            'start_date'    => $request->start_date,
-            'end_date'      => $request->end_date,
-            'sponsor'       => $request->sponsor,
-            'initiative'    => $request->initiative,
-            'amoa'          => $request->amoa,
-            'moe'           => $request->moe,
-            'progress'      => $request->progress,
-            'manager'       => $request->manager,
-            'cost'          => $request->cost,
-            'status'        => $request->status,
-            'benefits'      => $request->benefits
+            'name'        => $request->name,
+            'description' => $request->description,
+            'start_date'  => $request->start_date,
+            'end_date'    => $request->end_date,
+            'sponsor'     => $request->sponsor,
+            'initiative'  => $request->initiative,
+            'amoa'        => $request->amoa,
+            'moe'         => $request->moe,
+            'progress'    => $request->progress,
+            'manager'     => $request->manager,
+            'cost'        => $request->cost,
+            'status'      => $request->status,
+            'benefits'    => $request->benefits,
+            'saved_by'    => auth()->user()->id,
         ]);
         if($request->documentation){
             $project->documentation = $request->documentation;
@@ -197,7 +200,23 @@ class ProjectController extends Controller
      */
     public function show(Project $project)
     {
+        $project->load(['modifications' => function($query){
+            $query->latest();
+        }]);
         return view('admin.projects.show', compact('project'));
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  \App\Models\Project  $project
+     * @return \Illuminate\Http\Response
+     */
+    public function showDeleted($id)
+    {
+        $project = Project::withTrashed()
+        ->firstWhere('id', $id);
+        return view('admin.projects.deleted.show', compact('project'));
     }
 
     /**
@@ -247,6 +266,10 @@ class ProjectController extends Controller
             $project->progress = $request->progress;
         }
         $project->save();
+        ProjectModification::create([
+            'user_id' => auth()->user()->id,
+            'project_id' => $project->id,
+        ]);
         $project->natures()->sync($request->natures);
         return redirect()->route('admin.projects.index')->with('message', 'Projet modifié avec succès!');
 
@@ -260,6 +283,8 @@ class ProjectController extends Controller
      */
     public function destroy(Project $project)
     {
+        $project->deleted_by = auth()->user()->id;
+        $project->save();
         $project->delete();
 
         return response()->json(['message' => 'Project deleted!']);

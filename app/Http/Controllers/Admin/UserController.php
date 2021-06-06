@@ -142,6 +142,11 @@ class UserController extends Controller
         if(auth()->user()->id == $user->id){
             return response()->json(['message' => 'You cannot delete this user']);
         }
+        if(!empty($user->project_modifications)){
+            foreach($user->project_modifications as $modification){
+                $modification->delete();
+            }
+        }
         $user->delete();
         return response()->json(['message' => 'User deleted!']);
     }

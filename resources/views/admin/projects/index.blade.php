@@ -113,6 +113,7 @@
                         <th>Statut</th>
                         <th>Année</th>
                         <th>Nature(s)</th>
+                        <th>Enregistré par</th>
                         <th style="width: 140px">Options</th>
                     </tr>
                 </thead>
@@ -211,11 +212,20 @@
                 }
             },
             {
+                data: 'writer', 
+                name: 'writer', 
+                orderable: false, 
+                searchable: false,
+                render: function(writer){
+                    return (writer) ? writer.name : 'Inconnu';
+                }
+            },
+            {
                 data: 'action', 
                 name: 'action', 
                 orderable: false, 
                 searchable: false
-            },
+            }
         ]
     });
     $('#delete-project-btn').on('click', deleteProject);

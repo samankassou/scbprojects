@@ -32,6 +32,8 @@ class CreateProjectsTable extends Migration
             $table->text('documentation')->nullable();
             $table->text('bills')->nullable();
             $table->softDeletes();
+            $table->integer('saved_by')->nullable();
+            $table->integer('deleted_by')->nullable();
             $table->timestamps();
         });
     }

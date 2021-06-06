@@ -409,9 +409,6 @@
 
     function deleteUser()
     {
-        $(this).addClass('disabled')
-        .html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Suppression...')
-        .attr('disabled', true);
         let deleteModal = $('#delete-user-modal');
         let id = deleteModal.data('id');
         if(id == {{ auth()->user()->id }}){
@@ -425,6 +422,9 @@
             }).showToast();
             return;
         }
+        $(this).addClass('disabled')
+        .html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Suppression...')
+        .attr('disabled', true);
         $.ajax({
             method: "POST",
             url: "/admin/users/"+id,

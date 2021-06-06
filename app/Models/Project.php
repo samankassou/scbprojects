@@ -25,6 +25,8 @@ class Project extends Model
         'cost',
         'status',
         'progress',
+        'saved_by',
+        'deleted_by',
         'benefits',
         'documentation',
         'bills'
@@ -35,9 +37,24 @@ class Project extends Model
         return $this->belongsToMany(Nature::class);
     }
 
+    public function writer()
+    {
+        return $this->belongsTo(User::class, 'saved_by', 'id');
+    }
+
+    public function deleter()
+    {
+        return $this->belongsTo(User::class, 'deleted_by', 'id');
+    }
+
     public function steps()
     {
         return $this->belongsToMany(Step::class);
+    }
+
+    public function modifications()
+    {
+        return $this->hasMany(ProjectModification::class);
     }
 
     public function getStartYearAttribute()

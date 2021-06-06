@@ -45,8 +45,9 @@ Route::group([
             Route::get('/projects/export', [ProjectController::class, 'export'])->name('projects.export');
             Route::post('/projects/list', [ProjectController::class, 'ajaxList']);
             
-            Route::get('/projects/deleted', [ProjectController::class, 'deleted'])->name('projects.deleted');
+            Route::get('/projects/deleted', [ProjectController::class, 'deleted'])->name('projects.deleted.index');
             Route::post('/projects/deleted', [ProjectController::class, 'ajaxDeletedList'])->name('projects.deleted');
+            Route::get('/projects/deleted/{id}', [ProjectController::class, 'showDeleted'])->name('projects.deleted.show');
             Route::resource('/projects', ProjectController::class);
 
             Route::group([

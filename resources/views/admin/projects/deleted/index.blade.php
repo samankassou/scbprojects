@@ -24,9 +24,8 @@
                         <th>Nom</th>
                         <th>AMOA</th>
                         <th>Sponsor/MOA</th>
-                        <th>Statut</th>
-                        <th>Année</th>
-                        <th>Nature(s)</th>
+                        <th>Date suppression</th>
+                        <th>Supprimé par</th>
                         <th style="width: 140px">Options</th>
                     </tr>
                 </thead>
@@ -101,22 +100,23 @@
             {data: 'name', name: 'name'},
             {data: 'amoa', name: 'amoa'},
             {data: 'sponsor', name: 'sponsor'},
-            {data: 'status', name: 'status'},
-            {data: 'start_year', name: 'start_year'},
             {
-                data: 'natures',
-                name: 'natures',
-                orderable: false, 
+                data: 'deleted_at', 
+                name: 'deleted_at',
+                orderable: false,
                 searchable: false,
-                render: function(natures){
-                    let naturesNames = "";
-                    if(natures.length){
-                        for(nature of natures){
-                            naturesNames += nature.name + ", ";
-                        }
-                        return naturesNames.slice(0, -1);
-                    }
-                    return "Aucune";
+                render: function(deleted_at){
+                    let deletedAt = new Date(deleted_at);
+                    return deletedAt.toLocaleDateString()+' à '+deletedAt.toLocaleTimeString();
+                }
+            },
+            {
+                data: 'deleter', 
+                name: 'deleter',
+                orderable: false,
+                searchable: false,
+                render: function(deleter){
+                    return deleter.name;
                 }
             },
             {
