@@ -85,6 +85,104 @@
     </div>
 </div>
 {{--! Create user modal --}}
+{{-- Edit user modal --}}
+<div class="modal fade text-left" id="edit-user-modal" tabindex="-1" aria-labelledby="myModalLabel33" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Modifier un utilisateur </h4>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <i data-feather="x"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="#" id="edit-user-form">
+                    <div class="form-group">
+                        <input type="text" id="edit-name" placeholder="Nom(s)" class="form-control" name="name">
+                        <div class="invalid-feedback" id="edit-name-error"></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <input id="edit-email" type="email" placeholder="Email" class="form-control" name="email">
+                        <div class="invalid-feedback" id="edit-email-error"></div>
+                    </div>
+
+                    <label>Rôle: </label>
+                    <div class="form-group">
+                        <select name="role" id="edit-role">
+                            <option value="">Choisir un rôle</option>
+                            @foreach ($usersRoles as $role)
+                                <option value="{{ $role->id }}">{{ $role->display_name }}</option>
+                            @endforeach
+                        </select>
+                        <div class="invalid-feedback" id="edit-role-error"></div>
+                    </div>
+
+                    <div class="form-check">
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="form-check-input form-check-primary form-check-glow" id="toggle-pswzone-btn">
+                            <label class="form-check-label" for="customColorCheck1">Modifier le mot de passe</label>
+                        </div>
+                    </div>
+
+                    <div id="edit-password-zone" style="display: none">
+                        <div class="form-group">
+                            <input id="edit-password" type="password" placeholder="Mot de passe" class="form-control" name="password">
+                            <div class="invalid-feedback" id="password-error"></div>
+                            <div class="invalid-feedback" id="edit-password-error"></div>
+                        </div>
+    
+                        <div class="form-group">
+                            <input id="edit-password_confirmation" type="password" placeholder="Confirmez le mot de passe" class="form-control" name="password_confirmation">
+                            <div class="invalid-feedback" id="edit-password_confirmation-error"></div>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light-secondary" data-bs-dismiss="modal">
+                    <i class="bx bx-x d-block d-sm-none"></i>
+                    <span class="d-none d-sm-block">Annuler</span>
+                </button>
+                <button id="update-user-btn" type="button" class="btn btn-primary ml-1">
+                    <i class="bx bx-check d-block d-sm-none"></i>
+                    <span class="d-none d-sm-block">Enregistrer</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{{--! Edit user modal --}}
+{{--  User infos modal --}}
+<div class="modal fade text-left" id="user-infos-modal" tabindex="-1" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-primary">
+                <h5 class="modal-title white">
+                    Informations utilisateur
+                </h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <i data-feather="x"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p><strong>Nom(s)</strong>: <span class="name"></span></p>
+                <p><strong>Email</strong>: <span class="email"></span></p>
+                <p><strong>Rôle</strong>: <span class="role"></span></p>
+                <p><strong>Date de création</strong>: <span class="created_at"></span></p>
+                <p><strong>Date de dernière modification</strong>: <span class="updated_at"></span></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light-secondary" data-bs-dismiss="modal">
+                    <i class="bx bx-x d-block d-sm-none"></i>
+                    <span class="d-none d-sm-block">Fermer</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{{--!  User infos modal --}}
 {{-- Delete user modal --}}
 <div class="modal-danger me-1 mb-1 d-inline-block">
     <div class="modal fade text-left" id="delete-user-modal" tabindex="-1" aria-labelledby="myModalLabel120" aria-hidden="true" style="display: none;">
@@ -122,21 +220,15 @@
 @parent
 <script src="{{ asset('mazer/assets/vendors/choices.js/choices.min.js') }}"></script>
 <script>
-    let token = $('meta[name="csrf-token"]').attr('content');
-    
     $(function () {
+        token = $('meta[name="csrf-token"]').attr('content');
+        editRoleChoice = new Choices(document.getElementById('edit-role'));
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': token
             }
         });
-        $('#delete-user-btn').on('click', deleteUser);
-        $('#save-user-btn').on('click', saveUser);
-        $('#create-user-modal, #edit-user-modal').on('hide.bs.modal', function(e){
-        resetModal(e);
-    });
-    });
-    const table = $('#users-datatable').DataTable({
+        table = $('#users-datatable').DataTable({
         language: {
             url: "{{ asset('vendor/datatables/lang/French.json') }}"
         },
@@ -159,7 +251,12 @@
                     return roles[0].display_name
                 }
             },
-            {data: 'status', name: 'status'},
+            {
+                data: 'status', 
+                name: 'status',
+                orderable: false, 
+                searchable: false
+            },
             {
                 data: 'action', 
                 name: 'action', 
@@ -168,6 +265,16 @@
             },
         ]
     });
+        $('#delete-user-btn').on('click', deleteUser);
+        $('#save-user-btn').on('click', saveUser);
+        $('#toggle-pswzone-btn').on('click', togglePswZone);
+        $('#update-user-btn').on('click', updateUser);
+        $('#create-user-modal, #edit-user-modal').on('hide.bs.modal', function(e){
+        resetModal(e);
+            $('#edit-password-zone').hide();
+        });
+    });
+    
 
     function saveUser()
     {
@@ -200,6 +307,63 @@
             },
             complete: function(){
                 $('#save-user-btn').removeClass('disabled').text('Enregistrer').attr('disabled', false);
+            }
+        });
+        return false;
+    }
+
+    function togglePswZone()
+    {
+        $('#edit-password-zone').toggle(1000);
+    }
+
+    function updateUser()
+    {
+        let id = $('#edit-user-modal').data('id');
+        $(this).addClass('disabled')
+        .html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Enregistrement...')
+        .attr('disabled', true);
+        removeErrorMessages("edit-user-modal");
+        let name = $('#edit-name').val();
+        let email = $('#edit-email').val();
+        let role = $('#edit-role').val();
+        let togglePswZoneBtn = $('#toggle-pswzone-btn');
+
+        let data = {
+            _method: "PATCH",
+            name: name,
+            email: email,
+            role: role
+        };
+        if(togglePswZoneBtn.is(':checked')){
+            data.password = $('#edit-password').val();
+            data.password_confirmation = $('#edit-password_confirmation').val();
+        }
+        
+        $.ajax({
+            method: "POST",
+            url: "/admin/users/"+id,
+            data: data,
+            success: function(response){
+                $('#edit-user-modal').modal('hide');
+                table.ajax.reload(null, false);
+                Toastify({
+                    text: "Modifications enregistrées avec succès!",
+                    duration: 3000,
+                    close:true,
+                    gravity:"top",
+                    position: "right",
+                    backgroundColor: "#4fbe87",
+                }).showToast();
+            },
+            error: function(response){
+                let errors = response.responseJSON.errors;
+                for (const error in errors) {
+                    $('#edit-'+error+'-error').html(errors[error][0]).show();
+                }
+            },
+            complete: function(){
+                $('#update-user-btn').removeClass('disabled').text('Enregistrer').attr('disabled', false);
             }
         });
         return false;
@@ -288,10 +452,52 @@
         return false;
         
     }
+    function showEditUserModal(id)
+    {
+        $.ajax({
+            url: "/admin/users/"+id+"/edit",
+            success: function(response){
+                let user = response.user;
+                $('#edit-name').val(user.name);
+                $('#edit-email').val(user.email);
+                editRoleChoice.setChoiceByValue(''+user.roles[0].id);
+                $('#edit-user-modal').data('id', id).modal('show');
+            },
+            error: function(response){
+                console.log(response);
+            }
+        });
+        
+    }
+
     function showDeleteUserModal(id)
     {
         $('#delete-user-modal').data('id', id).modal('show');
     }
+
+    function showUserInfosModal(id)
+    {
+        $.ajax({
+            url: '/admin/users/'+id,
+            dataType: "JSON",
+            success: function(response){
+                let user = response.user;
+                let createdAt = new Date(user.created_at);
+                let updatedAt = new Date(user.updated_at);
+                $('#user-infos-modal .name').text(user.name);
+                $('#user-infos-modal .email').text(user.email);
+                $('#user-infos-modal .role').text(user.roles[0].display_name);
+                $('#user-infos-modal .created_at').text(createdAt.toLocaleDateString()+' à '+createdAt.toLocaleTimeString());
+                $('#user-infos-modal .updated_at').text(updatedAt.toLocaleDateString()+' à '+updatedAt.toLocaleTimeString());
+                $('#user-infos-modal').modal('show');
+            },
+            error: function(response){
+                console.log(response);
+            }
+        });
+    }
+
+    
 
     function resetModal(e)
     {

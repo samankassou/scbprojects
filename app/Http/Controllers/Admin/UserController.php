@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreUserRequest;
+use App\Http\Requests\UpdateUserRequest;
 
 class UserController extends Controller
 {
@@ -32,8 +33,8 @@ class UserController extends Controller
                 return $btn;
             })
             ->addColumn('action', function($user){
-                $actionBtns = "<a href=".route('admin.users.show', $user->id)." title='Détail' data-id=".$user->id." class='btn btn-sm btn-primary'><i class='bi bi-eye'></i></a> ";
-                $actionBtns .= "<button class='btn btn-sm btn-warning' title='Modifier' data-id=".$user->id."><i class='bi bi-pencil'></i></button> ";
+                $actionBtns = "<button class='btn btn-sm btn-primary' title='Détails' onclick='showUserInfosModal($user->id)'><i class='bi bi-eye'></i></button> ";
+                $actionBtns .= "<button class='btn btn-sm btn-warning' title='Modifier' onclick='showEditUserModal($user->id)'><i class='bi bi-pencil'></i></button> ";
                 $actionBtns .= "<button class='btn btn-sm btn-danger' title='Supprimer' onclick='showDeleteUserModal($user->id)'><i class='bi bi-trash'></i></button>";
                 return $actionBtns;
             })
@@ -42,16 +43,6 @@ class UserController extends Controller
         }
         $usersRoles = Role::all();
         return view('admin.users.index', compact('usersRoles'));
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
     }
 
     /**
@@ -81,7 +72,10 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        //
+        $user->load('roles');
+        return response()->json([
+            'user' => $user
+        ]);
     }
 
     /**
@@ -92,7 +86,10 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
-        //
+        $user->load('roles');
+        return response()->json([
+            'user' => $user
+        ]);
     }
 
     /**
@@ -102,9 +99,17 @@ class UserController extends Controller
      * @param  \App\Models\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, User $user)
+    public function update(UpdateUserRequest $request, User $user)
     {
-        //
+        $user->update([
+            'name' => $request->name,
+            'email' => $request->email,
+        ]);
+        if($request->password){
+            $user->password = bcrypt($request->password);
+        }
+        $user->roles()->sync([$request->role]);
+        return response()->json(['message' => 'User updated successfully!']);
     }
 
     /**
