@@ -22,6 +22,10 @@ Route::get('/projects/export/{reference}', [ProjectController::class, 'exportPdf
 Route::get('/projects/show/{reference}', [ProjectController::class, 'showByRef'])->name('projects.show');
 Route::get('/projects/search/{reference}', [ProjectController::class, 'search'])->name('projects.search');
 
+Route::get('/processes/export/{reference}', [ProcessController::class, 'exportPdf'])->name('processes.pdf');
+Route::get('/processes/show/{reference}', [ProcessController::class, 'showByRef'])->name('processes.show');
+Route::get('/processes/search/{reference}', [ProcessController::class, 'search'])->name('processes.search');
+
 
 Route::group([
     'middleware' => 'guest'

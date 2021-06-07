@@ -71,6 +71,16 @@ class ProcessController extends Controller
         return response()->json(['entities' => $entities]);
     }
 
+    public function search(Request $request)
+    {
+        $process = Process::firstWhere('reference', $request->reference);
+        $success = $process ? true : false;
+        return response()->json([
+            'success' => $success,
+            'process' => $process
+            ]);
+    }
+
     /**
      * Store a newly created resource in storage.
      *

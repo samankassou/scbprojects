@@ -14,6 +14,17 @@ class AuthController extends Controller
 
         if (Auth::attempt($credentials, $request->remember)) {
             $request->session()->regenerate();
+            if(!auth()->user()->status){
+                Auth::logout();
+
+                $request->session()->invalidate();
+
+                $request->session()->regenerateToken();
+
+                return back()->withInput()->withErrors([
+                    'email' => 'Votre compte n\'est plus actif'
+                ]);
+            }
 
             return redirect()->intended('dashboard');
         }

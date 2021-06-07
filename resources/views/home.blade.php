@@ -5,7 +5,6 @@
   <!-- basic -->
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <link rel="icon" href="./icon/2.jpg">
   <!-- mobile metas -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="viewport" content="initial-scale=1, maximum-scale=1">
@@ -21,14 +20,14 @@
   <!-- style css -->
   <link rel="stylesheet" href="{{ asset('front/css/styles.css') }}">
   <!-- Responsive-->
-  <link rel="stylesheet" href="{{ asset('front/css/responsive.css') }}">  
+  <link rel="stylesheet" href="{{ asset('front/css/responsive.css') }}">
   <!-- Scrollbar Custom CSS -->
   <link rel="stylesheet" href="{{ asset('front/css/jquery.mCustomScrollbar.min.css') }}">
 
   <style type="text/css">
-    
+
   </style>
-  
+
   </head>
 <!-- body -->
 
@@ -55,7 +54,7 @@
               </div>
             </div>
             <div class="col-xl-10 col-lg-8 col-md-8 col-sm-9">
-         
+
                <div class="menu-area">
                 <div class="limit-box">
                   <nav class="main-menu ">
@@ -71,7 +70,7 @@
                      </ul>
                    </nav>
                  </div>
-               </div> 
+               </div>
               </div>
            </div>
          </div>
@@ -81,7 +80,7 @@
 
      <!-- end header -->
      <section >
-        <div>        
+        <div>
         <div class="carousel-inner">
             <div class="container-fluid padding_dd">
               <div class="carousel-caption">
@@ -89,23 +88,33 @@
                   <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
                     <div class="text-bg">
                      <span>ORGANISATION ET PROJETS</span><hr>
-                          <form id="search-form" class="Vegetable">
+                     <p style="text-align: center"><strong>Choisir l'option de la Recherche</strong></p>
+                          <form id="search-form" class="Vegetable" style="display: none">
                           <input id="search-input" class="Vegetable_fom" placeholder="Saisir la Référence du Projet" type="text" name=" Recherche">
-                          <button class="Search_btn">Recherche </button> 
+                          <button class="Search_btn">Recherche </button>
                           </form>
+                          <form id="search-form1" class="Vegetable" style="display: none">
+                            <input id="search-input1" class="Vegetable_fom" placeholder="Saisir la Référence du Process" type="text" name=" Recherche">
+                            <button class="Search_btn">Recherche </button>
+                            </form>
+                            <a href="/" id="d3" style="display: none">Retour</a><br>
                           <div id="result">
-                           <a href="{{ route('admin.processes.index') }}">Gestion Process</a> <a href="{{ route('admin.projects.index') }}">Gestion Projets</a><hr>
+                            <button id="d1" class="Search_btn" type="button" onclick="myFunction()">Rechercher un Projet</button>&nbsp;&nbsp;
+                            <button id="d2" class="Search_btn" type="button" onclick="mFunction()" style="float: right">Rechercher un Process</button>
+                           <hr>
                             <h1 class="btn">SCB Cameroun</h1>
                           <p>Lorem ipsum dolor sit am et, consec tetur adipi scing elit. Sed
                               sodales enim ut rhoncus lorem ipsum ese terds. Lorem ipsum dolor sit
                               am et, consec tetur adipi scing elit. Sed sodales enim ut rhoncus . </p>
                           </div>
-                        </div><hr>
+                          </div><hr>
                         </div>
                         <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
                        <div class="images_box">
-                      <figure><img src="{{ asset('front/images/1.png') }}"></figure>
-                    </div>
+                          <figure><img src="{{ asset('front/images/3.jpg') }}"></figure>
+                          <span>Connexion:</span><br>
+                          <a href="{{ route('admin.processes.index') }}">Gestion Process</a> <a href="{{ route('admin.projects.index') }}">Gestion Projets</a><hr>
+                        </div>
                   </div>
                 </div>
               </div>
@@ -114,90 +123,181 @@
         </div>
       </section>
 </header>
-          <!--  footer -->
-          <footer>
-            <div class="footer ">
-              <div class="copyright">
-                <div class="container">
-                  <p>Copyright © 2021 SCB Cameroun <a href="scbcameroun.net">All right reserved </a></p>
-                </div>
+<!--  footer -->
+<footer>
+  <div class="footer ">
+    <div class="copyright">
+      <div class="container">
+        <p>Copyright © 2021 SCB Cameroun <a href="scbcameroun.net">All right reserved </a></p>
+      </div>
+    </div>
+  </div>
+</footer>
+<!-- end footer -->
+
+
+  <!-- Javascript files-->
+  <script src="{{ asset('front/js/jquery.min.js') }}"></script>
+  <script src="{{ asset('front/js/popper.min.js') }}"></script>
+  <script src="{{ asset('front/js/bootstrap.bundle.min.js') }}"></script>
+  <script src="{{ asset('front/js/jquery-3.0.0.min.js') }}"></script>
+  <script src="{{ asset('front/js/plugin.js') }}"></script>
+  <!-- sidebar -->
+  <script src="{{ asset('front/js/jquery.mCustomScrollbar.concat.min.js') }}"></script>
+  <script src="{{ asset('front/js/custom.js') }}"></script>
+  <script>
+    $(function(){
+      $('#search-form').on('submit', function(e){
+        e.preventDefault();
+        let searchWord = $('#search-input').val();
+        if(searchWord.length > 2){
+          $.ajax({
+            url: '/projects/search/'+searchWord,
+            success: function(response){
+              if(response.success){
+                let project = response.project;
+                let start_date = new Date(project.start_date);
+                let end_date = new Date(project.end_date);
+                let html = `
+                  <div class="card">
+                    <div class="card-content">
+                      <div class="card-body">
+                        <h2 class="card-title" style="text-align: center; text-decoration-color: rgb(0, 0, 0)"><strong>Resultat de la recherche</strong></h2>
+                        <h4 class="card-title" style= "text-align: center;">
+                          <div style= "text-align: left;"><strong>Nom du Projet:</strong><br></div>
+                          ${project.name}
+                        </h4>
+                        <h4 class="card-title" style= "text-align: center;">
+                          <div style= "text-align: left;"><strong>Chef du Projet:</strong><br></div>
+                          ${project.manager}
+                        </h4>
+                        <h4 class="card-title" style= "text-align: center;">
+                          <div style= "text-align: left;"><strong>Description du Projet:</strong><br></div>
+                          ${project.description}
+                        </h4>
+                        <h4 class="card-title" style= "text-align: center;">
+                          <div style= "text-align: left;"><strong>Dates de Début et de Fin:</strong><br></div>
+                          ${start_date.toLocaleDateString()}  /  ${end_date.toLocaleDateString()}
+                        </h4>
+                      </div>
+                    </div>
+                    <div class="card-footer d-flex justify-content-between">
+                        <span><button class="btn btn-light-primary"><a href="/projects/show/${project.reference}">Ouvrir</a></button></span>
+                        <button class="btn btn-light-primary"><a href="/projects/export/${project.reference}">Imprimer</a></button>
+                    </div>
+                  </div>
+                    `;
+                  $('#result').html(html);
+
+              }else{
+                let html = `
+                  <div class="d-flex justify-content-center align-items-center" style="width: 300px;">
+                      <img class="img-fluid" src="{{ asset('front/images/9.jpg') }}" alt="#" />
+                  </div>
+                `;
+                $('#result').html(html);
+              }
+            },
+            error: function(response){
+              console.log(response);
+            }
+          });
+        }
+      });
+    });
+  </script>
+
+<script>
+$(function(){
+$('#search-form1').on('submit', function(e){
+e.preventDefault();
+let searchWord = $('#search-input1').val();
+if(searchWord.length > 2){
+  $.ajax({
+    url: '/processes/search/'+searchWord,
+    success: function(response){
+      if(response.success){
+        let process = response.process;
+        let html = `
+          <div class="card">
+            <div class="card-content">
+              <div class="card-body">
+                <h2 class="card-title" style="text-align: center; text-decoration-color: rgb(0, 0, 0)"><strong>Détails de la procédure</strong></h2>
+                <h4 class="card-title" style= "text-align: center;">
+                  <div style= "text-align: left;"><strong>Intitulé:</strong><br></div>
+                  ${process.name}
+                </h4>
+                <h4 class="card-title" style= "text-align: center;">
+                  <div style= "text-align: left;"><strong>Version:</strong><br></div>
+                  ${process.version}
+                </h4>
+                <h4 class="card-title" style= "text-align: center;">
+                  <div style= "text-align: left;"><strong>Statut:</strong><br></div>
+                  ${process.status}
+                </h4>
+                <h4 class="card-title" style= "text-align: center;">
+                  <div style= "text-align: left;"><strong>Créée par:</strong><br></div>
+                  ${process.created_by}
+                </h4>
               </div>
             </div>
-          </footer>
-          <!-- end footer -->
+            <div class="card-footer d-flex justify-content-between">
+                <span><button class="btn btn-light-primary"><a href="/processes/show/${process.reference}">Ouvrir</a></button></span>
+                <button class="btn btn-light-primary"><a href="/processes/export/${process.reference}">Imprimer</a></button>
+            </div>
+          </div>
+            `;
+          $('#result').html(html);
 
+      }else{
+        let html = `
+          <div class="d-flex justify-content-center align-items-center" style="width: 300px;">
+              <img class="img-fluid" src="{{ asset('front/images/9.jpg') }}" alt="#" />
+          </div>
+        `;
+        $('#result').html(html);
+      }
+    },
+    error: function(response){
+      console.log(response);
+    }
+  });
+}
+});
+});
+</script>
 
-          <!-- Javascript files-->
-          <script src="{{ asset('front/js/jquery.min.js') }}"></script>
-          <script src="{{ asset('front/js/popper.min.js') }}"></script>
-          <script src="{{ asset('front/js/bootstrap.bundle.min.js') }}"></script>
-          <script src="{{ asset('front/js/jquery-3.0.0.min.js') }}"></script>
-          <script src="{{ asset('front/js/plugin.js') }}"></script>
-          <!-- sidebar -->
-          <script src="{{ asset('front/js/jquery.mCustomScrollbar.concat.min.js') }}"></script>
-          <script src="{{ asset('front/js/custom.js') }}"></script>
-          <script>
-            $(function(){
-              $('#search-form').on('submit', function(e){
-                e.preventDefault();
-                let searchWord = $('#search-input').val();
-                if(searchWord.length > 2){
-                  $.ajax({
-                    url: '/projects/search/'+searchWord,
-                    success: function(response){
-                      if(response.success){
-                        let project = response.project;
-                        let start_date = new Date(project.start_date);
-                        let end_date = new Date(project.end_date);
-                        let html = `
-                          <div class="card">
-                            <div class="card-content">
-                              <div class="card-body">
-                                <h2 class="card-title" style="text-align: center; text-decoration-color: rgb(0, 0, 0)"><strong>Resultat de la recherche</strong></h2>
-                                <h4 class="card-title" style= "text-align: center;">
-                                  <div style= "text-align: left;"><strong>Nom du Projet:</strong><br></div>
-                                  ${project.name}
-                                </h4>
-                                <h4 class="card-title" style= "text-align: center;">
-                                  <div style= "text-align: left;"><strong>Chef du Projet:</strong><br></div>
-                                  ${project.manager}
-                                </h4>
-                                <h4 class="card-title" style= "text-align: center;">
-                                  <div style= "text-align: left;"><strong>Description du Projet:</strong><br></div>
-                                  ${project.description}
-                                </h4>
-                                <h4 class="card-title" style= "text-align: center;">
-                                  <div style= "text-align: left;"><strong>Dates de Début et de Fin:</strong><br></div>
-                                  ${start_date.toLocaleDateString()}  /  ${end_date.toLocaleDateString()}
-                                </h4>
-                              </div>
-                            </div>
-                            <div class="card-footer d-flex justify-content-between">
-                                <span><button class="btn btn-light-primary"><a href="/projects/show/${project.reference}">Ouvrir</a></button></span>
-                                <button class="btn btn-light-primary"><a href="/projects/export/${project.reference}">Imprimer</a></button>
-                            </div>
-                          </div>
-                            `;
-                          $('#result').html(html);
+    <script>
+        function myFunction() {
+            var x = document.getElementById("search-form");
+            var y = document.getElementById("search-form1");
+            var a = document.getElementById("d1");
+            var b = document.getElementById("d2");
+            var c = document.getElementById("d3");
+            if(x.style.display === "none"){
+                x.style.display = "block";
+                c.style.display = "block";
+                y.style.display = "none";
+                a.style.display = "none";
+                b.style.display = "none";
+            }
+        }
 
-                      }else{
-                        let html = `
-                          <div class="d-flex justify-content-center align-items-center" style="width: 300px;">
-                              <img class="img-fluid" src="{{ asset('front/images/9.jpg') }}" alt="#" />
-                          </div>
-                        `;
-                        $('#result').html(html);
-                      }
-                    },
-                    error: function(response){
-                      console.log(response);
-                    }
-                  });
-                }
-              });
-            });
-          </script>
-
+        function mFunction() {
+            var x = document.getElementById("search-form");
+            var y = document.getElementById("search-form1");
+            var a = document.getElementById("d1");
+            var b = document.getElementById("d2");
+            var c = document.getElementById("d3");
+            if(y.style.display === "none"){
+                x.style.display = "nones";
+                y.style.display = "block";
+                c.style.display = "block";
+                a.style.display = "none";
+                b.style.display = "none";
+            }
+        }
+    </script>
 
 </body>
 
