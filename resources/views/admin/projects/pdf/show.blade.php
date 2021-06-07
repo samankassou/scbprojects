@@ -19,11 +19,22 @@
 .top-left p {
     margin: 0;
 }
+#footer{
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    color: #aaa;
+    font-size: 0.9em;
+    border-top: 0.1pt solid #aaa;
+}
 
 
     </style>
 </head>
 <body>
+    <div id="footer">
+        <div class="page-number"></div>
+    </div>
     <div class="my-5 page" size="A4">
         <div class="p-5">
             <section class="top-content bb d-flex justify-content-between">
@@ -106,4 +117,15 @@
             </section>
         </div>
     </div>
+    <script type="text/php">
+        if(isset($pdf)){
+            $text = "Page {PAGE_NUM} / {PAGE_COUNT}";
+            $size = 10;
+            $font = $fontMetrics->getFont("Verdana");
+            $width = $fontMetrics->get_text_width($text, $font, $size) / 2;
+            $x = ($pdf->get_width() - $width);
+            $y = ($pdf->get_height() - 30);
+            $pdf->page_text($x, $y, $text, $font, $size);
+        }
+    </script>
 </body>

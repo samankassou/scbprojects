@@ -9,6 +9,7 @@ use App\Models\Method;
 use App\Models\Process;
 use App\Models\Macroprocess;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreProcessRequest;
 use App\Http\Requests\UpdateProcessRequest;
@@ -71,6 +72,13 @@ class ProcessController extends Controller
         return response()->json(['entities' => $entities]);
     }
 
+    public function showByRef(Request $request)
+    {
+        $process = Process::firstWhere('reference', $request->reference);
+        abort_if(!$process, 404, 'Reférence incorrecte ou process inexistant');
+        return view('admin.processes.show_by_ref', compact('process'));
+    }
+
     public function search(Request $request)
     {
         $process = Process::firstWhere('reference', $request->reference);
@@ -79,6 +87,18 @@ class ProcessController extends Controller
             'success' => $success,
             'process' => $process
             ]);
+    }
+
+    public function exportPdf(Request $request)
+    {
+        $process = Process::firstWhere('reference', $request->reference);
+        abort_if(!$process, 404, 'Reférence incorrecte ou procédure inexistante');
+        $pdf = App::make('dompdf.wrapper');
+        $pdf->getDomPDF()->set_option("enable_php", true);
+        $pdf->loadView('admin.processes.pdf.show', compact('process'));
+        $fileName = 'process_'.$process->reference.'_'.today()->format('d-m-Y').'.pdf';
+        return $pdf->stream($fileName);
+
     }
 
     /**

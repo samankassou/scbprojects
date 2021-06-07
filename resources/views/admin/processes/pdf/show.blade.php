@@ -8,7 +8,7 @@
     <!-- Custom Style -->
     <link rel="stylesheet" href="{{ asset('front/css/bootstrap-4.0.0/style.css') }}">
 
-    <title>Procédure {{ $process->reference }}</title>
+    <title>Procédure</title>
 </head>
 <body>
     <div class="my-5 page" size="A4">
@@ -22,74 +22,96 @@
                         <p>Ref-No:</p>
                     </div>
                     <div class="position-relative">
-                        <p><span>{{ $process->reference }}</span></p>
+                        <p><span>XXXX-NTSF</span></p>
                     </div>
                 </div>
             </section>
             <section class="top-content bb d-flex justify-content-between">
                 <div class=" ">
-                    <h4><strong>Domaine:</strong></h4><h2 style="text-indent: 4em;"> {{ $process->method->macroprocess->domain->name }}</h2>
+                    <h4><strong>Domaine:</strong></h4><h2 style="text-indent: 4em;"> Domaine</h2>
                 </div>
             </section>
             <section class="store-user mt-5">
                 <div class="top-left">
                     <div class="row bb pb-3">
-                            <p><strong> Macroprocessus:&nbsp;</strong><span><h5> {{ $process->method->macroprocess->name }}</h5></span></p>
+                            <p><strong> Macroprocessus:&nbsp;</strong><span><h5> la composition et la mise en page avant impression.</h5></span></p>
                     </div>
                     <div class="row extra-info pt-3">
                             <p class="m-0 font-weight-bold"><strong>Processus:</strong></p>
-                            <p>{{ $process->method->name }}</p>
+                            <p>Le Lorem Ipsum est simplement du faux texte employé dans
+                               la composition et la mise en page avant impression. 
+                               Le Lorem Ipsum est le faux texte standard de l'imprimerie 
+                               depuis les années 1500, quand un imprimeur anonyme assembla 
+                               ensemble des morceaux de texte pour réaliser un livre spécimen 
+                               de polices de texte. Il n'a pas fait que PageMaker.</p>
                     </div>
                     <div class="row extra-info pt-3">
                         <p class="m-0 font-weight-bold"><strong> Intitulé:</strong></p>
-                        <p>{{ $process->name }}</p>
+                        <p>Lorem ipsum dolor sit amet, consectetur 
+                           adipisicing elit. In delectus, adipisci 
+                           vero est dolore praesentium.</p>
                     </div>
                     <div class="row extra-info pt-3">
                         <p class="m-0 font-weight-bold"><strong>Type:</strong></p>
-                        <p>{{ $process->type }}</p>
+                        <p>Lorem ipsum dolor sit amet, consectetur 
+                        adipisicing elit. In delectus, adipisci 
+                        vero est dolore praesentium.</p>
                     </div>
                     <div class="row extra-info pt-3">
                         <p class="m-0 font-weight-bold"><strong>No. de version:</strong></p>
-                        <p>{{ $process->version }}</p>
+                        <p>Lorem ipsum dolor sit amet, consectetur 
+                        adipisicing elit. In delectus, adipisci 
+                        vero est dolore praesentium.</p>
                     </div>
                     <div class="row extra-info pt-3">
                         <p class="m-0 font-weight-bold"><strong>Pôle:</strong></p>
-                        <p>{{ $process->entity->pole->name }}</p>
+                        <p>Lorem ipsum dolor sit amet, consectetur 
+                        adipisicing elit. In delectus, adipisci 
+                        vero est dolore praesentium.</p>
                     </div>
                     <div class="row extra-info pt-3">
                         <p class="m-0 font-weight-bold"><strong> Entité:</strong></p>
-                        <p>{{ $process->entity->name }}</p>
+                        <p>Lorem ipsum dolor sit amet, consectetur 
+                        adipisicing elit. In delectus, adipisci 
+                        vero est dolore praesentium.</p>
                     </div>
                     
                     <div class="row extra-info pt-3">
                         <p class="m-0 font-weight-bold"><strong> Céée le:</strong></p>&nbsp;
-                        <p> {{ $process->creation_date->format('d/m/Y') }}</p><strong style="text-indent: 2em;" > Par:</strong></p>&nbsp;<p> {{ $process->created_by }}</p>
+                        <p> 10-04.2021 - 10-04.2021.</p><strong style="text-indent: 2em;" > Par:</strong></p>&nbsp;<p> dgvghvchcdsdfhdq</p>
                     </div>
                     <div class="row extra-info pt-3">
                         <p class="m-0 font-weight-bold"><strong> Redigée le:</strong></p>&nbsp;
-                        <p>{{ $process->written_date->format('d/m/Y') }}</p><strong style="text-indent: 2em;" > Par:</strong></p>&nbsp;<p>{{ $process->written_by }}</p>
+                        <p>10-04.2021 - 10-04.2021.</p><strong style="text-indent: 2em;" > Par:</strong></p>&nbsp;<p>dsdfhdq</p>
                     </div>
                     <div class="row extra-info pt-3">
                         <p class="m-0 font-weight-bold"><strong> Validéé le:</strong></p>&nbsp;
-                        <p>{{ $process->validation_date->format('d/m/Y') }}</p><strong style="text-indent: 2em;" > Par:</strong></p>&nbsp;<p>{{ $process->validated_by }}</p>
+                        <p>10-04.2021 - 10-04.2021.</p><strong style="text-indent: 2em;" > Par:</strong></p>&nbsp;<p>dsdfhdq</p>
                     </div>
                     <div class="row extra-info pt-3">
                         <p class="m-0 font-weight-bold"><strong> Aprouvée le:</strong></p>&nbsp;
-                        <p>{{ $process->approved_date->format('d/m/Y') }}</p><strong style="text-indent: 2em;" > Par:</strong></p>&nbsp;<p>{{ $process->approved_by }}</p>
+                        <p>10-04.2021 - 10-04.2021.</p><strong style="text-indent: 2em;" > Par:</strong></p>&nbsp;<p>dsdfhdq</p>
                     </div>
                     <div class="row extra-info pt-3">
                         <p class="m-0 font-weight-bold"><strong>Etat:</strong></p>&nbsp;
-                        <p>{{ $process->status }}</p><strong style="text-indent: 2em;" ></p> 
+                        <p>Lorem ipsum dolor sit amet</p><strong style="text-indent: 2em;" ></p> 
                             
-                            <p><strong>Raison de la création</strong></p><p>{{ $process->reasons_for_creation }}</p>
-                            <p><strong>Raison de la modification</strong></p><p>{{ $process->reasons_for_modification }}</p>
+                            <p><strong>Raison de la création</strong></p><p>In delectus, adipisci 
+                                vero est dolore praesentium.s</p>
+                            <p><strong>Raison de la modification</strong></p><p>In delectus, adipisci 
+                                vero est dolore praesentium.s</p>
                     <div class="row extra-info pt-3">
                         <p class="m-0 font-weight-bold"><strong> Modification(s) apportée(s):</strong></p>
-                        <p>{{ $process->modifications }}</p>
+                        <p>Lorem ipsum dolor sit amet, consectetur 
+                        adipisicing elit. In delectus, adipisci 
+                        vero est dolore praesentium.</p>
                     </div>
                     <div class="row extra-info pt-3">
                         <p class="m-0 font-weight-bold"><strong> Annexe(s):</strong></p>
-                        <p>{{ $process->appendices }}</p>
+                        <p>Le Lorem Ipsum est simplement du faux texte employé dans
+                       la composition et la mise en page avant impression. 
+                       Le Lorem Ipsum est le faux texte standard de l'imprimerie 
+                       depuis les années 1500r.</p>
                     </div>
             
 

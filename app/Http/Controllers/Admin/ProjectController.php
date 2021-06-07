@@ -72,6 +72,7 @@ class ProjectController extends Controller
         $project = Project::firstWhere('reference', $request->reference);
         abort_if(!$project, 404, 'Reférence incorrecte ou projet inexistant');
         $pdf = App::make('dompdf.wrapper');
+        $pdf->getDomPDF()->set_option("enable_php", true);
         $pdf->loadView('admin.projects.pdf.show', compact('project'));
         $fileName = 'projet_'.$project->reference.'_'.today()->format('d-m-Y').'.pdf';
         return $pdf->stream($fileName);
