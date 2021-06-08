@@ -27,6 +27,27 @@
             <p><strong>Documentation du projet</strong>: {{ $project->documentation }}</p>
             <p><strong>Facture</strong>: {{ $project->bills }}</p>
             <p><strong>Gains/Impact</strong>: {{ $project->benefits }}</p>
+            @if ($project->steps->count())
+            <div>
+                <h4>Etape(s) Réalisée(s)</h4>
+                @foreach ($project->steps as $step)
+                <ul>
+                    <li>{{ $step->name }}</li>
+                </ul>
+                @endforeach
+            </div>
+            @endif
+            @if ($project->modifications->count())
+            <div>
+                <h4>Historique des modifications</h4>
+                @foreach ($project->modifications as $modification)
+                <p>
+                    le {{ $modification->created_at->format('d/m/Y') }} à  {{ $modification->created_at->format('H:i:s') }}
+                    par <strong>{{ $modification->author->name }}</strong>
+                </p>
+                @endforeach
+            </div>
+            @endif
         </div>
     </div>
 </section>

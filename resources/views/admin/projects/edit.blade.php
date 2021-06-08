@@ -80,7 +80,7 @@
                         <fieldset class="form-group">
                             <select id="natures" class="form-select choices multiple-remove @error('natures') is-invalid @enderror" multiple name="natures[]">
                                 @foreach ($natures as $nature)
-                                    <option value="{{ $nature->id }}" @if($project->natures->pluck('id')->contains($nature->id)) selected @endif>{{ $nature->name }}</option>
+                                    <option value="{{ $nature->id }}" {{ collect(old('natures', $project->natures->pluck('id')->toArray()))->contains($nature->id) ? "selected": "" }}>{{ $nature->name }}</option>
                                 @endforeach
                             </select>
                             @error('natures')
@@ -90,6 +90,21 @@
                                 </div>
                             @enderror
                         </fieldset>
+
+                        <label for="natures">Etape(s) réalisée(s): </label>
+                        <div class="form-group">
+                            <select id="steps" class="form-select choices multiple-remove @error('steps') is-invalid @enderror" multiple name="steps[]">
+                                @foreach ($steps as $step)
+                                    <option value="{{ $step->id }}" {{ collect(old('steps', $project->steps->pluck('id')->toArray()))->contains($step->id) ? "selected": "" }}>{{ $step->name }}</option>
+                                @endforeach
+                            </select>
+                            @error('steps')
+                                <div class="invalid-feedback" style="display: block">
+                                    <i class="bx bx-radio-circle"></i>
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
 
                         <label for="initiative">Initiative:</label>
                         <div class="form-group">

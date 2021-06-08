@@ -166,18 +166,31 @@ class ProjectController extends Controller
             'name'        => $request->name,
             'description' => $request->description,
             'start_date'  => $request->start_date,
-            'end_date'    => $request->end_date,
             'sponsor'     => $request->sponsor,
             'initiative'  => $request->initiative,
             'amoa'        => $request->amoa,
-            'moe'         => $request->moe,
             'progress'    => $request->progress,
             'manager'     => $request->manager,
-            'cost'        => $request->cost,
             'status'      => $request->status,
             'benefits'    => $request->benefits,
             'saved_by'    => auth()->user()->id,
         ]);
+        
+        if($request->end_date){
+            $project->end_date = $request->end_date;
+        }
+
+        if($request->cost){
+            $project->cost = $request->cost;
+        }
+
+        if($request->steps){
+            $project->steps()->attach($request->steps);
+        }
+
+        if($request->moe){
+            $project->moe = $request->moe;
+        }
         if($request->documentation){
             $project->documentation = $request->documentation;
         }
@@ -231,8 +244,9 @@ class ProjectController extends Controller
     {
         $projects = Project::all();
         $natures = Nature::all();
+        $steps = Step::all();
         $years = array_unique(Arr::sort($projects->pluck('start_year')));
-        return view('admin.projects.edit', compact('project', 'natures', 'years'));
+        return view('admin.projects.edit', compact('project', 'natures', 'years', 'steps'));
     }
 
     /**
@@ -252,14 +266,29 @@ class ProjectController extends Controller
             'sponsor'       => $request->sponsor,
             'initiative'    => $request->initiative,
             'amoa'          => $request->amoa,
-            'moe'           => $request->moe,
             'manager'       => $request->manager,
             'cost'          => $request->cost,
             'status'        => $request->status,
             'benefits'      => $request->benefits
         ]);
+
+        if($request->end_date){
+            $project->end_date = $request->end_date;
+        }
+
+        if($request->cost){
+            $project->cost = $request->cost;
+        }
+
+        if($request->steps){
+            $project->steps()->attach($request->steps);
+        }
+
         if($request->documentation){
             $project->documentation = $request->documentation;
+        }
+        if($request->moe){
+            $project->moe = $request->moe;
         }
         if($request->bills){
             $project->bills = $request->bills;

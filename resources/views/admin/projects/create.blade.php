@@ -75,34 +75,34 @@
                         </div>
 
                         <label for="natures">Nature(s): </label>
-                        <fieldset class="form-group">
+                        <div class="form-group">
                             <select id="natures" class="form-select choices multiple-remove @error('natures') is-invalid @enderror" multiple name="natures[]">
                                 @foreach ($natures as $nature)
-                                    <option value="{{ $nature->id }}">{{ $nature->name }}</option>
+                                <option value="{{ $nature->id }}" {{ collect(old('natures'))->contains($nature->id) ? "selected": "" }}>{{ $nature->name }}</option>
                                 @endforeach
                             </select>
                             @error('natures')
-                                <div class="invalid-feedback">
-                                    <i class="bx bx-radio-circle"></i>
-                                    {{ $message }}
-                                </div>
+                            <div class="invalid-feedback" style="display: block">
+                                <i class="bx bx-radio-circle"></i>
+                                {{ $message }}
+                            </div>
                             @enderror
-                        </fieldset>
+                        </div>
 
                         <label for="natures">Etape(s) réalisée(s): </label>
-                        <fieldset class="form-group">
+                        <div class="form-group">
                             <select id="steps" class="form-select multiple-remove @error('steps') is-invalid @enderror" multiple name="steps[]">
                                 @foreach ($steps as $step)
-                                    <option value="{{ $step->id }}">{{ $step->name }}</option>
+                                    <option value="{{ $step->id }}" {{ collect(old('steps'))->contains($step->id) ? "selected": "" }}>{{ $step->name }}</option>
                                 @endforeach
                             </select>
                             @error('steps')
-                                <div class="invalid-feedback">
+                                <div class="invalid-feedback" style="display: block">
                                     <i class="bx bx-radio-circle"></i>
                                     {{ $message }}
                                 </div>
                             @enderror
-                        </fieldset>
+                        </div>
 
                         <label for="initiative">Initiative:</label>
                         <div class="form-group">
@@ -131,7 +131,7 @@
 
                         <label for="amoa">Progression(%):</label>
                         <div class="form-group">
-                            <input id="amoa" type="text" name="progress" value="{{ old('progress') }}" class="form-control @error('progress') is-invalid @enderror">
+                            <input id="amoa" type="number" name="progress" value="{{ old('progress') }}" class="form-control @error('progress') is-invalid @enderror">
                             @error('progress')
                                 <div class="invalid-feedback">
                                     <i class="bx bx-radio-circle"></i>

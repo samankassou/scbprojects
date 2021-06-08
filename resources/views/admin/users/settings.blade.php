@@ -43,55 +43,59 @@
                                 </div>
                                 <div class="tab-pane fade" id="profile" role="tabpanel"
                                     aria-labelledby="profile-tab">
-                                    <div class="my-4">
-                                        <form action="#" id="user-form">
-                                            <div class="form-group">
-                                                <input type="text" id="name" placeholder="Nom(s)" class="form-control" name="name" value="{{ auth()->user()->name }}">
-                                                <div class="invalid-feedback" id="name-error"></div>
-                                            </div>
-                                            
-                                            <div class="form-group">
-                                                <input id="email" type="email" placeholder="Email" class="form-control" name="email" value="{{ auth()->user()->email }}">
-                                                <div class="invalid-feedback" id="email-error"></div>
-                                            </div>
-
-                                            <div class="form-group">
-                                                <button id="update-user-btn" type="button" class="btn btn-primary ml-1">
-                                                    <i class="bx bx-check d-block d-sm-none"></i>
-                                                    <span class="d-none d-sm-block">Enregistrer</span>
-                                                </button>
-                                            </div>
-                        
-                                        </form>
+                                    <div class="row my-4">
+                                        <div class="col-md-6">
+                                            <form action="#" id="user-form">
+                                                <div class="form-group">
+                                                    <input type="text" id="name" placeholder="Nom(s)" class="form-control" name="name" value="{{ auth()->user()->name }}">
+                                                    <div class="invalid-feedback" id="name-error"></div>
+                                                </div>
+                                                
+                                                <div class="form-group">
+                                                    <input id="email" type="email" placeholder="Email" class="form-control" name="email" value="{{ auth()->user()->email }}">
+                                                    <div class="invalid-feedback" id="email-error"></div>
+                                                </div>
+    
+                                                <div class="form-group">
+                                                    <button id="update-user-btn" type="button" class="btn btn-primary ml-1">
+                                                        <i class="bx bx-check d-block d-sm-none"></i>
+                                                        <span class="d-none d-sm-block">Enregistrer</span>
+                                                    </button>
+                                                </div>
+                            
+                                            </form>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="tab-pane fade" id="contact" role="tabpanel"
                                     aria-labelledby="contact-tab">
-                                    <div class="my-4">
-                                        <form action="#" id="password-form">
-                                            <div class="form-group">
-                                                <input type="password" id="actual_password" placeholder="Mot de passe actuel" class="form-control" name="actual-password">
-                                                <div class="invalid-feedback" id="actual_password-error"></div>
-                                            </div>
-                                            
-                                            <div class="form-group">
-                                                <input id="password" type="password" placeholder="Nouveau mot de passe" class="form-control" name="password">
-                                                <div class="invalid-feedback" id="password-error"></div>
-                                            </div>
-
-                                            <div class="form-group">
-                                                <input id="password_confirmation" type="password" placeholder="Confirmez le mot de passe" class="form-control" name="password_confirmation">
-                                                <div class="invalid-feedback" id="password_confirmation-error"></div>
-                                            </div>
-
-                                            <div class="form-group">
-                                                <button id="update-password-btn" type="button" class="btn btn-primary ml-1">
-                                                    <i class="bx bx-check d-block d-sm-none"></i>
-                                                    <span class="d-none d-sm-block">Enregistrer</span>
-                                                </button>
-                                            </div>
-                        
-                                        </form>
+                                    <div class="row my-4">
+                                        <div class="col-md-6">
+                                            <form action="#" id="password-form">
+                                                <div class="form-group">
+                                                    <input type="password" id="actual_password" placeholder="Mot de passe actuel" class="form-control" name="actual-password">
+                                                    <div class="invalid-feedback" id="actual_password-error"></div>
+                                                </div>
+                                                
+                                                <div class="form-group">
+                                                    <input id="password" type="password" placeholder="Nouveau mot de passe" class="form-control" name="password">
+                                                    <div class="invalid-feedback" id="password-error"></div>
+                                                </div>
+    
+                                                <div class="form-group">
+                                                    <input id="password_confirmation" type="password" placeholder="Confirmez le mot de passe" class="form-control" name="password_confirmation">
+                                                    <div class="invalid-feedback" id="password_confirmation-error"></div>
+                                                </div>
+    
+                                                <div class="form-group">
+                                                    <button id="update-password-btn" type="button" class="btn btn-primary ml-1">
+                                                        <i class="bx bx-check d-block d-sm-none"></i>
+                                                        <span class="d-none d-sm-block">Enregistrer</span>
+                                                    </button>
+                                                </div>
+                            
+                                            </form>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

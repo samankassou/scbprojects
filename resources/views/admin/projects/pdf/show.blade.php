@@ -59,7 +59,7 @@
             <section class="store-user mt-5">
                 <div class="col-10">
                     <div class="row bb pb-3">
-                            <p><strong> Date Début - Fin: </strong><span>{{ $project->start_date->format('d-m-Y') }} - {{ $project->end_date->format('d-m-Y') }}</span></p>
+                            <p><strong> Date Début - Fin: </strong><span>{{ $project->start_date->format('d/m/Y') }} - {{ $project->end_date->format('d/m/Y') }}</span></p>
                     </div>
                     <div class="row extra-info pt-3">
                             <p class="m-0 font-weight-bold"><strong>Description:</strong></p>
@@ -82,6 +82,16 @@
                         </p>
                     </div>
                     <div class="row extra-info pt-3">
+                        <p class="m-0 font-weight-bold"><strong>Etape(s) réailisée(s): </strong></p>
+                        <ul>
+                            @forelse ($project->steps as $step)
+                            <li>{{ $step->name }}</li>
+                            @empty
+                            <p>Aucune</p>
+                            @endforelse
+                        </ul>
+                    </div>
+                    <div class="row extra-info pt-3">
                         <p class="m-0 font-weight-bold"><strong>AMOA:</strong></p>
                         <p>{{ $project->amoa }}</p>
                     </div>
@@ -90,7 +100,7 @@
                         <p>{{ $project->moe }}</p>
                     </div>
                     <div class="row extra-info pt-3">
-                        <p class="m-0 font-weight-bold"><strong> Chef du Projet:</strong></p>
+                        <p class="m-0 font-weight-bold"><strong> Chef de Projet:</strong></p>
                         <p>{{ $project->manager }}</p>
                     </div>
                     <div class="row extra-info pt-3">

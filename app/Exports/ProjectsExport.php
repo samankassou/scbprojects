@@ -5,10 +5,14 @@ namespace App\Exports;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithColumnWidths;
 use Maatwebsite\Excel\Concerns\WithCustomStartCell;
+use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\WithProperties;
 use Maatwebsite\Excel\Concerns\WithStyles;
+use Maatwebsite\Excel\Events\AfterSheet;
+use PhpOffice\PhpSpreadsheet\Style\Alignment;
+use PhpOffice\PhpSpreadsheet\Style\Border;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
 use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
@@ -19,7 +23,8 @@ WithCustomStartCell,
 WithMapping,
 WithStyles,
 WithColumnWidths,
-WithProperties
+WithProperties,
+WithEvents
 {
     public function __construct($projects)
     {
@@ -48,7 +53,7 @@ WithProperties
         return [
             '#',
             'Reférence',
-            'Nom',
+            'Titre',
             'Date de création',
             'Date de dernière modification',
             'Description',
@@ -59,12 +64,42 @@ WithProperties
             'Chef de projet',
             'Date début',
             'Date fin prévisionnelle',
-            'Coût du projet',
+            'Coût du projet(FCFA)',
             'Statut',
-            'Progression',
-            'Gains/Impact',
+            'Etat d\'avancement(%)',
+            'Gains/Impact sur SCB',
             'Documentation',
             'Facture(s)',
+        ];
+    }
+
+    public function registerEvents(): array
+    {
+        return [
+            AfterSheet::class => function(AfterSheet $event){
+                $highestRow = $event->sheet->getDelegate()->getHighestRow();
+                $highestColumn = $event->sheet->getDelegate()->getHighestColumn();
+                $cellRange = 'A3:'.$highestColumn.''.$highestRow;
+                $hearders = "A2:$highestColumn"."2";
+                
+                $event->sheet->getDelegate()->getStyle($hearders)->getAlignment()->setWrapText(true);
+                $event->sheet->getDelegate()->getStyle($hearders)->getAlignment()->setTextRotation(61);
+                $event->sheet->getDelegate()->getRowDimension(2)->setRowHeight(90);
+
+                $event->sheet->getDelegate()->getStyle($cellRange)->getAlignment()->setWrapText(true);
+                $event->sheet->getDelegate()->getStyle($cellRange)->applyFromArray([
+                    'borders' => [
+                        'allBorders' => [
+                            'borderStyle' => Border::BORDER_THIN,
+                            'color' => ['argb' => '538dd5']
+                        ]
+                    ]
+                ]);
+                $event->sheet->getDelegate()->getStyle($cellRange)->getAlignment()->applyFromArray([
+                    'horizontal' => 'center',
+                    'vertical' => 'center'
+                ]);
+            }
         ];
     }
 
@@ -149,24 +184,24 @@ WithProperties
     {
         return [
             'A' => 5,
-            'B' => 25,
-            'C' => 54,
-            'D' => 25,
-            'E' => 25,
-            'F' => 45,
-            'G' => 35,
-            'H' => 35,
+            'B' => 10,
+            'C' => 22,
+            'D' => 12,
+            'E' => 12,
+            'F' => 20,
+            'G' => 15,
+            'H' => 15,
             'I' => 11,
             'J' => 10,
             'K' => 12,
             'L' => 12,
             'M' => 12,
-            'N' => 35,
+            'N' => 15,
             'O' => 13,
-            'P' => 20,
-            'Q' => 30,
-            'R' => 30,
-            'S' => 30,
+            'P' => 10,
+            'Q' => 20,
+            'R' => 20,
+            'S' => 20,
         ];
     }
 

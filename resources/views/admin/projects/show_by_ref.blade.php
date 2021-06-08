@@ -15,7 +15,7 @@
         <div class="p-5">
             <section class="top-content bb d-flex justify-content-between">
                 <div class="logo">
-                    <img src="{{ asset('front/images/4.png') }}" alt="" class="img-fluid">
+                    <img src="{{ asset('images/logo.png') }}" alt="" class="img-fluid">
                 </div>
                 <div class="top-left">
                     <div class="graphic-path">
@@ -28,24 +28,24 @@
             </section>
             <section class="top-content bb d-flex justify-content-between">
                 <div class="top-left">
-                    <h4><strong>Nom du Projet:</strong></h4><h2> &nbsp;&nbsp;&nbsp;&nbsp; {{ $project->name }}</h2>
+                    <h4><strong>Nom du Projet:</strong> </h4><h2> {{ $project->name }}</h2>
                 </div>
             </section>
             <section class="store-user mt-5">
                 <div class="col-10">
                     <div class="row bb pb-3">
-                            <p><strong> Date Début - Fin: </strong><span>{{ $project->start_date->format('d-m-Y') }} - {{ $project->end_date->format('d-m-Y') }}</span></p>
+                            <p><strong> Date Début - Fin: </strong><span>{{ $project->start_date->format('d/m/Y') }} - {{ $project->end_date->format('d/m/Y') }}</span></p>
                     </div>
                     <div class="row extra-info pt-3">
-                            <p class="m-0 font-weight-bold"><strong>Description:</strong></p>
+                            <p class="m-0 font-weight-bold"><strong>Description:</strong> </p>
                             <p>{{ $project->description }}</p>
                     </div>
                     <div class="row extra-info pt-3">
-                        <p class="m-0 font-weight-bold"><strong> Sponsort/AMOA: </strong></p>
+                        <p class="m-0 font-weight-bold"><strong> Sponsort/AMOA:&nbsp;&nbsp; </strong></p>
                         <p>{{ $project->sponsor }}</p>
                     </div>
                     <div class="row extra-info pt-3">
-                        <p class="m-0 font-weight-bold"><strong>Nature(s): </strong></p>
+                        <p class="m-0 font-weight-bold"><strong>Nature(s):&nbsp;&nbsp; </strong></p>
                         <p>
                             @foreach ($project->natures as $nature)
                                 @if (!$loop->last)
@@ -56,36 +56,45 @@
                             @endforeach
                         </p>
                     </div>
+
                     <div class="row extra-info pt-3">
-                        <p class="m-0 font-weight-bold"><strong>AMOA:</strong></p>
+                        <p class="m-0 font-weight-bold"><strong>Etape(s) réalisée(s): </strong></p>
+                        <ul>
+                            @foreach ($project->steps as $step)
+                            <li>{{ $step->name }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                    <div class="row extra-info pt-3">
+                        <p class="m-0 font-weight-bold"><strong>AMOA:&nbsp;&nbsp;</strong></p>
                         <p>{{ $project->amoa }}</p>
                     </div>
                     <div class="row extra-info pt-3">
-                        <p class="m-0 font-weight-bold"><strong>MOE:</strong></p>
+                        <p class="m-0 font-weight-bold"><strong>MOE:&nbsp;&nbsp;</strong></p>
                         <p>{{ $project->moe }}</p>
                     </div>
                     <div class="row extra-info pt-3">
-                        <p class="m-0 font-weight-bold"><strong> Chef du Projet:</strong></p>
+                        <p class="m-0 font-weight-bold"><strong> Chef de Projet:&nbsp;&nbsp;</strong></p>
                         <p>{{ $project->manager }}</p>
                     </div>
                     <div class="row extra-info pt-3">
-                        <p class="m-0 font-weight-bold"><strong> Coût du projet:</strong></p>
+                        <p class="m-0 font-weight-bold"><strong> Coût du projet:&nbsp;&nbsp;</strong></p>
                         <p>FCFA <strong>{{ number_format($project->cost, 0, '.', ' ') }}</strong></p>
                     </div>
                     <div class="row extra-info pt-3">
-                        <p class="m-0 font-weight-bold"><strong> Statut du projet:</strong></p>
+                        <p class="m-0 font-weight-bold"><strong> Statut du projet:&nbsp;&nbsp;</strong></p>
                         <p>{{ $project->status }}</p>
                     </div>
                     <div class="row extra-info pt-3">
-                        <p class="m-0 font-weight-bold"><strong> Gains/Impact:</strong></p>
+                        <p class="m-0 font-weight-bold"><strong> Gains/Impact:&nbsp;&nbsp;</strong></p>
                         <p>{{ $project->benefits }}</p>
                     </div>
                     <div class="row extra-info pt-3">
-                        <p class="m-0 font-weight-bold"><strong> Documentation du projet:</strong></p>
+                        <p class="m-0 font-weight-bold"><strong> Documentation du projet:&nbsp;&nbsp;</strong></p>
                         <p>{{ $project->documentation }}</p>
                     </div>
             <div class="row extra-info pt-3">
-                <p class="m-0 font-weight-bold"><strong>Factures:</strong></p>
+                <p class="m-0 font-weight-bold"><strong>Factures:&nbsp;&nbsp;</strong></p>
                 <p>{{ $project->bills }}</p>
             </div>
             </div>
