@@ -196,20 +196,10 @@
             {data: 'status', name: 'status'},
             {data: 'start_year', name: 'start_year'},
             {
-                data: 'natures',
-                name: 'natures',
+                data: 'displayedNatures',
+                name: 'displayedNatures',
                 orderable: false, 
-                searchable: false,
-                render: function(natures){
-                    let naturesNames = "";
-                    if(natures.length){
-                        for(nature of natures){
-                            naturesNames += nature.name + ", ";
-                        }
-                        return naturesNames.slice(0, -1);
-                    }
-                    return "Aucune";
-                }
+                searchable: false
             },
             {
                 data: 'writer', 

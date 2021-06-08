@@ -23,9 +23,9 @@ class CreateProjectsTable extends Migration
             $table->string('sponsor');
             $table->enum('initiative', ['groupe', 'local']);
             $table->string('amoa');
-            $table->string('moe');
+            $table->string('moe')->nullable();
             $table->string('manager');
-            $table->integer('cost');
+            $table->integer('cost')->nullable();
             $table->enum('status', ['en stand-by', 'en cours', 'inachevé', 'terminé']);
             $table->unsignedInteger('progress');
             $table->text('benefits');

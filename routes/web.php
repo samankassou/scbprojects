@@ -43,6 +43,9 @@ Route::group([
         'as' => 'admin.',
         'prefix' => 'admin',
     ], function(){
+        Route::get('/settings', [UserController::class, 'settings'])->name('settings');
+        Route::post('/settings/update', [UserController::class, 'updateInfos'])->name('settings.update');
+        Route::post('/settings/updatePassword', [UserController::class, 'updatePassword'])->name('settings.update.password');
         Route::group([
             'middleware' => ['permission:view-project|view-projects']
         ], function(){

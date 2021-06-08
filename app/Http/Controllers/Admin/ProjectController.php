@@ -85,7 +85,8 @@ class ProjectController extends Controller
 
         $projects = $query->get();
         $projects->each(function($project){
-            $project->load(['natures', 'writer']);
+            $project->load(['writer']);
+            $project->displayedNatures = implode(", ", $project->natures->pluck('name')->toArray());
         });
 
         return Datatables::of($projects)
@@ -104,12 +105,6 @@ class ProjectController extends Controller
 
     public function ajaxDeletedList(Request $request)
     {
-        // $query = $this->projectQuery($request);
-
-        // $projects = $query->get();
-        // $projects->each(function($project){
-        //     $project->natures = $project->natures;
-        // });
         $projects = Project::onlyTrashed()->with(['natures', 'deleter'])->get();
         $user = auth()->user();
         
@@ -137,6 +132,12 @@ class ProjectController extends Controller
     public function export(Request $request)
     {
         $projects = $this->projectQuery($request)->get();
+        $projects->each(function($project, $index){
+            $project->load(['modifications' => function($query){
+                $query->latest()->first();
+            }, 'natures']);
+            $project->index = $index + 1;
+        });
         $fileName = 'liste_des_projects_'.today()->format('d-m-Y').'.xlsx';
         return Excel::download(new ProjectsExport($projects), $fileName);
     }

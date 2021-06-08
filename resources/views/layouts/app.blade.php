@@ -25,7 +25,7 @@
                 <div class="sidebar-header">
                     <div class="d-flex justify-content-between">
                         <div class="logo">
-                            <a href="/"><img src="{{ asset('mazer/assets/images/logo/logo.png') }}" alt="Logo" srcset=""></a>
+                            <a href="/"><img class="w-100 h-100" src="{{ asset('images/logo.png') }}" alt="Logo"></a>
                         </div>
                         <div class="toggler">
                             <a href="#" class="sidebar-hide d-xl-none d-block"><i class="bi bi-x bi-middle"></i></a>
@@ -97,6 +97,20 @@
                             </a>
                         </li>
                         @endrole
+
+                        <li class="sidebar-item {{ request()->routeIs('admin.settings') ? 'active' : '' }}">
+                            <a class="sidebar-link" href="{{ route('admin.settings') }}">
+                                <i class="icon-mid bi bi-gear-fill"></i>
+                                 <span>Parametres</span>
+                            </a>
+                        </li>
+
+                        <li class="sidebar-item">
+                            <a onclick="event.preventDefault();document.getElementById('logoutForm').submit();" class="sidebar-link" href="#">
+                                <i class="icon-mid bi bi-box-arrow-left"></i>
+                                 <span>Se déconnecter</span>
+                            </a>
+                        </li>
                         
                     </ul>
                 </div>
@@ -129,11 +143,7 @@
                                         </div>
                                         <div class="user-img d-flex align-items-center">
                                             <div class="avatar avatar-md">
-                                                @if (empty(auth()->user()->avatar))
-                                                    <img src="{{ asset('images/user.svg') }}">
-                                                @else
-                                                    <img src="{{ auth()->user()->avatar->getUrl('avatar-thumb') }}">
-                                                @endif
+                                                <img src="{{ asset('images/user.svg') }}">
                                             </div>
                                         </div>
                                     </div>
@@ -179,7 +189,7 @@
                 <footer>
                     <div class="footer clearfix mb-0 text-muted">
                         <div class="float-start">
-                            <p>2021 &copy; Mazer</p>
+                            <p>2021 &copy; SCB Cameroun</p>
                         </div>
                     </div>
                 </footer>

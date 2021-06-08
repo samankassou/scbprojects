@@ -6,10 +6,14 @@ use App\Models\Role;
 use App\Models\User;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Yajra\DataTables\DataTables;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Hash;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
+use App\Http\Requests\UpdateUserPasswordRequest;
+use Illuminate\Validation\ValidationException;
 
 class UserController extends Controller
 {
@@ -140,7 +144,7 @@ class UserController extends Controller
     public function destroy(User $user)
     {
         if(auth()->user()->id == $user->id){
-            return response()->json(['message' => 'You cannot delete this user']);
+            return response()->json(['message' => 'You cannot delete this user'], 500);
         }
         if(!empty($user->project_modifications)){
             foreach($user->project_modifications as $modification){
@@ -149,5 +153,43 @@ class UserController extends Controller
         }
         $user->delete();
         return response()->json(['message' => 'User deleted!']);
+    }
+
+    public function settings()
+    {
+        return view('admin.users.settings');
+    }
+
+    public function updateInfos(Request $request)
+    {
+        $request->validate([
+            'name' => 'required',
+            'email' => [
+                'required',
+                'email',
+                Rule::unique('users')->ignore(auth()->user()->id),
+            ]
+        ]);
+        $user = User::firstWhere('id', auth()->user()->id);
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->save();
+        return response()->json(['message' => 'User updated!']);
+    }
+    
+    public function updatePassword(UpdateUserPasswordRequest $request)
+    {
+        $user = User::firstWhere('id', auth()->user()->id);
+        if(!Hash::check($request->actual_password, $user->password)){
+            throw ValidationException::withMessages([
+                'actual_password' => ['Mot de passe incorrect']
+            ]);
+            return;
+        }
+
+        
+        $user->password = bcrypt($request->password);
+        $user->save();
+        return response()->json(['message' => 'Password updated']);
     }
 }
