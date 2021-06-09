@@ -72,6 +72,8 @@ Route::group([
         Route::group([
             'middleware' => ['permission:view-processes|view-process']
         ], function(){
+            Route::post('/processes/list', [ProcessController::class, 'ajaxList']);
+
             Route::get('/processes/poles/{id}/entities', [ProcessController::class, 'getEntities'])->name('processes.poles.entities');
             Route::get('/processes/macroprocesses/{id}/methods', [ProcessController::class, 'getMethods'])->name('processes.macroprocesses.methods');
             Route::get('/processes/domains/{id}/macroprocesses', [ProcessController::class, 'getMacroprocesses'])->name('processes.domains.macroprocesses');

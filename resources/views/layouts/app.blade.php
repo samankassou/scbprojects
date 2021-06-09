@@ -14,11 +14,41 @@
     @yield('styles')
     <link rel="stylesheet" href="{{ asset('mazer/assets/vendors/perfect-scrollbar/perfect-scrollbar.css') }}">
     <link rel="stylesheet" href="{{ asset('mazer/assets/vendors/bootstrap-icons/bootstrap-icons.css') }}">
+    <link rel="stylesheet" href="{{ asset('mazer/assets/vendors/fontawesome/all.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('mazer/assets/vendors/iconly/bold.css') }}">
     <link rel="stylesheet" href="{{ asset('mazer/assets/css/app.css') }}">
     <link rel="shortcut icon" href="{{ asset('mazer/assets/images/favicon.svg') }}" type="image/x-icon">
+    <style>
+        /*---------------------------- preloader area ----------------------------*/
+        .loader_bg {
+            position: fixed;
+            z-index: 9999999;
+            background: #fff;
+            width: 100%;
+            height: 100%;
+        }
+        .loader {
+            height: 100%;
+            width: 100%;
+            position: absolute;
+            left: 0;
+            top: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .loader img {
+            width: 280px;
+        }
+    </style>
 </head>
 
 <body>
+    <!-- loader  -->
+  <div class="loader_bg">
+    <div class="loader"><img src="{{ asset('mazer/assets/vendors/svg-loaders/ball-triangle.svg') }}" class="me-4" style="width: 3rem" alt="audio"></div>
+  </div>
+  <!-- end loader -->
     <div id="app">
         <div id="sidebar" class="active">
             <div class="sidebar-wrapper active">
@@ -50,14 +80,14 @@
                                 <span>Projets</span>
                             </a>
                             <ul class="submenu {{ request()->routeIs('admin.projects.*') ? 'active' : '' }}">
+                                <li class="submenu-item {{ request()->routeIs('admin.projects.index') ? 'active' : '' }}">
+                                    <a href="{{ route('admin.projects.index') }}">Liste des Projets</a>
+                                </li>
                                 @permission('create-project')
                                 <li class="submenu-item {{ request()->routeIs('admin.projects.create') ? 'active' : '' }}">
                                     <a href="{{ route('admin.projects.create') }}">Créer un Projet</a>
                                 </li>
                                 @endpermission
-                                <li class="submenu-item {{ request()->routeIs('admin.projects.index') ? 'active' : '' }}">
-                                    <a href="{{ route('admin.projects.index') }}">Liste des Projets</a>
-                                </li>
                                 <li class="submenu-item {{ request()->routeIs('admin.projects.deleted.*') ? 'active' : '' }}">
                                     <a href="{{ route('admin.projects.deleted.index') }}">Projets Supprimés</a>
                                 </li>
@@ -73,14 +103,14 @@
                                 <span>Procédures</span>
                             </a>
                             <ul class="submenu {{ request()->routeIs('admin.processes.*') ? 'active' : '' }}">
+                                <li class="submenu-item {{ request()->routeIs('admin.processes.index') ? 'active' : '' }}">
+                                    <a href="{{ route('admin.processes.index') }}">Liste des Procédures</a>
+                                </li>
                                 @permission('create-process')
                                 <li class="submenu-item {{ request()->routeIs('admin.processes.create') ? 'active' : '' }}">
                                     <a href="{{ route('admin.processes.create') }}">Créer une Procédure</a>
                                 </li>
                                 @endpermission
-                                <li class="submenu-item {{ request()->routeIs('admin.processes.index') ? 'active' : '' }}">
-                                    <a href="{{ route('admin.processes.index') }}">Liste des Procédures</a>
-                                </li>
                                 <li class="submenu-item ">
                                     <a href="#">Procédures Supprimées</a>
                                 </li>
@@ -198,8 +228,14 @@
     </div>
     <script src="{{ asset('mazer/assets/vendors/perfect-scrollbar/perfect-scrollbar.min.js') }}"></script>
     <script src="{{ asset('mazer/assets/js/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ asset('vendor/datatables/js/jquery-3.5.1.js') }}"></script>
     @yield('scripts')
     <script src="{{ asset('mazer/assets/js/main.js') }}"></script>
+    <script>
+        setTimeout(function () {
+            $('.loader_bg').fadeToggle();
+        }, 1500);
+    </script>
 </body>
 
 </html>

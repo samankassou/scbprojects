@@ -114,7 +114,7 @@ class ProjectController extends Controller
             ->addColumn('action', function($project) use($user){
                 $actionBtns = "<a href=".route('admin.projects.deleted.show', $project->id)." class='btn btn-sm btn-primary' title='Détails'><i class='bi bi-eye'></i></a> ";
                 if($user->isAbleTo('restore-project')){
-                    $actionBtns .= "<button class='btn btn-sm btn-secondary' onclick='restoreProject(".$project->id.")' title='Restaurer'><i class='bi bi-cloud-upload'></i></button> ";
+                    $actionBtns .= "<button class='btn btn-sm btn-info' onclick='restoreProject(".$project->id.")' title='Restaurer'><i class='bi bi-cloud-upload'></i></button> ";
                     $actionBtns .= "<button class='btn btn-sm btn-danger' onclick='showDeleteProjectModal(".$project->id.")' title='Supprimer'><i class='bi bi-trash'></i></button>";
                 }
                 return $actionBtns;

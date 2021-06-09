@@ -10,7 +10,7 @@
                             <div class="row">
                                 <div class="col-md-4">
                                     <div class="stats-icon purple">
-                                        <i class="iconly-boldShow"></i>
+                                        <i class="iconly-boldUser"></i>
                                     </div>
                                 </div>
                                 <div class="col-md-8">
@@ -27,7 +27,7 @@
                             <div class="row">
                                 <div class="col-md-4">
                                     <div class="stats-icon green">
-                                        <i class="iconly-boldAdd-User"></i>
+                                        <i class="iconly-boldCalendar"></i>
                                     </div>
                                 </div>
                                 <div class="col-md-8">
@@ -44,7 +44,7 @@
                             <div class="row">
                                 <div class="col-md-4">
                                     <div class="stats-icon blue">
-                                        <i class="iconly-boldProfile"></i>
+                                        <i class="iconly-boldDocument"></i>
                                     </div>
                                 </div>
                                 <div class="col-md-8">
@@ -61,7 +61,7 @@
                             <div class="row">
                                 <div class="col-md-4">
                                     <div class="stats-icon red">
-                                        <i class="iconly-boldBookmark"></i>
+                                        <i class="iconly-boldDelete"></i>
                                     </div>
                                 </div>
                                 <div class="col-md-8">

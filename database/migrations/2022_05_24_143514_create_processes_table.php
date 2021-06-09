@@ -23,14 +23,13 @@ class CreateProcessesTable extends Migration
             $table->string('status');
             $table->string('created_by');
             $table->string('written_by');
-            $table->string('validated_by');
+            $table->string('verified_by');
             $table->string('approved_by');
             $table->date('creation_date');
             $table->date('written_date');
-            $table->date('validation_date');
+            $table->date('verification_date');
             $table->date('approved_date');
             $table->date('diffusion_date');
-            $table->foreignId('entity_id')->constrained();
             $table->enum('state', ['Créé', 'Revu']);
             $table->text('reasons_for_creation')->nullable();
             $table->text('reasons_for_modification')->nullable();

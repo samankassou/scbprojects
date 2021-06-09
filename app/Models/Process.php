@@ -25,23 +25,22 @@ class Process extends Model
         'status',
         'created_by',
         'written_by',
-        'validated_by',
+        'verified_by',
         'approved_by',
         'creation_date',
         'written_date',
         'approved_date',
-        'validation_date',
+        'verification_date',
         'diffusion_date',
-        'entity_id',
         'state',
         'reasons_for_creation',
         'reasons_for_modification',
         'appendices'
     ];
 
-    public function entity()
+    public function entities()
     {
-        return $this->belongsTo(Entity::class);
+        return $this->belongsToMany(Entity::class);
     }
 
     public function method()

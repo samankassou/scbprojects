@@ -8,63 +8,57 @@
 <section class="section">
     <div class="card">
         <div class="card-body">
-            <div class="row justify-content-center">
-                <div class="col-md-8 d-flex">
-                    <p class="h4 mr-2">Rechercher: </p>
-                    <div id="searchBar" class="input-group mb-3">
-                        <button class="btn btn-primary dropdown-toggle" type="button"
-                            data-bs-toggle="dropdown"
-                            aria-expanded="false">dans toutes les procédures</button>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#">dans toutes les procédures</a></li>
-                            <li><a class="dropdown-item" href="#">par Intitulé</a></li>
-                            <li><a class="dropdown-item" href="#">par Date de diffusion</a></li>
-                            <li><a class="dropdown-item" href="#">par Domaine</a>
-                            <li><a class="dropdown-item" href="#">par Macroprocessus</a>
-                            <li><a class="dropdown-item" href="#">par Processus</a>
-                            <li><a class="dropdown-item" href="#">par Pôle</a>
-                            <li><a class="dropdown-item" href="#">par Entité</a>
-                            </li>
-                        </ul>
-                        <input type="text" class="form-control"
-                            aria-label="Rechercher une procédure" placeholder="Rechercher une procédure">
-                    </div>
-                </div>
-                <div class="col-md-4 d-none">
+            <h5>Rechercher:</h5>
+            <div class="row">
+                <div class="col-md-4">
                     <fieldset class="form-group">
-                        <select class="form-select choices" id="searchType">
-                            <option value="allSearch">dans toutes les procédures</option>
-                            <option value="">par Intitulé</option>
-                            <option value="">par Date de diffusion</option>
-                            <option value="">par Statut</option>
-                            <option value="">par Domaine</option>
-                            <option value="">par Macroprocessus</option>
-                            <option value="">par Processus</option>
-                            <option value="">par Pôle</option>
-                            <option value="">par Entité</option>
+                        <select class="form-select choices" id="criteria">
+                            <option value="all">dans tous les process</option>
+                            <option value="amoa">par Nom</option>
+                            <option value="reference">par Etat</option>
+                            <option value="sponsor">par Statut</option>
+                            <option value="year">par Pôle</option>
+                            <option value="status">par Macroprocessus</option>
+                            <option value="year">par Processus</option>
                         </select>
                     </fieldset>
                 </div>
-                <div class="col-md-6 d-none">
+                <div class="col-md-6">
                     <div class="search-container active">
-                        <input type="text" class="form-control search" id="allSearch" placeholder="Rechercher une procédure...">
+                        <div class="choices">
+                            <div class="choices__inner">
+                                <input type="text" class="form-control all search choices__input" id="allSearch" placeholder="Rechercher une procédure...">
+                            </div>
+                        </div>
                     </div>
                     <div class="search-container">
-                        <input class="form-control search" id="referenceSearch" type="text" placeholder="Entrez une reférence...">
+                        <div class="choices">
+                            <div class="choices__inner">
+                                <input class="form-control reference search choices__input" id="referenceSearch" type="text" placeholder="Entrez une reférence...">
+                            </div>
+                        </div>
                     </div>
                     <div class="search-container">
-                        <input class="form-control search" id="amoaSearch" type="text" placeholder="AMOA...">
+                        <div class="choices">
+                            <div class="choices__inner">
+                                <input class="form-control amoa search choices__input" id="amoaSearch" type="text" placeholder="AMOA...">
+                            </div>
+                        </div>
                     </div>
                     <div class="search-container">
-                        <input class="form-control search" id="sponsorSearch" type="text" placeholder="Sponsor/MOA...">
+                        <div class="choices">
+                            <div class="choices__inner">
+                                <input class="form-control sponsor search choices__input" id="sponsorSearch" type="text" placeholder="Sponsor/MOA...">
+                            </div>
+                        </div>
                     </div>
                     <div class="search-container">
-                        <select id="statusSearch" class="form-select search">
+                        <select id="statusSearch" class="form-select status search">
                             <option value="">Tous</option>
-                            <option value="1">En cours</option>
-                            <option value="2">En stand-by</option>
-                            <option value="3">inachevé</option>
-                            <option value="4">Terminé</option>
+                            <option value="en cours">En cours</option>
+                            <option value="inachevé">En stand-by</option>
+                            <option value="en stand-by">inachevé</option>
+                            <option value="terminé">Terminé</option>
                         </select>
                     </div>
                 </div>
@@ -80,41 +74,35 @@
             </div>
             <div class="d-flex justify-content-between mb-3">
                 <div>
-                    <button class="btn btn-outline-primary m-2">Exporter(Excel)</button>
+                    <button id="export-btn" class="btn btn-outline-primary m-2">
+                        <i class='bi bi-file-spreadsheet'></i>
+                        <span>Exporter(Excel)</span>
+                    </button>
+                    <button id="import-btn" class="btn btn-outline-primary m-2">
+                        <i class='bi bi-download'></i>
+                        <span>Importer(Excel)</span>
+                    </button>
                 </div>
                 <div>
-                    <a href="{{ route('admin.processes.create') }}" class="btn btn-sm btn-primary"><i class="bi bi-plus"></i> Créer</a>
+                    <a href="{{ route('admin.processes.create') }}" class="btn btn-sm btn-outline-primary"><i class="bi bi-plus"></i> Créer</a>
                 </div>
             </div>
             <table class="table table-striped" id="processes-datatable" style="width: 100%">
                 <thead>
                     <tr>
+                        <th>N°</th>
+                        <th>Macroprocessus</th>
+                        <th>Processus</th>
+                        <th>Procédure</th>
+                        <th>Type</th>
                         <th>Ref.</th>
                         <th>Version</th>
-                        <th>Intitulé</th>
+                        <th>Etat</th>
                         <th>Statut</th>
                         <th>Date de création</th>
-                        <th>Pôle</th>
                         <th style="width: 120px">Options</th>
                     </tr>
                 </thead>
-                <tbody>
-                    @foreach ($processes as $process)
-                        <tr>
-                            <td>{{ $process->reference }}</td>
-                            <td>{{ $process->version }}</td>
-                            <td>{{ $process->name }}</td>
-                            <td>{{ $process->status }}</td>
-                            <td>{{ $process->creation_date->format('d/m/Y') }}</td>
-                            <td>{{ $process->entity->pole->name }}</td>
-                            <td>
-                                <a href="{{ route('admin.processes.show', $process->id) }}" class='btn btn-sm btn-primary'><i class='bi bi-eye'></i></a>
-                                <a href="{{ route('admin.processes.edit', $process->id) }}" class='btn btn-sm btn-warning'><i class='bi bi-pencil'></i></a>
-                                <button onclick="showDeleteProcessModal({{ $process->id }})" class='btn btn-sm btn-danger delete-btn'><i class='bi bi-trash'></i></button>
-                            </td>
-                        </tr>
-                    @endforeach
-                </tbody>
             </table>
         </div>
     </div>
@@ -156,23 +144,78 @@
 @parent
 <script src="{{ asset('mazer/assets/vendors/choices.js/choices.min.js') }}"></script>
 <script>
-    $('#delete-process-btn').on('click', deleteProcess);
-    $('#searchBar button, #searchBar li a').on('click', ()=>{
-        console.log($(this).html());
+     let token = $('meta[name="csrf-token"]').attr('content');
+    $(function () {
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': token
+            }
+        });
     });
     const table = $('#processes-datatable').DataTable({
         searching: false,
         language: {
             url: "{{ asset('vendor/datatables/lang/French.json') }}"
         },
+        responsive: true,
+        processing: true,
+        serverSide: true,
+        ajax: {
+            url: "/admin/processes/list",
+            type: "POST",
+            data: {
+                _token: token,
+                search_type: function(){
+                    return getData().search_type;
+                },
+                search: function(){
+                    return getData().search;
+                }
+            }
+        },
+        columns: [
+            {data: 'DT_RowIndex', name: 'DT_RowIndex'},
+            {
+                data: 'method.macroprocess.name', 
+                name: 'method.macroprocess.name'
+            },
+            {
+                data: 'method.name', 
+                name: 'method.name'
+            },
+            {data: 'name', name: 'name'},
+            {data: 'type', name: 'type'},
+            {data: 'reference', name: 'reference'},
+            {data: 'version', name: 'version'},
+            {data: 'state', name: 'state'},
+            {data: 'status', name: 'status'},
+            {
+                data: 'creation_date', 
+                name: 'creation_date',
+                orderable: false,
+                searchable: false,
+                render: function(created_at){
+                    let createdAt = new Date(created_at);
+                    return createdAt.toLocaleDateString();
+                }
+            },
+            {
+                data: 'action', 
+                name: 'action', 
+                orderable: false, 
+                searchable: false
+            }
+        ]
     });
-    const yearSearch = new Choices(document.getElementById('yearSearch'));
-    const statusSearch = new Choices(document.getElementById('statusSearch'));
-    const natureSearch = new Choices(document.getElementById('natureSearch'), {
-        removeItemButton: true
-    });
+    $('#delete-process-btn').on('click', deleteProcess);
     
-    $('#searchType').on('change', function(){
+    // const yearSearch = new Choices(document.getElementById('yearSearch'));
+    // const statusSearch = new Choices(document.getElementById('statusSearch'));
+    // const natureSearch = new Choices(document.getElementById('natureSearch'), {
+    //     removeItemButton: true
+    // });
+    
+    $('#criteria').on('change', function(){
         //reset all inputs search
         $("input[type='text'].search").val('');
         yearSearch.setChoiceByValue('');
@@ -181,45 +224,50 @@
         //remove the active search
         $('.search-container').removeClass('active');
         //set the new active box
-        let element = $(this).val();
-        $('#'+element).closest('.search-container').addClass('active');
+        let criteria = $(this).val();
+        $('.'+criteria).closest('.search-container').addClass('active');
+        table.ajax.reload(null, false);
 
     });
     $("input[type='text'].search").on('keyup', function(){
-        //table.ajax.reload(null, false);
-        console.log(getData());
+        table.ajax.reload(null, false);
     });
     $("select.search").on('change', function(){
-        //table.ajax.reload(null, false);
-        console.log(getData());
+        table.ajax.reload(null, false);
     });
 
     function getData()
     {
-        const searchType = document.getElementById('searchType').value,
-        all = document.getElementById('allSearch').value,
-        year = yearSearch.getValue().value,
-        reference = document.getElementById('referenceSearch').value,
-        amoa = document.getElementById('amoaSearch').value;
-        const natures = natureSearch.getValue().map(element => {
-            return element.value;
-        });
-        const sponsor = document.getElementById('sponsorSearch').value,
-        status = statusSearch.getValue().value;
+        let criteria = $('#criteria').val();
+        let search_type = criteria;
         
-        return {
-            all: all,
-            year: year,
-            reference: reference,
-            amoa: amoa,
-            natures: natures,
-            sponsor: sponsor,
-            status: status
-            };
-            // return {
-            //     search_type: searchType,
-            //     value: value
-            // };
+        if(criteria == "all"){
+            search = $('#allSearch').val();
+        }
+        if(criteria == "reference"){
+            search = $('#referenceSearch').val();
+        }
+        if(criteria == "sponsor"){
+            search = $('#sponsorSearch').val();
+        }
+        if(criteria == "amoa"){
+            search = $('#amoaSearch').val();
+        }
+        if(criteria == "year"){
+            search = yearSearch.getValue().value;
+        }
+        if(criteria == "status"){
+            search = status = statusSearch.getValue().value;
+        }
+        if(criteria == "natures"){
+            const natures = natureSearch.getValue().map(element => {
+                return parseInt(element.value);
+            });
+            search = JSON.stringify(natures);
+        }
+            return {
+            search_type: search_type,
+            search: search};
     }
 
     function showDeleteProcessModal(id)

@@ -6,7 +6,6 @@
 @endsection
 
 @section('scripts')
-<script src="{{ asset('vendor/datatables/js/jquery-3.5.1.js') }}"></script>
 <script src="{{ asset('vendor/datatables/js/jquery.dataTables.min.js') }}"></script>
 <script src="{{ asset('vendor/datatables/js/dataTables.responsive.min.js') }}"></script>
 <script src="{{ asset('vendor/datatables/js/dataTables.bootstrap5.min.js') }}"></script>

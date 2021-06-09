@@ -25,7 +25,19 @@
   <link rel="stylesheet" href="{{ asset('front/css/jquery.mCustomScrollbar.min.css') }}">
 
   <style type="text/css">
+            .bttn a:link, a:visited {
+    background-color: #f44336;
+    color: white;
+    padding: 14px 25px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+}
 
+
+a:hover, a:active {
+    background-color: red;
+}
   </style>
 
   </head>
@@ -48,7 +60,7 @@
               <div class="full">
                 <div class="center-desk">
                   <div class="logo">
-                    <a href="/"><img src="{{ asset('front/images/4.png') }}" alt="#" /></a>
+                    <a href="/"><img src="{{ asset('images/logo.png') }}" alt="#" /></a>
                   </div>
                 </div>
               </div>
@@ -111,9 +123,11 @@
                         </div>
                         <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
                        <div class="images_box">
-                          <figure><img src="{{ asset('front/images/3.jpg') }}"></figure>
-                          <span>Connexion:</span><br>
-                          <a href="{{ route('admin.processes.index') }}">Gestion Process</a> <a href="{{ route('admin.projects.index') }}">Gestion Projets</a><hr>
+                          <figure><img src="{{ asset('front/images/3.jpg') }}"></figure><br>
+                          <div class="bttn">
+                          <span>Connexion:</span><br><br>
+                          <a href="{{ route('admin.processes.index') }}">Gestion Process</a>&nbsp;<a href="{{ route('admin.projects.index') }}">Gestion Projets</a><hr>
+                        </div>
                         </div>
                   </div>
                 </div>

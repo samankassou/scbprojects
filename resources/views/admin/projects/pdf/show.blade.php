@@ -11,6 +11,70 @@
     <title>Projet: {{ $project->reference }}</title>
     <style>
 
+.arrow {
+  margin-bottom: 4px;
+}
+
+.arrow.back {
+  text-align: right;
+}
+
+.inner-arrow {
+  padding-right: 10px;
+  height: 30px;
+  display: inline-block;
+  background-color: rgb(233, 125, 49);
+  text-align: center;
+
+  line-height: 30px;
+  vertical-align: middle;
+}
+
+.arrow.back .inner-arrow {
+  background-color: #ffbf06;
+  padding-right: 0;
+  padding-left: 10px;
+}
+
+.arrow:before,
+.arrow:after {
+  content:'';
+  display: inline-block;
+  width: 0; height: 0;
+  border: 15px solid transparent;
+  vertical-align: middle;
+}
+
+.arrow:before {
+  border-top-color: rgb(233, 125, 49);
+  border-bottom-color: rgb(233, 125, 49);
+  border-right-color: rgb(8, 8, 8);
+}
+
+
+.arrow:after {
+  border-left-color: rgb(233, 125, 49);
+}
+
+.arrow.back:after {
+  border-left-color: rgb(5, 5, 5);
+  border-top-color: rgb(233, 125, 49);
+  border-bottom-color: rgb(233, 125, 49);
+  border-right-color: transparent;
+}
+
+.arrow span {
+  display: inline-block;
+  width: 80px;
+  margin-right: 20px;
+  text-align: right;
+}
+
+.arrow.back span {
+  margin-right: 0;
+  margin-left: 20px;
+  text-align: left;
+}
 
 .logo img {
     height: 60px;
@@ -39,18 +103,19 @@
         <div class="p-5">
             <section class="top-content bb d-flex justify-content-between">
                 <div class="logo">
-                    <img src="{{ asset('front/images/4.png') }}" alt="" class="img-fluid">
-                </div>
-                <div class="top-left" style="float: right">
-                    
+                    <img src="{{ asset('images/logo.png') }}" alt="" class="img-fluid">
+                    <div class="top-left" style="float: right">
+
                     <div class="graphic-path">
-                        <p>Ref-No:</p>
+                             <div id="company">
+                                <div class="arrow back"><div class="inner-arrow"><strong>No.Ref:&nbsp; {{ $project->reference }}</strong></div></div>
+                                <div class="arrow back"><div class="inner-arrow">SCB Cameroun Tel: XXXXXXXXXXXX</div></div>
+                              </div>
                     </div>
-                    <div class="position-relative">
-                        <p><span>{{ $project->reference }}</span></p>
-                    </div><img src="{{ asset('wave.svg') }}" alt="" style="float: rigth; height: 60px;">
                 </div>
-            </section><br><br><br><br><br><hr><h2 style="text-align: center;"><strong>ORGANISATION ET PROJETS</strong></h2><hr>
+                </div>
+
+            </section><br><hr><h2 style="text-align: center;"><strong>ORGANISATION ET PROJETS</strong></h2><hr>
             <section class="top-content bb d-flex justify-content-between">
                 <div class="top-left">
                     <h4><strong>Nom du Projet:</strong></h4>&nbsp;&nbsp;&nbsp;&nbsp;<h2 style="text-align: center; text-decoration: underline;">  {{ $project->name }}</h2>
@@ -112,7 +177,7 @@
                         <p>{{ $project->status }}</p>
                     </div>
                     <div class="row extra-info pt-3">
-                        <p class="m-0 font-weight-bold"><strong> Gains/Impact:</strong></p>
+                        <p class="m-0 font-weight-bold"><strong> Gains/Impact sur SCB:</strong></p>
                         <p>{{ $project->benefits }}</p>
                     </div>
                     <div class="row extra-info pt-3">

@@ -46,10 +46,10 @@ class ProcessFactory extends Factory
                 'created_by' => $this->faker->name(),
                 'written_by' => $this->faker->name(),
                 'approved_by' => $this->faker->name(),
-                'validated_by' => $this->faker->name(),
+                'verified_by' => $this->faker->name(),
                 'creation_date' => $this->faker->date(),
                 'written_date' => $this->faker->date(),
-                'validation_date' => $this->faker->date(),
+                'verification_date' => $this->faker->date(),
                 'approved_date' => $this->faker->date(),
                 'diffusion_date' => $this->faker->date(),
                 'state' => $this->faker->randomElement(['Créé', 'Revu']),
@@ -58,7 +58,6 @@ class ProcessFactory extends Factory
                 'appendices' => $this->faker->paragraph(),
                 'modifications' => $this->faker->paragraph(),
                 'method_id' => Method::all()->random()->id,
-                'entity_id' => Entity::all()->random()->id,
         ];
     }
 }
