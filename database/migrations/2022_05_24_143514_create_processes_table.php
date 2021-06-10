@@ -35,6 +35,8 @@ class CreateProcessesTable extends Migration
             $table->text('reasons_for_modification')->nullable();
             $table->text('appendices')->nullable();
             $table->text('modifications')->nullable();
+            $table->softDeletes();
+            $table->integer('deleted_by')->nullable();
             $table->timestamps();
         });
     }

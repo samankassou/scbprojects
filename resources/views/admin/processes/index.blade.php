@@ -105,12 +105,11 @@
 </section>
 {{-- Delete process modal --}}
 <div class="modal-danger me-1 mb-1 d-inline-block">
-    <!--Danger theme Modal -->
-    <div class="modal fade text-left" id="delete-process-modal" tabindex="-1" aria-labelledby="myModalLabel120" aria-hidden="true" style="display: none;">
+    <div class="modal fade text-left" id="delete-process-modal" tabindex="-1" aria-hidden="true" style="display: none;">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
             <form id="delete-process-form" class="modal-content">
                 <div class="modal-header bg-danger">
-                    <h5 class="modal-title white" id="myModalLabel120">
+                    <h5 class="modal-title white">
                         Supprimer une procédure
                     </h5>
                     <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
@@ -268,12 +267,41 @@
 
     function showDeleteProcessModal(id)
     {
+        $('#delete-process-modal').data('id',id);
         $('#delete-process-modal').modal('show');
     }
 
     function deleteProcess()
     {
-
+        $(this).addClass('disabled')
+        .html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Suppression...')
+        .attr('disabled', true);
+        let id = $('#delete-process-modal').data('id');
+        $.ajax({
+            url: "/admin/processes/"+id,
+            method: "POST",
+            data: {_method: "DELETE"},
+            success: (response)=>{                
+                table.ajax.reload(null, false);
+                Toastify({
+                    text: "Procédure supprimée avec succès!",
+                    duration: 3000,
+                    close:true,
+                    gravity:"top",
+                    position: "right",
+                    backgroundColor: "#4fbe87",
+                }).showToast();
+                
+            },
+            error: (response)=>{
+                console.log(response);
+            },
+            complete: ()=>{
+                $('#delete-process-btn').removeClass('disabled').text('Supprimer').attr('disabled', false);
+                $('#delete-process-modal').modal('hide');
+            }
+        });
+        return false;
     }
 </script>
 @endsection

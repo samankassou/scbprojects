@@ -226,7 +226,11 @@ class ProcessController extends Controller
      */
     public function destroy(Process $process)
     {
-        //
+        $process->deleted_by = auth()->user()->id;
+        $process->save();
+        $process->delete();
+
+        return response()->json(['message' => 'Process deleted!']);
     }
 
     public function processQuery($request)

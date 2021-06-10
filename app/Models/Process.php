@@ -4,17 +4,18 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Process extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $dates = [
         'creation_date',
-        'written_date',
-        'approved_date',
+        'writing_date',
+        'date_of_approval',
         'validation_date',
-        'diffusion_date'
+        'broardcasting_date'
     ];
 
     protected $fillable = [
@@ -28,11 +29,12 @@ class Process extends Model
         'verified_by',
         'approved_by',
         'creation_date',
-        'written_date',
-        'approved_date',
+        'writing_date',
+        'date_of_approval',
         'verification_date',
-        'diffusion_date',
+        'broardcasting_date',
         'state',
+        'deleted_by',
         'reasons_for_creation',
         'reasons_for_modification',
         'appendices'
