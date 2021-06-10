@@ -82,8 +82,13 @@ WithEvents
                 $cellRange = 'A3:'.$highestColumn.''.$highestRow;
                 $hearders = "A2:$highestColumn"."2";
                 
+                $event->sheet->getDelegate()->mergeCells("A1:B1");
+                $event->sheet->getDelegate()->mergeCells("C1:S1");
+                $event->sheet->getDelegate()->setCellValue("A1", today()->format('d/m/Y'));
+                $event->sheet->getDelegate()->setCellValue("C1", "PORTEFEUILLE PROJETS ORGANISATION");
                 $event->sheet->getDelegate()->getStyle($hearders)->getAlignment()->setWrapText(true);
-                $event->sheet->getDelegate()->getStyle($hearders)->getAlignment()->setTextRotation(61);
+                $event->sheet->getDelegate()->getStyle("B2:R2")->getAlignment()->setTextRotation(61);
+                $event->sheet->getDelegate()->getRowDimension(1)->setRowHeight(90);
                 $event->sheet->getDelegate()->getRowDimension(2)->setRowHeight(90);
 
                 $event->sheet->getDelegate()->getStyle($cellRange)->getAlignment()->setWrapText(true);
@@ -94,6 +99,16 @@ WithEvents
                             'color' => ['argb' => '538dd5']
                         ]
                     ]
+                ]);
+                $event->sheet->getDelegate()->getStyle("A1")->applyFromArray([
+                    'font' => ['name' => 'Calibri', 'size' => 14, 'bold' => true],
+                ]);
+                $event->sheet->getDelegate()->getStyle("S2")->getAlignment()->applyFromArray([
+                    'horizontal' => 'center',
+                ]);
+                $event->sheet->getDelegate()->getStyle("A1:C1")->getAlignment()->applyFromArray([
+                    'horizontal' => 'center',
+                    'vertical' => 'center'
                 ]);
                 $event->sheet->getDelegate()->getStyle($cellRange)->getAlignment()->applyFromArray([
                     'horizontal' => 'center',
@@ -158,6 +173,10 @@ WithEvents
     public function styles(Worksheet $sheet)
     {
         return [
+            'C1' => [
+                'fill' => ['fillType' => Fill::FILL_SOLID, 'color' => ['rgb' => 'FFC107']],
+                'font' => ['name' => 'Candara', 'bold' => true, 'size' => 36],
+            ],
             '2' => [
                 'font' => ['name' => 'Candara', 'bold' => true, 'size' => 12],
                 'borders' => [

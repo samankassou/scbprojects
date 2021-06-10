@@ -855,5 +855,16 @@ class MethodSeeder extends Seeder
             'name' => 'Suivi des risques opérationnels',
             'macroprocess_id' => $macroprocess46->id
         ]);
+
+        //macroprocess 47
+        $macroprocess47 = Macroprocess::firstWhere('name', 'Développement et pilotage de projets');
+        Method::create([
+            'name' => 'Gestion applicative',
+            'macroprocess_id' => $macroprocess47->id
+        ]);
+        Method::create([
+            'name' => 'Gestion de projets SI',
+            'macroprocess_id' => $macroprocess47->id
+        ]);
     }
 }

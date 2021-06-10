@@ -78,10 +78,6 @@
                         <i class='bi bi-file-spreadsheet'></i>
                         <span>Exporter(Excel)</span>
                     </button>
-                    <button id="import-btn" class="btn btn-outline-primary m-2">
-                        <i class='bi bi-download'></i>
-                        <span>Importer(Excel)</span>
-                    </button>
                 </div>
                 <div>
                     <a href="{{ route('admin.processes.create') }}" class="btn btn-sm btn-outline-primary"><i class="bi bi-plus"></i> Créer</a>

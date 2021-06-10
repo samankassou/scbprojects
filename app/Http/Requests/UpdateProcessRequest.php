@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateProcessRequest extends FormRequest
@@ -27,23 +28,23 @@ class UpdateProcessRequest extends FormRequest
             'method'                   => 'required|exists:methods,id',
             'name'                     => 'required',
             'type'                     => 'required',
-            'reference'                => 'required',
+            'reference' => [
+                'required',
+                Rule::unique('processes')->ignore($this->process->id),
+            ],
             'version'                  => 'required',
-            'pole'                     => 'required',
-            'entity'                   => 'required',
+            'entities'                 => 'required|array',
             'creation_date'            => 'required|date',
             'created_by'               => 'required',
-            'written_date'             => 'required|date',
-            'written_by'               => 'required',
-            'validation_date'          => 'required|date',
-            'validated_by'             => 'required',
-            'validation_date'          => 'required|date',
-            'validated_by'             => 'required',
-            'approved_date'            => 'required|date',
-            'approved_by'              => 'required',
+            'written_date'             => 'nullable|date',
+            'written_by'               => 'nullable',
+            'verification_date'        => 'nullable|date',
+            'verified_by'              => 'nullable',
+            'approved_date'            => 'nullable|date',
+            'approved_by'              => 'nullable',
             'state'                    => 'required',
             'reasons_for_creation'     => 'nullable',
-            'reasons_for_modification' => 'nullable',
+            'reasons_for_modification' => 'required',
             'appendices'               => 'nullable',
 
         ];

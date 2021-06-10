@@ -36,8 +36,8 @@ class ProcessController extends Controller
     public function create()
     {
         $domains = Domain::all();
-        $poles = Pole::all();
-        return view('admin.processes.create', compact('domains', 'poles'));
+        $entities = Entity::all();
+        return view('admin.processes.create', compact('domains', 'entities'));
     }
 
     /**
@@ -62,16 +62,6 @@ class ProcessController extends Controller
         return response()->json(['methods' => $methods]);
     }
 
-    /**
-     * list Entities related to a Pole.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function getEntities(Request $request)
-    {
-        $entities = Entity::where('pole_id', $request->id)->get();
-        return response()->json(['entities' => $entities]);
-    }
 
     public function showByRef(Request $request)
     {
@@ -134,7 +124,59 @@ class ProcessController extends Controller
      */
     public function store(StoreProcessRequest $request)
     {
-        dd($request->all());
+        //dd($request->reference);
+        $process = new Process;
+        $process->name = $request->name;
+        $process->reference = $request->reference;
+        $process->type = $request->type;
+        $process->version = $request->version;
+        $process->creation_date = $request->creation_date;
+        $process->created_by = $request->created_by;
+        $process->state = $request->state;
+        $process->status = $request->status;
+        $process->method_id = $request->method;
+
+        if($request->writing){
+            $process->writing = $request->writing;
+            $process->written_by   = $request->written_by;
+        }
+
+        if($request->verification_date){
+            $process->verification_date = $request->verification_date;
+            $process->verified_by         = $request->verified_by;
+        }
+
+        if($request->date_of_approval){
+            $process->date_of_approval = $request->date_of_approval;
+            $process->approved_by      = $request->approved_by;
+        }
+
+        if($request->broadcasting_date){
+            $process->broadcasting_date = $request->broadcasting_date;
+        }
+
+        if($request->reasons_for_creation){
+            $process->reasons_for_creation = $request->reasons_for_creation;
+        }
+
+        if($request->reasons_for_modification){
+            $process->reasons_for_modification = $request->reasons_for_modification;
+        }
+
+        if($request->modifications){
+            $process->modifications = $request->modifications;
+        }
+
+        if($request->appendices){
+            $process->appendices = $request->appendices;
+        }
+
+        $process->save();
+        $process->entities()->attach($request->entities);
+
+        return redirect()->route('admin.processes.index')->with('message', 'Procédure créée avec succès!');
+
+        
     }
 
     /**

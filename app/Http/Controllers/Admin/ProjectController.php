@@ -204,7 +204,7 @@ class ProjectController extends Controller
         $project->steps()->attach($request->steps);
         
         
-        return redirect()->route('admin.projects.index')->with('message', 'Projet crée avec succès!');
+        return redirect()->route('admin.projects.index')->with('message', 'Projet créé avec succès!');
     }
 
     /**

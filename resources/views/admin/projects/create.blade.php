@@ -107,8 +107,8 @@
                         <label for="initiative">Initiative:</label>
                         <div class="form-group">
                             <select id="initiative" class="form-select @error('initiative') is-invalid @enderror" name="initiative">
-                                <option value="local">local</option>
-                                <option value="groupe">groupe</option>
+                                <option value="local" {{ old('initiative') == "local" ? "selected" : "" }}>local</option>
+                                <option value="groupe" {{ old('initiatie') == "groupe" ? "selected" : "" }}>groupe</option>
                             </select>
                             @error('initiative')
                                 <div class="invalid-feedback">
@@ -164,7 +164,7 @@
 
                         <label for="cost">Coût du projet:</label>
                         <div class="form-group">
-                            <input id="cost" type="number" name="cost" value="{{ old('cost') }}" class="form-control @error('manager') is-invalid @enderror">
+                            <input id="cost" type="number" name="cost" value="{{ old('cost') }}" class="form-control @error('cost') is-invalid @enderror">
                             @error('cost')
                                 <div class="invalid-feedback">
                                     <i class="bx bx-radio-circle"></i>
@@ -176,10 +176,10 @@
                         <label for="status">Statut du projet:</label>
                         <div class="form-group">
                             <select id="status" class="form-select @error('status') is-invalid @enderror" name="status">
-                                <option value="en cours">en cours</option>
-                                <option value="inachevé">inachevé</option>
-                                <option value="en stand-by">en stand-by</option>
-                                <option value="terminé">terminé</option>
+                                <option value="en cours" {{ old('status') == "en cours" ? "selected" : "" }}>en cours</option>
+                                <option value="inachevé" {{ old('status') == "inachevé" ? "selected" : "" }}>inachevé</option>
+                                <option value="en stand-by" {{ old('status') == "en stand-by" ? "selected" : "" }}>en stand-by</option>
+                                <option value="terminé" {{ old('status') == "terminé" ? "selected" : "" }}>terminé</option>
                             </select>
                             @error('status')
                                 <div class="invalid-feedback">
