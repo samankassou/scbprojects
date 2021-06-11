@@ -169,8 +169,8 @@ class ProcessController extends Controller
         $process->status = $request->status;
         $process->method_id = $request->method;
 
-        if($request->writing){
-            $process->writing = $request->writing;
+        if($request->writing_date){
+            $process->writing_date = $request->writing_date;
             $process->written_by   = $request->written_by;
         }
 
@@ -249,7 +249,53 @@ class ProcessController extends Controller
      */
     public function update(UpdateProcessRequest $request, Process $process)
     {
-        //
+        $process->update([
+            "method_id" => $request->method,
+            "name" => $request->name,
+            "type" => $request->type,
+            "reference" => $request->reference,
+            "version" => $request->version,
+            "creation_date" => $request->creation_date,
+            "created_by" => $request->created_by,
+            "state" => $request->state,
+            "status" => $request->status,
+            "modifications" => $request->modifications,
+        ]);
+        if($request->writing_date){
+            $process->writing_date = $request->writing_date;
+            $process->written_by   = $request->written_by;
+        }
+
+        if($request->verification_date){
+            $process->verification_date = $request->verification_date;
+            $process->verified_by         = $request->verified_by;
+        }
+
+        if($request->date_of_approval){
+            $process->date_of_approval = $request->date_of_approval;
+            $process->approved_by      = $request->approved_by;
+        }
+
+        if($request->broadcasting_date){
+            $process->broadcasting_date = $request->broadcasting_date;
+        }
+
+        if($request->reasons_for_creation){
+            $process->reasons_for_creation = $request->reasons_for_creation;
+        }
+
+        if($request->reasons_for_modification){
+            $process->reasons_for_modification = $request->reasons_for_modification;
+        }
+
+        if($request->appendices){
+            $process->appendices = $request->appendices;
+        }
+
+        $process->save();
+        $process->entities()->sync($request->entities);
+
+        return redirect()->route('admin.processes.index')->with('message', 'Procédure modifiée avec succès!');
     }
 
     /**

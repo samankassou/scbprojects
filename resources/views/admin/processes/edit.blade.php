@@ -115,7 +115,7 @@
                                 @endforeach
                             </select>
                             @error('entities')
-                                <div class="invalid-feedback">
+                                <div class="invalid-feedback" style="display: block">
                                     <i class="bx bx-radio-circle"></i>
                                     {{ $message }}
                                 </div>
@@ -153,7 +153,7 @@
                             <div class="col-md-6">
                                 <label for="writing_date">Redigée le:</label>
                                 <div class="form-group">
-                                    <input id="writing_date" type="date" name="writing_date" value="{{ old('writing_date', optional($process->writing_date))->format('Y-m-d') }}" class="form-control @error('writing_date') is-invalid @enderror">
+                                    <input id="writing_date" type="date" name="writing_date" value="{{ old('writing_date', optional($process->writing_date)->format('Y-m-d')) }}" class="form-control @error('writing_date') is-invalid @enderror">
                                     @error('writing_date')
                                         <div class="invalid-feedback">
                                             <i class="bx bx-radio-circle"></i>
@@ -207,7 +207,7 @@
                             <div class="col-md-6">
                                 <label for="date_of_approval">Approuvée le:</label>
                                 <div class="form-group">
-                                    <input id="date_of_approval" type="date" name="date_of_approval" value="{{ old('date_of_approval', optional($process->date_of_approval))->format('Y-m-d') }}" class="form-control @error('date_of_approval') is-invalid @enderror">
+                                    <input id="date_of_approval" type="date" name="date_of_approval" value="{{ old('date_of_approval', optional($process->date_of_approval)->format('Y-m-d')) }}" class="form-control @error('date_of_approval') is-invalid @enderror">
                                     @error('date_of_approval')
                                         <div class="invalid-feedback">
                                             <i class="bx bx-radio-circle"></i>
@@ -248,6 +248,24 @@
                                 <option value="Revu" @if(old('state', $process->state) == 'Revu') selected @endif>Revu</option>
                             </select>
                             @error('state')
+                                <div class="invalid-feedback">
+                                    <i class="bx bx-radio-circle"></i>
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
+
+                        <label for="status">Statut:</label>
+                        <div class="form-group">
+                            <select id="status" class="form-select @error('status') is-invalid @enderror" name="status">
+                                <option value="En cours de rédaction" {{ old('status', $process->status) == "En cours de rédaction" ? "selected" : "" }}>En cours de rédaction</option>
+                                <option value="En cours de vérification" {{ old('status', $process->status) == "En cours de vérification" ? "selected" : "" }}>En cours de vérification</option>
+                                <option value="En cours d'approbation" {{ old('status', $process->status) == "En cours d'approbation" ? "selected" : "" }}>En cours d'approbation</option>
+                                <option value="Existant" {{ old('status', $process->status) == "Existant" ? "selected" : "" }}>Existant</option>
+                                <option value="A Créer" {{ old('status', $process->status) == "A Créer" ? "selected" : "" }}>A Créer</option>
+                                <option value="Terminé" {{ old('status', $process->status) == "Terminé" ? "selected" : "" }}>Terminé</option>
+                            </select>
+                            @error('status')
                                 <div class="invalid-feedback">
                                     <i class="bx bx-radio-circle"></i>
                                     {{ $message }}

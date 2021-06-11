@@ -253,7 +253,7 @@
                             @enderror
                         </div>
 
-                        <label for="state">Statut:</label>
+                        <label for="status">Statut:</label>
                         <div class="form-group">
                             <select id="status" class="form-select @error('status') is-invalid @enderror" name="status">
                                 <option value="En cours de rédaction" {{ old('status') == "En cours de rédaction" ? "selected" : "" }}>En cours de rédaction</option>
@@ -263,7 +263,7 @@
                                 <option value="A Créer" {{ old('status') == "A Créer" ? "selected" : "" }}>A Créer</option>
                                 <option value="Terminé" {{ old('status') == "Terminé" ? "selected" : "" }}>Terminé</option>
                             </select>
-                            @error('state')
+                            @error('status')
                                 <div class="invalid-feedback">
                                     <i class="bx bx-radio-circle"></i>
                                     {{ $message }}
