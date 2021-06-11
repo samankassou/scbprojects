@@ -28,6 +28,39 @@ class ProcessController extends Controller
         return view('admin.processes.index', compact('processes'));
     }
 
+    
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function deleted(Request $request)
+    {
+        $processes = Process::onlyTrashed()->get();
+        return view('admin.processes.deleted.index', compact('processes'));
+    }
+
+    public function ajaxDeletedList(Request $request)
+    {
+        $processes = Process::onlyTrashed()->with(['method', 'method.macroprocess', 'deleter'])->get();
+        $user = auth()->user();
+        
+
+        return Datatables::of($processes)
+            ->addIndexColumn()
+            ->addColumn('action', function($process) use($user){
+                $actionBtns = "<a href=".route('admin.processes.deleted.show', $process->id)." class='btn btn-sm btn-primary' title='Détails'><i class='bi bi-eye'></i></a> ";
+                if($user->isAbleTo('restore-process')){
+                    $actionBtns .= "<button class='btn btn-sm btn-info' onclick='restoreProcess(".$process->id.")' title='Restaurer'><i class='bi bi-cloud-upload'></i></button> ";
+                    $actionBtns .= "<button class='btn btn-sm btn-danger' onclick='showDeleteProcessModal(".$process->id.")' title='Supprimer'><i class='bi bi-trash'></i></button>";
+                }
+                return $actionBtns;
+            })
+            ->rawColumns(['action'])
+            ->make(true);
+        
+    }
+
     /**
      * Show the form for creating a new resource.
      *
@@ -201,9 +234,10 @@ class ProcessController extends Controller
      */
     public function edit(Process $process)
     {
+        $process->load(['method', 'method.macroprocess']);
         $domains = Domain::all();
-        $poles = Pole::all();
-        return view('admin.processes.edit', compact('process', 'domains', 'poles'));
+        $entities = Entity::all();
+        return view('admin.processes.edit', compact('process', 'domains', 'entities'));
     }
 
     /**

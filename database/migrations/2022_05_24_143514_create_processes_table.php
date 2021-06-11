@@ -26,10 +26,10 @@ class CreateProcessesTable extends Migration
             $table->string('verified_by')->nullable();
             $table->string('approved_by')->nullable();
             $table->date('creation_date');
-            $table->date('written_date')->nullable();
+            $table->date('writing_date')->nullable();
             $table->date('verification_date')->nullable();
             $table->date('date_of_approval')->nullable();
-            $table->date('diffusion_date')->nullable();
+            $table->date('broadcasting_date')->nullable();
             $table->enum('state', ['Créé', 'Revu']);
             $table->text('reasons_for_creation')->nullable();
             $table->text('reasons_for_modification')->nullable();

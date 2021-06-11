@@ -10,7 +10,7 @@
             <h4 class="card-title">Modification de la procédure "{{ $process->name }}"</h4>
         </div>
         <div class="card-body">
-            <form id="edit-form" action="{{ route('admin.processes.update', $process->id) }}" method="POST" data-process-id="{{ $process->id }}">
+            <form id="edit-form" data-process="{{ $process }}" data-old-method="{{ old('method') }}" data-old-macroprocess="{{ old('macroprocess') }}" data-old-created="{{ old('reasons_for_creation') }}" data-old-reviewed="{{ old('reasons_for_modifications') }}" action="{{ route('admin.processes.update', $process->id) }}" method="POST" data-process-id="{{ $process->id }}">
                 @method('PATCH')
                 @csrf
                 <div class="row justify-content-center">
@@ -20,7 +20,7 @@
                         <div class="form-group">
                             <select id="domain" class="form-select @error('domain') is-invalid @enderror" name="domain">
                                 @foreach ($domains as $domain)
-                                    <option value="{{ $domain->id }}" @if(old('domain', $process->id) == $domain->id) selected @endif>{{ $domain->name }}</option>
+                                    <option value="{{ $domain->id }}" @if(old('domain', $process->method->macroprocess->domain->id) == $domain->id) selected @endif>{{ $domain->name }}</option>
                                 @endforeach
                             </select>
                             @error('domain')
@@ -71,11 +71,11 @@
                         <label for="type">Type:</label>
                         <div class="form-group">
                             <select id="type" class="form-select @error('type') is-invalid @enderror" name="type">
-                                <option value="Note circulaire">Note circulaire</option>
-                                <option value="Instruction à durée limitée">Instruction à durée limitée</option>
-                                <option value="Note de procédure">Note de procédure</option>
-                                <option value="Note de fonctionnement">Note de fonctionnement</option>
-                                <option value="Fiche de décision">Fiche de décision</option>
+                                <option value="Note circulaire" {{ old('type', $process->type) == "Note circulaire" ? "selected" : "" }}>Note circulaire</option>
+                                <option value="Instruction à durée limitée" {{ old('type', $process->type) == "Instruction à durée limitée" ? "selected" : "" }}>Instruction à durée limitée</option>
+                                <option value="Note de procédure" {{ old('type', $process->type) == "Note de procédure" ? "selected" : "" }}>Note de procédure</option>
+                                <option value="Note de fonctionnement" {{ old('type', $process->type) == "Note de fonctionnement" ? "selected" : "" }}>Note de fonctionnement</option>
+                                <option value="Fiche de décision" {{ old('type', $process->type) == "Fiche de décision" ? "selected" : "" }}>Fiche de décision</option>
                             </select>
                             @error('type')
                                 <div class="invalid-feedback">
@@ -107,27 +107,14 @@
                             @enderror
                         </div>
 
-                        <label for="pole">Pôle:</label>
+                        <label for="entities">Entité(s) impactée(s):</label>
                         <div class="form-group">
-                            <select id="pole" class="form-select @error('pole') is-invalid @enderror" name="pole">
-                                @foreach ($poles as $pole)
-                                    <option value="{{ $pole->id }}" @if(old('pole', $process->entity->pole->id) == $pole->id) selected @endif>{{ $pole->name }}</option>
+                            <select id="entities" class="form-select @error('entities') is-invalid @enderror" multiple name="entities[]">
+                                @foreach ($entities as $entity)
+                                <option value="{{ $entity->id }}" {{ collect(old('entities', $process->entities->pluck('id')->toArray()))->contains($entity->id) ? "selected": "" }}>{{ $entity->name }}</option>
                                 @endforeach
                             </select>
-                            @error('pole')
-                                <div class="invalid-feedback">
-                                    <i class="bx bx-radio-circle"></i>
-                                    {{ $message }}
-                                </div>
-                            @enderror
-                        </div>
-
-                        <label for="entity">Entité:</label>
-                        <div class="form-group">
-                            <select id="entity" class="form-select @error('entity') is-invalid @enderror" name="entity">
-                                
-                            </select>
-                            @error('entity')
+                            @error('entities')
                                 <div class="invalid-feedback">
                                     <i class="bx bx-radio-circle"></i>
                                     {{ $message }}
@@ -164,10 +151,10 @@
 
                         <div class="row">
                             <div class="col-md-6">
-                                <label for="written_date">Redigée le:</label>
+                                <label for="writing_date">Redigée le:</label>
                                 <div class="form-group">
-                                    <input id="written_date" type="date" name="written_date" value="{{ old('written_date', $process->written_date->format('Y-m-d')) }}" class="form-control @error('written_date') is-invalid @enderror">
-                                    @error('written_date')
+                                    <input id="writing_date" type="date" name="writing_date" value="{{ old('writing_date', optional($process->writing_date))->format('Y-m-d') }}" class="form-control @error('writing_date') is-invalid @enderror">
+                                    @error('writing_date')
                                         <div class="invalid-feedback">
                                             <i class="bx bx-radio-circle"></i>
                                             {{ $message }}
@@ -191,10 +178,10 @@
 
                         <div class="row">
                             <div class="col-md-6">
-                                <label for="validation_date">Validée le:</label>
+                                <label for="verification_date">Vérifiée le:</label>
                                 <div class="form-group">
-                                    <input id="validation_date" type="date" name="validation_date" value="{{ old('validation_date', $process->validation_date->format('Y-m-d')) }}" class="form-control @error('validation_date') is-invalid @enderror">
-                                    @error('validation_date')
+                                    <input id="verification_date" type="date" name="verification_date" value="{{ old('verification_date', optional($process->verification_date)->format('Y-m-d')) }}" class="form-control @error('verification_date') is-invalid @enderror">
+                                    @error('verification_date')
                                         <div class="invalid-feedback">
                                             <i class="bx bx-radio-circle"></i>
                                             {{ $message }}
@@ -203,10 +190,10 @@
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <label for="validated_by">Par:</label>
+                                <label for="verified_by">Par:</label>
                                 <div class="form-group">
-                                    <input id="validated_by" type="text" name="validated_by" value="{{ old('validated_by', $process->validated_by) }}" class="form-control @error('validated_by') is-invalid @enderror">
-                                    @error('validated_by')
+                                    <input id="verified_by" type="text" name="verified_by" value="{{ old('verified_by', $process->verified_by) }}" class="form-control @error('verified_by') is-invalid @enderror">
+                                    @error('verified_by')
                                         <div class="invalid-feedback">
                                             <i class="bx bx-radio-circle"></i>
                                             {{ $message }}
@@ -218,10 +205,10 @@
 
                         <div class="row">
                             <div class="col-md-6">
-                                <label for="approved_date">Approuvée le:</label>
+                                <label for="date_of_approval">Approuvée le:</label>
                                 <div class="form-group">
-                                    <input id="approved_date" type="date" name="approved_date" value="{{ old('approved_date', $process->approved_date->format('Y-m-d')) }}" class="form-control @error('approved_date') is-invalid @enderror">
-                                    @error('approved_date')
+                                    <input id="date_of_approval" type="date" name="date_of_approval" value="{{ old('date_of_approval', optional($process->date_of_approval))->format('Y-m-d') }}" class="form-control @error('date_of_approval') is-invalid @enderror">
+                                    @error('date_of_approval')
                                         <div class="invalid-feedback">
                                             <i class="bx bx-radio-circle"></i>
                                             {{ $message }}
@@ -243,11 +230,22 @@
                             </div>
                         </div>
 
+                        <label for="broadcasting_date">Date de diffusion:</label>
+                        <div class="form-group">
+                            <input id="broadcasting_date" type="date" value="{{ old('broadcasting_date', optional($process->broadcasting_date)->format('Y-m-d')) }}" name="broadcasting_date" class="form-control @error('broadcasting_date') is-invalid @enderror">
+                            @error('broadcasting_date')
+                                <div class="invalid-feedback">
+                                    <i class="bx bx-radio-circle"></i>
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
+
                         <label for="state">Etat:</label>
                         <div class="form-group">
                             <select id="state" class="form-select @error('state') is-invalid @enderror" name="state">
-                                <option value="Créé" @if(old('state') == 'Créé') selected @endif>Créé</option>
-                                <option value="Revu" @if(old('state') == 'Revu') selected @endif>Revu</option>
+                                <option value="Créé" @if(old('state', $process->state) == 'Créé') selected @endif>Créé</option>
+                                <option value="Revu" @if(old('state', $process->state) == 'Revu') selected @endif>Revu</option>
                             </select>
                             @error('state')
                                 <div class="invalid-feedback">
@@ -285,7 +283,7 @@
 
                         <label for="modifications">Modification(s) apportée(s):</label>
                         <div class="form-group">
-                            <textarea id="modifications" name="modifications" class="form-control @error('modifications') is-invalid @enderror" rows="3"></textarea>
+                            <textarea id="modifications" name="modifications" class="form-control @error('modifications') is-invalid @enderror" rows="3">{{ old('modifications', $process->modifications) }}</textarea>
                             @error('modifications')
                                 <div class="invalid-feedback">
                                     <i class="bx bx-radio-circle"></i>
@@ -324,18 +322,28 @@
 <script src="{{ asset('vendor/datatables/js/jquery-3.5.1.js') }}"></script>
 <script>
     $(function(){
+        entitiesChoices = new Choices(document.getElementById('entities'), {
+            removeItemButton: true
+        });
         let domain = $('#domain').val();
-        let pole = $('#pole').val();
+        oldReasonsOfModification = $('#edit-form').data('old-reviewed');
+        oldReasonsOfCreation = $('#edit-form').data('old-created');
+        process = $('#edit-form').data('process');
+        let oldMethod = $('#edit-form').data('old-method');
+        let oldMacroprocess = $('#edit-form').data('old-macroprocess');
+        let selectedMethod = oldMethod ? oldMethod : process.method_id;
+        let selectedMacroprocess = oldMacroprocess ? oldMacroprocess : process.method.macroprocess_id;
+        $('#macroprocess').data('selected', selectedMacroprocess);
+        $('#method').data('selected', selectedMethod);
         fillMacroprocesses(domain);
-        fillEntities(pole);
         $('#domain').on('change', function(e){
+            $('#macroprocess').data('selected', null);
+            $('#method').data('selected', null);
             fillMacroprocesses($(this).val());
         });
         $('#macroprocess').on('change', function(e){
+            $('#method').data('selected', null);
             fillMethods($(this).val());
-        });
-        $('#pole').on('change', function(e){
-            fillEntities($(this).val());
         });
         $('#state').on('change', switchReasonInput);
     });
@@ -352,6 +360,10 @@
                 });
 
                 $('#macroprocess').html(html);
+                let selected = $('#macroprocess').data('selected');
+                if(selected){
+                    $('#macroprocess').val(selected);
+                }
                 let macroprocess = $('#macroprocess').val();
                 fillMethods(macroprocess);
             },
@@ -373,25 +385,10 @@
                 });
 
                 $('#method').html(html);
-            },
-            error: function(response){
-                console.log(response);
-            }
-        });
-    }
-
-    function fillEntities(pole)
-    {
-        $.ajax({
-            url: "/admin/processes/poles/"+pole+"/entities",
-            success: function(response){
-                let entities = response.entities;
-                let html = '';
-                entities.forEach(entity => {
-                    html+= `<option value="${entity.id}">${entity.name}</option>`;
-                });
-
-                $('#entity').html(html);
+                let selected = $('#method').data('selected');
+                if(selected){
+                    $('#method').val(selected);
+                }
             },
             error: function(response){
                 console.log(response);
@@ -403,21 +400,16 @@
     {
         $('.reasons textarea').val('');
         $('.reasons').hide();
-        const id = $('#edit-form').data("process-id");
+        if(e.target.value == "Revu"){
+            let content = oldReasonsOfModification ? oldReasonsOfModification : process.reasons_for_modification;
+            $('#reasons_for_modification').val(content);
+            $('.reviewed').show();
+        }else{
+            let content = oldReasonsOfCreation ? oldReasonsOfCreation : process.reasons_for_creation;
+            $('#reasons_for_creation').val(content);
+            $('.created').show();
+        }
         
-        $.ajax({
-            url: "/admin/processes/"+id,
-            success: function(response){
-                let process = response.process;
-                if(e.target.value == "Revu"){
-                    $('.reviewed textarea').val(process.reasons_for_modification);
-                    $('.reviewed').show();
-                }else{
-                    $('.created textarea').val(process.reasons_for_creation);
-                    $('.created').show();
-                }
-            }
-        });
     }
 </script>
 @endsection

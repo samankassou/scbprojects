@@ -88,6 +88,10 @@ class PermissionSeeder extends Seeder
             'name' => 'delete-process',
             'display_name' => 'Supprimer une procédure'
         ]);
+        $restoreProcess = Permission::create([
+            'name' => 'restore-process',
+            'display_name' => 'Restaurer une procédure'
+        ]);
 
         $adminRole = Role::firstWhere('name', 'admin');
         $projectsWriterRole = Role::firstWhere('name', 'projects-writer');
@@ -106,6 +110,7 @@ class PermissionSeeder extends Seeder
             $exportProjects,
             $deleteProject,
             $restoreProject,
+            $restoreProcess,
             $viewProcess,
             $viewProcesses,
             $createProcess,

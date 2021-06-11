@@ -14,8 +14,8 @@ class Process extends Model
         'creation_date',
         'writing_date',
         'date_of_approval',
-        'validation_date',
-        'broardcasting_date'
+        'verification_date',
+        'broadcasting_date'
     ];
 
     protected $fillable = [
@@ -48,5 +48,10 @@ class Process extends Model
     public function method()
     {
         return $this->belongsTo(Method::class);
+    }
+
+    public function deleter()
+    {
+        return $this->belongsTo(User::class, 'deleted_by', 'id');
     }
 }

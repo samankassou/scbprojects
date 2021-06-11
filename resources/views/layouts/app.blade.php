@@ -111,8 +111,8 @@
                                     <a href="{{ route('admin.processes.create') }}">Créer une Procédure</a>
                                 </li>
                                 @endpermission
-                                <li class="submenu-item ">
-                                    <a href="#">Procédures Supprimées</a>
+                                <li class="submenu-item {{ request()->routeIs('admin.processes.deleted.*') ? 'active' : '' }}">
+                                    <a href="{{ route('admin.processes.deleted.index') }}">Procédures Supprimées</a>
                                 </li>
                             </ul>
                         </li>

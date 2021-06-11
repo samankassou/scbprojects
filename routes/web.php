@@ -74,6 +74,12 @@ Route::group([
         ], function(){
             Route::post('/processes/list', [ProcessController::class, 'ajaxList']);
 
+            Route::get('/processes/deleted', [ProcessController::class, 'deleted'])->name('processes.deleted.index');
+            Route::post('/processes/deleted', [ProcessController::class, 'ajaxDeletedList'])->name('processes.deleted');
+            Route::get('/processes/deleted/{id}', [ProcessController::class, 'showDeleted'])->name('processes.deleted.show');
+
+            Route::post('/processes/delete/{id}', [ProcessController::class, 'delete'])->name('processes.forcedelete');
+
             Route::get('/processes/macroprocesses/{id}/methods', [ProcessController::class, 'getMethods'])->name('processes.macroprocesses.methods');
             Route::get('/processes/domains/{id}/macroprocesses', [ProcessController::class, 'getMacroprocesses'])->name('processes.domains.macroprocesses');
             Route::resource('/processes', ProcessController::class);

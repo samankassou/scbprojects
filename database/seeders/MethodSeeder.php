@@ -156,11 +156,7 @@ class MethodSeeder extends Seeder
             'macroprocess_id' => $macroprocess7->id
         ]);
         //macroprocess 8
-        $macroprocess8 = Macroprocess::firstWhere('name', 'Développement et pilotage de projets');
-        Method::create([
-            'name' => 'Gestion de projet',
-            'macroprocess_id' => $macroprocess8->id
-        ]);
+        $macroprocess8 = Macroprocess::where('name', 'Développement et pilotage de projets')->get()->last();
         Method::create([
             'name' => 'Gestion applicative',
             'macroprocess_id' => $macroprocess8->id
@@ -856,14 +852,10 @@ class MethodSeeder extends Seeder
             'macroprocess_id' => $macroprocess46->id
         ]);
 
-        //macroprocess 47
-        $macroprocess47 = Macroprocess::firstWhere('name', 'Développement et pilotage de projets');
+        //macroprocess47
+        $macroprocess47 = Macroprocess::firstwhere('name', 'Développement et pilotage de projets');
         Method::create([
-            'name' => 'Gestion applicative',
-            'macroprocess_id' => $macroprocess47->id
-        ]);
-        Method::create([
-            'name' => 'Gestion de projets SI',
+            'name' => 'Gestion de projet',
             'macroprocess_id' => $macroprocess47->id
         ]);
     }

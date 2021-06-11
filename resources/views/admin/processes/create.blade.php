@@ -340,7 +340,6 @@
     const entitiesChoices = new Choices(document.getElementById('entities'), {
         removeItemButton: true
     });
-    console.log($('#verification_date').val(), 'test');
     $(function(){
         let domain = $('#domain').val();
         fillMacroprocesses(domain);

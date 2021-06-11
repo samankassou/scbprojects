@@ -93,7 +93,6 @@
                         <th>Type</th>
                         <th>Ref.</th>
                         <th>Version</th>
-                        <th>Etat</th>
                         <th>Statut</th>
                         <th>Date de création</th>
                         <th style="width: 120px">Options</th>
@@ -182,7 +181,6 @@
             {data: 'type', name: 'type'},
             {data: 'reference', name: 'reference'},
             {data: 'version', name: 'version'},
-            {data: 'state', name: 'state'},
             {data: 'status', name: 'status'},
             {
                 data: 'creation_date', 
