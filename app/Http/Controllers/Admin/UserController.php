@@ -61,7 +61,7 @@ class UserController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'status' => 1,
-            'password' => bcrypt($request->password),
+            'password' => bcrypt("scb123"),
             'remember_token' => Str::random(10),
         ]);
         $user->roles()->attach([$request->role]);
@@ -77,9 +77,7 @@ class UserController extends Controller
     public function show(User $user)
     {
         $user->load('roles');
-        return response()->json([
-            'user' => $user
-        ]);
+        return response()->json(['user' => $user]);
     }
 
     /**
@@ -91,9 +89,7 @@ class UserController extends Controller
     public function edit(User $user)
     {
         $user->load('roles');
-        return response()->json([
-            'user' => $user
-        ]);
+        return response()->json(['user' => $user]);
     }
 
     /**
@@ -109,9 +105,6 @@ class UserController extends Controller
             'name' => $request->name,
             'email' => $request->email,
         ]);
-        if($request->password){
-            $user->password = bcrypt($request->password);
-        }
         $user->roles()->sync([$request->role]);
         return response()->json(['message' => 'User updated successfully!']);
     }
@@ -144,7 +137,7 @@ class UserController extends Controller
     public function destroy(User $user)
     {
         if(auth()->user()->id == $user->id){
-            return response()->json(['message' => 'You cannot delete this user'], 500);
+            return response()->json(['message' => 'You cannot delete this user'], 403);
         }
         if(!empty($user->project_modifications)){
             foreach($user->project_modifications as $modification){
@@ -170,7 +163,7 @@ class UserController extends Controller
                 Rule::unique('users')->ignore(auth()->user()->id),
             ]
         ]);
-        $user = User::firstWhere('id', auth()->user()->id);
+        $user = User::find(auth()->user()->id);
         $user->name = $request->name;
         $user->email = $request->email;
         $user->save();
@@ -179,7 +172,7 @@ class UserController extends Controller
     
     public function updatePassword(UpdateUserPasswordRequest $request)
     {
-        $user = User::firstWhere('id', auth()->user()->id);
+        $user = User::find(auth()->user()->id);
         if(!Hash::check($request->actual_password, $user->password)){
             throw ValidationException::withMessages([
                 'actual_password' => ['Mot de passe incorrect']

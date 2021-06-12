@@ -3,16 +3,13 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Models\Step;
-use App\Models\User;
 use App\Models\Nature;
 use App\Models\Project;
-use Barryvdh\DomPDF\PDF;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Exports\ProjectsExport;
 use Yajra\DataTables\DataTables;
-use Illuminate\Support\Facades\DB;
 use App\Models\ProjectModification;
 use Illuminate\Support\Facades\App;
 use App\Http\Controllers\Controller;
@@ -32,7 +29,7 @@ class ProjectController extends Controller
         $projects = Project::all();
         $natures = Nature::all();
         $steps = Step::all();
-        $years = array_unique(Arr::sort($projects->pluck('start_year')));
+        $years = $projects->pluck('start_year')->sort()->unique();
         return view('admin.projects.index', compact('projects', 'natures', 'years', 'steps'));
     }
 
@@ -43,11 +40,7 @@ class ProjectController extends Controller
      */
     public function deleted(Request $request)
     {
-        $projects = Project::all();
-        $natures = Nature::all();
-        $steps = Step::all();
-        $years = array_unique(Arr::sort($projects->pluck('start_year')));
-        return view('admin.projects.deleted.index', compact('projects', 'natures', 'years', 'steps'));
+        return view('admin.projects.deleted.index');
     }
 
     public function showByRef(Request $request)
@@ -84,8 +77,9 @@ class ProjectController extends Controller
         $query = $this->projectQuery($request);
 
         $projects = $query->get();
+        $projects->load(['writer']);
+
         $projects->each(function($project){
-            $project->load(['writer']);
             $project->displayedNatures = implode(", ", $project->natures->pluck('name')->toArray());
         });
 
@@ -132,10 +126,10 @@ class ProjectController extends Controller
     public function export(Request $request)
     {
         $projects = $this->projectQuery($request)->get();
+        $projects->load(['natures', 'modifications' => function($query){
+            $query->latest()->first();
+        }]);
         $projects->each(function($project, $index){
-            $project->load(['modifications' => function($query){
-                $query->latest()->first();
-            }, 'natures']);
             $project->index = $index + 1;
         });
         $fileName = 'liste_des_projects_'.today()->format('d-m-Y').'.xlsx';
@@ -200,9 +194,7 @@ class ProjectController extends Controller
         $project->reference = Str::upper(Str::random(3)).'-'.$project->start_year.'-'.$project->id;
         $project->save();
         $project->natures()->attach($request->natures);
-       
-        $project->steps()->attach($request->steps);
-        
+               
         
         return redirect()->route('admin.projects.index')->with('message', 'Projet créé avec succès!');
     }
@@ -229,7 +221,7 @@ class ProjectController extends Controller
      */
     public function showDeleted($id)
     {
-        $project = Project::withTrashed()
+        $project = Project::onlyTrashed()
         ->firstWhere('id', $id);
         return view('admin.projects.deleted.show', compact('project'));
     }
@@ -242,11 +234,9 @@ class ProjectController extends Controller
      */
     public function edit(Project $project)
     {
-        $projects = Project::all();
         $natures = Nature::all();
         $steps = Step::all();
-        $years = array_unique(Arr::sort($projects->pluck('start_year')));
-        return view('admin.projects.edit', compact('project', 'natures', 'years', 'steps'));
+        return view('admin.projects.edit', compact('project', 'natures', 'steps'));
     }
 
     /**
@@ -262,12 +252,10 @@ class ProjectController extends Controller
             'name'          => $request->name,
             'description'   => $request->description,
             'start_date'    => $request->start_date,
-            'end_date'      => $request->end_date,
             'sponsor'       => $request->sponsor,
             'initiative'    => $request->initiative,
             'amoa'          => $request->amoa,
             'manager'       => $request->manager,
-            'cost'          => $request->cost,
             'status'        => $request->status,
             'benefits'      => $request->benefits
         ]);
@@ -349,11 +337,8 @@ class ProjectController extends Controller
      */
     public function restore($id)
     {
-        $project = Project::withTrashed()
-        ->firstWhere('id', $id);
-        if($project){
-            $project->restore();
-        }
+        Project::onlyTrashed()
+        ->findOrFail($id)->restore();
 
         return response()->json(['message' => 'Project restored!']);
     }
@@ -398,18 +383,9 @@ class ProjectController extends Controller
             //get array of ids
             $natures = json_decode($request->search);
             if(!empty($natures)){
-                //foreach($natures as $nature){
-                    $query->whereHas('natures', function($query) use($natures){
-                        $query->whereIn('natures.id', $natures);
-                    }, '=');
-                //}
-                // $query = DB::table('projects')
-                // ->where('natures.id', 1)
-                // ->leftJoin('nature_project', 'projects.id', '=', 'nature_project.project_id')
-                // ->leftJoin('natures', 'natures.id', '=', 'nature_project.nature_id')
-                // ->select('projects.*', 'natures.*');
-
-
+                $query->whereHas('natures', function($query)use($natures){
+                    $query->whereIn('natures.id', $natures);
+                });
             }
         }
         return $query;

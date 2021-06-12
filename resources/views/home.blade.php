@@ -106,13 +106,13 @@ a:hover, a:active {
                           <button class="Search_btn">Recherche </button>
                           </form>
                           <form id="search-form1" class="Vegetable" style="display: none">
-                            <input id="search-input1" class="Vegetable_fom" placeholder="Saisir la Référence du Process" type="text" name=" Recherche">
+                            <input id="search-input1" class="Vegetable_fom" placeholder="Saisir la Référence de la procédure" type="text" name=" Recherche">
                             <button class="Search_btn">Recherche </button>
                             </form>
                             <a href="/" id="d3" style="display: none">Retour</a><br>
                           <div id="result">
                             <button id="d1" class="Search_btn" type="button" onclick="myFunction()">Rechercher un Projet</button>&nbsp;&nbsp;
-                            <button id="d2" class="Search_btn" type="button" onclick="mFunction()" style="float: right">Rechercher un Process</button>
+                            <button id="d2" class="Search_btn" type="button" onclick="mFunction()" style="float: right">Rechercher une Procédure</button>
                            <hr>
                             <h1 class="btn">SCB Cameroun</h1>
                           <p>Lorem ipsum dolor sit am et, consec tetur adipi scing elit. Sed
@@ -196,8 +196,8 @@ a:hover, a:active {
                       </div>
                     </div>
                     <div class="card-footer d-flex justify-content-between">
-                        <span><button class="btn btn-light-primary"><a href="/projects/show/${project.reference}">Ouvrir</a></button></span>
-                        <button class="btn btn-light-primary"><a href="/projects/export/${project.reference}">Imprimer</a></button>
+                        <span><button class="btn btn-light-primary"><a target="_blank" href="/projects/show/${project.reference}">Ouvrir</a></button></span>
+                        <button class="btn btn-light-primary"><a target="_blank" href="/projects/export/${project.reference}">Imprimer</a></button>
                     </div>
                   </div>
                     `;
@@ -256,8 +256,8 @@ if(searchWord.length > 2){
               </div>
             </div>
             <div class="card-footer d-flex justify-content-between">
-                <span><button class="btn btn-light-primary"><a href="/processes/show/${process.reference}">Ouvrir</a></button></span>
-                <button class="btn btn-light-primary"><a href="/processes/export/${process.reference}">Imprimer</a></button>
+                <span><button class="btn btn-light-primary"><a target="_blank" href="/processes/show/${process.reference}">Ouvrir</a></button></span>
+                <button class="btn btn-light-primary"><a target="_blank" href="/processes/export/${process.reference}">Imprimer</a></button>
             </div>
           </div>
             `;

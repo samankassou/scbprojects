@@ -119,7 +119,6 @@
 </section>
 {{-- Delete project modal --}}
 <div class="modal-danger me-1 mb-1 d-inline-block">
-    <!--Danger theme Modal -->
     <div class="modal fade text-left" id="delete-project-modal" tabindex="-1" aria-labelledby="myModalLabel120" aria-hidden="true" style="display: none;">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
             <form id="delete-project-form" class="modal-content">
@@ -155,94 +154,101 @@
 @parent
 <script src="{{ asset('mazer/assets/vendors/choices.js/choices.min.js') }}"></script>
 <script>
-    let token = $('meta[name="csrf-token"]').attr('content');
     $(function () {
+        token = $('meta[name="csrf-token"]').attr('content');
         $.ajaxSetup({
             headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                'X-CSRF-TOKEN': token
             }
         });
-    });
-    const table = $('#projects-datatable').DataTable({
-        searching: false,
-        language: {
-            url: "{{ asset('vendor/datatables/lang/French.json') }}"
-        },
-        responsive: true,
-        processing: true,
-        serverSide: true,
-        ajax: {
-            url: "/admin/projects/list",
-            type: "POST",
-            data: {
-                _token: token,
-                search_type: function(){
-                    return getData().search_type;
+
+        table = $('#projects-datatable').DataTable({
+            searching: false,
+            language: {
+                url: "{{ asset('vendor/datatables/lang/French.json') }}"
+            },
+            responsive: true,
+            processing: true,
+            serverSide: true,
+            ajax: {
+                url: "/admin/projects/list",
+                type: "POST",
+                data: {
+                    _token: token,
+                    search_type: function(){
+                        return getData().search_type;
+                    },
+                    search: function(){
+                        return getData().search;
+                    }
+                }
+            },
+            columns: [
+                {data: 'reference', name: 'reference'},
+                {data: 'name', name: 'name'},
+                {data: 'amoa', name: 'amoa'},
+                {data: 'sponsor', name: 'sponsor'},
+                {data: 'status', name: 'status'},
+                {data: 'start_year', name: 'start_year'},
+                {
+                    data: 'displayedNatures',
+                    name: 'displayedNatures',
+                    orderable: false, 
+                    searchable: false
                 },
-                search: function(){
-                    return getData().search;
+                {
+                    data: 'writer', 
+                    name: 'writer', 
+                    orderable: false, 
+                    searchable: false,
+                    render: function(writer){
+                        return (writer) ? writer.name : 'Inconnu';
+                    }
+                },
+                {
+                    data: 'action', 
+                    name: 'action', 
+                    orderable: false, 
+                    searchable: false
                 }
-            }
-        },
-        columns: [
-            {data: 'reference', name: 'reference'},
-            {data: 'name', name: 'name'},
-            {data: 'amoa', name: 'amoa'},
-            {data: 'sponsor', name: 'sponsor'},
-            {data: 'status', name: 'status'},
-            {data: 'start_year', name: 'start_year'},
-            {
-                data: 'displayedNatures',
-                name: 'displayedNatures',
-                orderable: false, 
-                searchable: false
-            },
-            {
-                data: 'writer', 
-                name: 'writer', 
-                orderable: false, 
-                searchable: false,
-                render: function(writer){
-                    return (writer) ? writer.name : 'Inconnu';
-                }
-            },
-            {
-                data: 'action', 
-                name: 'action', 
-                orderable: false, 
-                searchable: false
-            }
-        ]
+            ]
+        });
+
+        $('#delete-project-btn').on('click', deleteProject);
+        $('#export-btn').on('click', exportToExcel);
+        yearSearch = new Choices(document.getElementById('yearSearch'));
+        statusSearch = new Choices(document.getElementById('statusSearch'));
+        natureSearch = new Choices(document.getElementById('natureSearch'), {
+            removeItemButton: true
+        });
+
+        $('#criteria').on('change', function(){
+            //reset all inputs search
+            $("input[type='text'].search").val('');
+            yearSearch.setChoiceByValue('');
+            statusSearch.setChoiceByValue('');
+            natureSearch.removeActiveItems();
+            //remove the active search
+            $('.search-container').removeClass('active');
+            //set the new active box
+            let criteria = $(this).val();
+            $('.'+criteria).closest('.search-container').addClass('active');
+            table.ajax.reload(null, false);
+        });
+
+        $("input[type='text'].search").on('keyup', function(){
+            table.ajax.reload(null, false);
+        });
+        
+        $("select.search").on('change', function(){
+            table.ajax.reload(null, false);
+        });
+
     });
-    $('#delete-project-btn').on('click', deleteProject);
-    $('#export-btn').on('click', exportToExcel);
-    const yearSearch = new Choices(document.getElementById('yearSearch'));
-    const statusSearch = new Choices(document.getElementById('statusSearch'));
-    const natureSearch = new Choices(document.getElementById('natureSearch'), {
-        removeItemButton: true
-    });
+   
     
-    $('#criteria').on('change', function(){
-        //reset all inputs search
-        $("input[type='text'].search").val('');
-        yearSearch.setChoiceByValue('');
-        statusSearch.setChoiceByValue('');
-        natureSearch.removeActiveItems();
-        //remove the active search
-        $('.search-container').removeClass('active');
-        //set the new active box
-        let criteria = $(this).val();
-        $('.'+criteria).closest('.search-container').addClass('active');
-        table.ajax.reload(null, false);
-
-    });
-    $("input[type='text'].search").on('keyup', function(){
-        table.ajax.reload(null, false);
-    });
-    $("select.search").on('change', function(){
-        table.ajax.reload(null, false);
-    });
-
+    
+    
     function getData()
     {
         let criteria = $('#criteria').val();
@@ -286,8 +292,7 @@
 
     function showDeleteProjectModal(id)
     {
-        $('#projectId').val(id);
-        $('#delete-project-modal').modal('show');
+        $('#delete-project-modal').data('project-id', id).modal('show');
     }
 
     function deleteProject()
@@ -295,7 +300,7 @@
         $(this).addClass('disabled')
         .html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Suppression...')
         .attr('disabled', true);
-        let id = $('#projectId').val();
+        let id = $('#delete-project-modal').data('project-id');
         $.ajax({
             url: "/admin/projects/"+id,
             method: "POST",
@@ -316,7 +321,10 @@
                 console.log(response);
             },
             complete: ()=>{
-                $('#delete-project-btn').removeClass('disabled').text('Supprimer').attr('disabled', false);
+                $('#delete-project-btn')
+                .removeClass('disabled')
+                .text('Supprimer')
+                .attr('disabled', false);
                 $('#delete-project-modal').modal('hide');
             }
         });

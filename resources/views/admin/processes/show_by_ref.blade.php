@@ -15,7 +15,7 @@
         <div class="p-5">
             <section class="top-content bb d-flex justify-content-between">
                 <div class="logo">
-                    <img src="{{ asset('front/images/4.png') }}" alt="" class="img-fluid">
+                    <img src="{{ asset('images/logo.png') }}" alt="" class="img-fluid">
                 </div>
                 <div class="top-left">
                     <div class="graphic-path">
@@ -53,12 +53,12 @@
                         <p>{{ $process->version }}</p>
                     </div>
                     <div class="row extra-info pt-3">
-                        <p class="m-0 font-weight-bold"><strong>Pôle:</strong></p>
-                        <p>{{ $process->entity->pole->name }}</p>
+                        <p class="m-0 font-weight-bold"><strong>Pôle(s):</strong></p>
+                        <p></p>
                     </div>
                     <div class="row extra-info pt-3">
-                        <p class="m-0 font-weight-bold"><strong> Entité:</strong></p>
-                        <p>{{ $process->entity->name }}</p>
+                        <p class="m-0 font-weight-bold"><strong> Entité(s) impactée(s):</strong></p>
+                        <p>{{ implode(', ', $process->entities->pluck('name')->toArray()) }}</p>
                     </div>
                     
                     <div class="row extra-info pt-3">
@@ -67,15 +67,15 @@
                     </div>
                     <div class="row extra-info pt-3">
                         <p class="m-0 font-weight-bold"><strong> Redigée le:</strong></p>&nbsp;
-                        <p>{{ $process->written_date->format('d/m/Y') }}</p><strong style="text-indent: 2em;" > Par:</strong></p>&nbsp;<p>{{ $process->written_by }}</p>
+                        <p>{{ $process->writing_date->format('d/m/Y') }}</p><strong style="text-indent: 2em;" > Par:</strong></p>&nbsp;<p>{{ $process->written_by }}</p>
                     </div>
                     <div class="row extra-info pt-3">
                         <p class="m-0 font-weight-bold"><strong> Validéé le:</strong></p>&nbsp;
-                        <p>{{ $process->validation_date->format('d/m/Y') }}</p><strong style="text-indent: 2em;" > Par:</strong></p>&nbsp;<p>{{ $process->validated_by }}</p>
+                        <p>{{ $process->verification_date->format('d/m/Y') }}</p><strong style="text-indent: 2em;" > Par:</strong></p>&nbsp;<p>{{ $process->verified_by }}</p>
                     </div>
                     <div class="row extra-info pt-3">
                         <p class="m-0 font-weight-bold"><strong> Aprouvée le:</strong></p>&nbsp;
-                        <p>{{ $process->approved_date->format('d/m/Y') }}</p><strong style="text-indent: 2em;" > Par:</strong></p>&nbsp;<p>{{ $process->approved_by }}</p>
+                        <p>{{ $process->date_of_approval->format('d/m/Y') }}</p><strong style="text-indent: 2em;" > Par:</strong></p>&nbsp;<p>{{ $process->approved_by }}</p>
                     </div>
                     <div class="row extra-info pt-3">
                         <p class="m-0 font-weight-bold"><strong>Etat:</strong></p>&nbsp;

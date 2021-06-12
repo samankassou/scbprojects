@@ -24,10 +24,10 @@ class ProcessFactory extends Factory
     public function definition()
     {
         return [
-              'name' => $this->faker->sentence(),
+              'name'      => $this->faker->sentence(),
               'reference' => $this->faker->numberBetween(1, 1000),
-              'version' => $this->faker->numberBetween(1, 3),
-              'type' => $this->faker->randomElement([
+              'version'   => $this->faker->numberBetween(1, 3),
+              'type'      => $this->faker->randomElement([
                   'Note de procédure',
                   'Note de fonctionnement',
                   'Note circulaire',

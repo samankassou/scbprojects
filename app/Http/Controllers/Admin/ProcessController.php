@@ -42,9 +42,8 @@ class ProcessController extends Controller
 
     public function ajaxDeletedList(Request $request)
     {
-        $processes = Process::onlyTrashed()->with(['method', 'method.macroprocess', 'deleter'])->get();
+        $processes = Process::onlyTrashed()->with(['method.macroprocess', 'deleter'])->get();
         $user = auth()->user();
-        
 
         return Datatables::of($processes)
             ->addIndexColumn()
@@ -108,10 +107,7 @@ class ProcessController extends Controller
         $query = $this->processQuery($request);
 
         $processes = $query->get();
-        $processes->each(function($process){
-            $process->load(['method', 'entities', 'method.macroprocess']);
-        });
-        
+        $processes->load(['entities.pole', 'method.macroprocess']);
 
         return Datatables::of($processes)
             ->addIndexColumn()
@@ -141,9 +137,11 @@ class ProcessController extends Controller
     {
         $process = Process::firstWhere('reference', $request->reference);
         abort_if(!$process, 404, 'Reférence incorrecte ou procédure inexistante');
+        $polesIds = $process->entities->pluck('pole_id')->unique();
+        $poles = Pole::whereIn('id', $polesIds)->get();
         $pdf = App::make('dompdf.wrapper');
         $pdf->getDomPDF()->set_option("enable_php", true);
-        $pdf->loadView('admin.processes.pdf.show', compact('process'));
+        $pdf->loadView('admin.processes.pdf.show', compact('process', 'poles'));
         $fileName = 'process_'.$process->reference.'_'.today()->format('d-m-Y').'.pdf';
         return $pdf->stream($fileName);
 
@@ -157,17 +155,16 @@ class ProcessController extends Controller
      */
     public function store(StoreProcessRequest $request)
     {
-        //dd($request->reference);
-        $process = new Process;
-        $process->name = $request->name;
-        $process->reference = $request->reference;
-        $process->type = $request->type;
-        $process->version = $request->version;
+        $process                = new Process;
+        $process->name          = $request->name;
+        $process->reference     = $request->reference;
+        $process->type          = $request->type;
+        $process->version       = $request->version;
         $process->creation_date = $request->creation_date;
-        $process->created_by = $request->created_by;
-        $process->state = $request->state;
-        $process->status = $request->status;
-        $process->method_id = $request->method;
+        $process->created_by    = $request->created_by;
+        $process->state         = $request->state;
+        $process->status        = $request->status;
+        $process->method_id     = $request->method;
 
         if($request->writing_date){
             $process->writing_date = $request->writing_date;
@@ -223,7 +220,10 @@ class ProcessController extends Controller
         if($request->ajax()){
             return response()->json(['process' => $process]);
         }
-        return view('admin.processes.show', compact('process'));
+        $process->load(['entities.pole']);
+        $polesIds = $process->entities->pluck('pole_id')->unique();
+        $poles = Pole::whereIn('id', $polesIds)->get();
+        return view('admin.processes.show', compact('process', 'poles'));
     }
 
     /**
@@ -234,7 +234,7 @@ class ProcessController extends Controller
      */
     public function edit(Process $process)
     {
-        $process->load(['method', 'method.macroprocess']);
+        $process->load(['method.macroprocess']);
         $domains = Domain::all();
         $entities = Entity::all();
         return view('admin.processes.edit', compact('process', 'domains', 'entities'));
@@ -250,15 +250,15 @@ class ProcessController extends Controller
     public function update(UpdateProcessRequest $request, Process $process)
     {
         $process->update([
-            "method_id" => $request->method,
-            "name" => $request->name,
-            "type" => $request->type,
-            "reference" => $request->reference,
-            "version" => $request->version,
+            "method_id"     => $request->method,
+            "name"          => $request->name,
+            "type"          => $request->type,
+            "reference"     => $request->reference,
+            "version"       => $request->version,
             "creation_date" => $request->creation_date,
-            "created_by" => $request->created_by,
-            "state" => $request->state,
-            "status" => $request->status,
+            "created_by"    => $request->created_by,
+            "state"         => $request->state,
+            "status"        => $request->status,
             "modifications" => $request->modifications,
         ]);
         if($request->writing_date){
@@ -319,19 +319,7 @@ class ProcessController extends Controller
         $search = "%".$request->search."%";
         if($request->search_type == "all" && !empty($request->search))
         {
-            // $query->where('amoa', 'LIKE', $search);
-            // $query->orWhere('sponsor', 'LIKE', $search);
-            // $query->orWhere('reference', 'LIKE', $search);
-            // $query->orWhere('status', 'LIKE', $search);
-            // $query->orWhere('name', 'LIKE', $search);
-            // $query->orWhere(function($query) use($request){
-            //     $query->WhereYear('start_date', $request->search);
-            // });
-            // $query->orWhere(function($query) use($search){
-            //     $query->whereHas('natures', function($query) use($search){
-            //         $query->where('name', 'LIKE', $search);
-            //     });
-            // });
+            
 
         }
         if($request->search_type == "amoa" && !empty($request->search)){
@@ -348,24 +336,6 @@ class ProcessController extends Controller
         }
         if($request->search_type == "year" && !empty($request->search)){
             $query->whereYear('start_date', $request->search);
-        }
-        if($request->search_type == "natures"){
-            //get array of ids
-            $natures = json_decode($request->search);
-            if(!empty($natures)){
-                //foreach($natures as $nature){
-                    $query->whereHas('natures', function($query) use($natures){
-                        $query->whereIn('natures.id', $natures);
-                    }, '=');
-                //}
-                // $query = DB::table('projects')
-                // ->where('natures.id', 1)
-                // ->leftJoin('nature_project', 'projects.id', '=', 'nature_project.project_id')
-                // ->leftJoin('natures', 'natures.id', '=', 'nature_project.nature_id')
-                // ->select('projects.*', 'natures.*');
-
-
-            }
         }
         return $query;
     }

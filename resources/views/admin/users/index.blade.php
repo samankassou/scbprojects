@@ -59,16 +59,6 @@
                         <div class="invalid-feedback" id="role-error"></div>
                     </div>
 
-                    <div class="form-group">
-                        <input id="password" type="password" placeholder="Mot de passe" class="form-control" name="password">
-                        <div class="invalid-feedback" id="password-error"></div>
-                    </div>
-
-                    <div class="form-group">
-                        <input id="password_confirmation" type="password" placeholder="Confirmez le mot de passe" class="form-control" name="password_confirmation">
-                        <div class="invalid-feedback" id="password_confirmation-error"></div>
-                    </div>
-
                 </form>
             </div>
             <div class="modal-footer">
@@ -117,27 +107,6 @@
                         </select>
                         <div class="invalid-feedback" id="edit-role-error"></div>
                     </div>
-
-                    <div class="form-check">
-                        <div class="custom-control custom-checkbox">
-                            <input type="checkbox" class="form-check-input form-check-primary form-check-glow" id="toggle-pswzone-btn">
-                            <label class="form-check-label" for="customColorCheck1">Modifier le mot de passe</label>
-                        </div>
-                    </div>
-
-                    <div id="edit-password-zone" style="display: none">
-                        <div class="form-group">
-                            <input id="edit-password" type="password" placeholder="Mot de passe" class="form-control" name="password">
-                            <div class="invalid-feedback" id="password-error"></div>
-                            <div class="invalid-feedback" id="edit-password-error"></div>
-                        </div>
-    
-                        <div class="form-group">
-                            <input id="edit-password_confirmation" type="password" placeholder="Confirmez le mot de passe" class="form-control" name="password_confirmation">
-                            <div class="invalid-feedback" id="edit-password_confirmation-error"></div>
-                        </div>
-                    </div>
-
                 </form>
             </div>
             <div class="modal-footer">
@@ -229,49 +198,47 @@
             }
         });
         table = $('#users-datatable').DataTable({
-        language: {
-            url: "{{ asset('vendor/datatables/lang/French.json') }}"
-        },
-        responsive: true,
-        processing: true,
-        serverSide: true,
-        ajax: {
-            url: "{{ route('admin.users.index') }}"
-        },
-        columns: [
-            {data: 'DT_RowIndex', name: 'DT_RowIndex'},
-            {data: 'name', name: 'name'},
-            {data: 'email', name: 'email'},
-            {
-                data: 'roles',
-                name: 'roles',
-                orderable: false, 
-                searchable: false,
-                render: function(roles){
-                    return roles[0].display_name
-                }
+            language: {
+                url: "{{ asset('vendor/datatables/lang/French.json') }}"
             },
-            {
-                data: 'status', 
-                name: 'status',
-                orderable: false, 
-                searchable: false
+            responsive: true,
+            processing: true,
+            serverSide: true,
+            ajax: {
+                url: "{{ route('admin.users.index') }}"
             },
-            {
-                data: 'action', 
-                name: 'action', 
-                orderable: false, 
-                searchable: false
-            },
-        ]
-    });
+            columns: [
+                {data: 'DT_RowIndex', name: 'DT_RowIndex'},
+                {data: 'name', name: 'name'},
+                {data: 'email', name: 'email'},
+                {
+                    data: 'roles',
+                    name: 'roles',
+                    orderable: false, 
+                    searchable: false,
+                    render: function(roles){
+                        return roles[0].display_name
+                    }
+                },
+                {
+                    data: 'status', 
+                    name: 'status',
+                    orderable: false, 
+                    searchable: false
+                },
+                {
+                    data: 'action', 
+                    name: 'action', 
+                    orderable: false, 
+                    searchable: false
+                },
+            ]
+        });
         $('#delete-user-btn').on('click', deleteUser);
         $('#save-user-btn').on('click', saveUser);
-        $('#toggle-pswzone-btn').on('click', togglePswZone);
         $('#update-user-btn').on('click', updateUser);
         $('#create-user-modal, #edit-user-modal').on('hide.bs.modal', function(e){
-        resetModal(e);
-            $('#edit-password-zone').hide();
+            resetModal(e);
         });
     });
     
@@ -312,14 +279,9 @@
         return false;
     }
 
-    function togglePswZone()
-    {
-        $('#edit-password-zone').toggle(1000);
-    }
-
     function updateUser()
     {
-        let id = $('#edit-user-modal').data('id');
+        let id = $('#edit-user-modal').data('user-id');
         $(this).addClass('disabled')
         .html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Enregistrement...')
         .attr('disabled', true);
@@ -327,7 +289,6 @@
         let name = $('#edit-name').val();
         let email = $('#edit-email').val();
         let role = $('#edit-role').val();
-        let togglePswZoneBtn = $('#toggle-pswzone-btn');
 
         let data = {
             _method: "PATCH",
@@ -335,10 +296,6 @@
             email: email,
             role: role
         };
-        if(togglePswZoneBtn.is(':checked')){
-            data.password = $('#edit-password').val();
-            data.password_confirmation = $('#edit-password_confirmation').val();
-        }
         
         $.ajax({
             method: "POST",
@@ -410,7 +367,7 @@
     function deleteUser()
     {
         let deleteModal = $('#delete-user-modal');
-        let id = deleteModal.data('id');
+        let id = deleteModal.data('user-id');
         if(id == {{ auth()->user()->id }}){
             deleteModal.modal('hide');
             Toastify({
@@ -461,7 +418,7 @@
                 $('#edit-name').val(user.name);
                 $('#edit-email').val(user.email);
                 editRoleChoice.setChoiceByValue(''+user.roles[0].id);
-                $('#edit-user-modal').data('id', id).modal('show');
+                $('#edit-user-modal').data('user-id', id).modal('show');
             },
             error: function(response){
                 console.log(response);
@@ -472,7 +429,7 @@
 
     function showDeleteUserModal(id)
     {
-        $('#delete-user-modal').data('id', id).modal('show');
+        $('#delete-user-modal').data('user-id', id).modal('show');
     }
 
     function showUserInfosModal(id)
