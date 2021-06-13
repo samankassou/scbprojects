@@ -25,7 +25,10 @@ class ProcessController extends Controller
     public function index()
     {
         $processes = Process::all();
-        return view('admin.processes.index', compact('processes'));
+        $poles = Pole::all();
+        $macroprocesses = Macroprocess::all();
+        $methods = Method::all();
+        return view('admin.processes.index', compact('processes', 'poles', 'macroprocesses', 'methods'));
     }
 
     
@@ -319,23 +322,32 @@ class ProcessController extends Controller
         $search = "%".$request->search."%";
         if($request->search_type == "all" && !empty($request->search))
         {
-            
-
-        }
-        if($request->search_type == "amoa" && !empty($request->search)){
-            $query->where('amoa', 'LIKE', $search);
-        }
-        if($request->search_type == "sponsor" && !empty($request->search)){
-            $query->where('sponsor', 'LIKE', $search);
+            $query->where('name', 'LIKE', $search);
+            $query->orWhere('reference', 'LIKE', $search);
+            $query->orWhere('state', 'LIKE', $search);
+            $query->orWhere('status', 'LIKE', $search);
         }
         if($request->search_type == "reference" && !empty($request->search)){
             $query->where('reference', 'LIKE', $search);
         }
+        if($request->search_type == "state" && !empty($request->search)){
+            $query->where('state', $request->search);
+        }
         if($request->search_type == "status" && !empty($request->search)){
             $query->where('status', $request->search);
         }
-        if($request->search_type == "year" && !empty($request->search)){
-            $query->whereYear('start_date', $request->search);
+        if($request->search_type == "method" && !empty($request->search)){
+            $query->where('method_id', $request->search);
+        }
+        if($request->search_type == "pole" && !empty($request->search)){
+            $query->whereHas('entities', function($query) use($request){
+                $query->where('pole_id', $request->search);
+            });
+        }
+        if($request->search_type == "macroprocess" && !empty($request->search)){
+            $query->whereHas('method', function($query) use($request){
+                $query->where('macroprocess_id', $request->search);
+            });
         }
         return $query;
     }

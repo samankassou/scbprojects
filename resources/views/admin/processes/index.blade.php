@@ -14,12 +14,13 @@
                     <fieldset class="form-group">
                         <select class="form-select choices" id="criteria">
                             <option value="all">dans tous les process</option>
-                            <option value="amoa">par Nom</option>
-                            <option value="reference">par Etat</option>
-                            <option value="sponsor">par Statut</option>
-                            <option value="year">par Pôle</option>
-                            <option value="status">par Macroprocessus</option>
-                            <option value="year">par Processus</option>
+                            <option value="reference">par Reférence</option>
+                            <option value="name">par Nom</option>
+                            <option value="state">par Etat</option>
+                            <option value="status">par Statut</option>
+                            <option value="pole">par Pôle</option>
+                            <option value="macroprocess">par Macroprocessus</option>
+                            <option value="method">par Processus</option>
                         </select>
                     </fieldset>
                 </div>
@@ -34,33 +35,66 @@
                     <div class="search-container">
                         <div class="choices">
                             <div class="choices__inner">
-                                <input class="form-control reference search choices__input" id="referenceSearch" type="text" placeholder="Entrez une reférence...">
+                                <input type="text" class="form-control reference search choices__input" id="referenceSearch" placeholder="Entrez une reférence de procédure...">
                             </div>
                         </div>
                     </div>
                     <div class="search-container">
                         <div class="choices">
                             <div class="choices__inner">
-                                <input class="form-control amoa search choices__input" id="amoaSearch" type="text" placeholder="AMOA...">
+                                <input class="form-control name search choices__input" id="nameSearch" type="text" placeholder="Entrez un nom de procédure...">
                             </div>
                         </div>
                     </div>
                     <div class="search-container">
-                        <div class="choices">
-                            <div class="choices__inner">
-                                <input class="form-control sponsor search choices__input" id="sponsorSearch" type="text" placeholder="Sponsor/MOA...">
-                            </div>
-                        </div>
+                        <select id="stateSearch" class="form-select state search">
+                            <option value="">Tous</option>
+                            <option value="Créé">Créé</option>
+                            <option value="Revu">Revu</option>
+                        </select>
                     </div>
                     <div class="search-container">
                         <select id="statusSearch" class="form-select status search">
                             <option value="">Tous</option>
-                            <option value="en cours">En cours</option>
-                            <option value="inachevé">En stand-by</option>
-                            <option value="en stand-by">inachevé</option>
-                            <option value="terminé">Terminé</option>
+                            <option value="A créer">A créer</option>
+                            <option value="Terminé">Terminé</option>
+                            <option value="En stand-by">En stand-by</option>
+                            <option value="En cours de rédaction">En cours de rédaction</option>
+                            <option value="En cours de vérification">En cours de vérification</option>
+                            <option value="En cours d'approbation">En cours d'approbation</option>
                         </select>
                     </div>
+                    <div class="search-container">
+                        <select id="poleSearch" class="form-select pole search">
+                            <option value="">Tous</option>
+                            @foreach ($poles as $pole)
+                                <option value="{{ $pole->id }}">{{ $pole->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="search-container">
+                        <select id="macroprocessSearch" class="form-select macroprocess search">
+                            <option value="">Tous</option>
+                            @foreach ($macroprocesses as $macroprocess)
+                                <option value="{{ $macroprocess->id }}">
+                                    @if (($macroprocess->name == "Développement et pilotage de projets") || ($macroprocess->name == "Gestion des reportings"))
+                                    {{ $macroprocess->name }}({{ $macroprocess->domain->name }})
+                                    @else
+                                    {{ $macroprocess->name }}
+                                    @endif
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="search-container">
+                        <select id="methodSearch" class="form-select method search">
+                            <option value="">Tous</option>
+                            @foreach ($methods as $method)
+                                <option value="{{ $method->id }}">{{ $method->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    
                 </div>
             </div>
             @if (session('message'))
@@ -138,96 +172,101 @@
 @parent
 <script src="{{ asset('mazer/assets/vendors/choices.js/choices.min.js') }}"></script>
 <script>
-     let token = $('meta[name="csrf-token"]').attr('content');
     $(function () {
+        token = $('meta[name="csrf-token"]').attr('content');
+
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': token
             }
         });
-    });
-    const table = $('#processes-datatable').DataTable({
-        searching: false,
-        language: {
-            url: "{{ asset('vendor/datatables/lang/French.json') }}"
-        },
-        responsive: true,
-        processing: true,
-        serverSide: true,
-        ajax: {
-            url: "/admin/processes/list",
-            type: "POST",
-            data: {
-                _token: token,
-                search_type: function(){
-                    return getData().search_type;
-                },
-                search: function(){
-                    return getData().search;
-                }
-            }
-        },
-        columns: [
-            {data: 'DT_RowIndex', name: 'DT_RowIndex'},
-            {
-                data: 'method.macroprocess.name', 
-                name: 'method.macroprocess.name'
-            },
-            {
-                data: 'method.name', 
-                name: 'method.name'
-            },
-            {data: 'name', name: 'name'},
-            {data: 'type', name: 'type'},
-            {data: 'reference', name: 'reference'},
-            {data: 'version', name: 'version'},
-            {data: 'status', name: 'status'},
-            {
-                data: 'creation_date', 
-                name: 'creation_date',
-                orderable: false,
-                searchable: false,
-                render: function(created_at){
-                    let createdAt = new Date(created_at);
-                    return createdAt.toLocaleDateString();
-                }
-            },
-            {
-                data: 'action', 
-                name: 'action', 
-                orderable: false, 
-                searchable: false
-            }
-        ]
-    });
-    $('#delete-process-btn').on('click', deleteProcess);
-    
-    // const yearSearch = new Choices(document.getElementById('yearSearch'));
-    // const statusSearch = new Choices(document.getElementById('statusSearch'));
-    // const natureSearch = new Choices(document.getElementById('natureSearch'), {
-    //     removeItemButton: true
-    // });
-    
-    $('#criteria').on('change', function(){
-        //reset all inputs search
-        $("input[type='text'].search").val('');
-        yearSearch.setChoiceByValue('');
-        statusSearch.setChoiceByValue('');
-        natureSearch.removeActiveItems();
-        //remove the active search
-        $('.search-container').removeClass('active');
-        //set the new active box
-        let criteria = $(this).val();
-        $('.'+criteria).closest('.search-container').addClass('active');
-        table.ajax.reload(null, false);
 
+        stateSearch = new Choices(document.getElementById('stateSearch'));
+        statusSearch = new Choices(document.getElementById('statusSearch'));
+        poleSearch = new Choices(document.getElementById('poleSearch'));
+        macroprocessSearch = new Choices(document.getElementById('macroprocessSearch'));
+        methodSearch = new Choices(document.getElementById('methodSearch'));
+
+        table = $('#processes-datatable').DataTable({
+            searching: false,
+            language: {
+                url: "{{ asset('vendor/datatables/lang/French.json') }}"
+            },
+            responsive: true,
+            processing: true,
+            serverSide: true,
+            ajax: {
+                url: "/admin/processes/list",
+                type: "POST",
+                data: {
+                    _token: token,
+                    search_type: function(){
+                        return getData().search_type;
+                    },
+                    search: function(){
+                        return getData().search;
+                    }
+                }
+            },
+            columns: [
+                {data: 'DT_RowIndex', name: 'DT_RowIndex'},
+                {
+                    data: 'method.macroprocess.name', 
+                    name: 'method.macroprocess.name'
+                },
+                {
+                    data: 'method.name', 
+                    name: 'method.name'
+                },
+                {data: 'name', name: 'name'},
+                {data: 'type', name: 'type'},
+                {data: 'reference', name: 'reference'},
+                {data: 'version', name: 'version'},
+                {data: 'status', name: 'status'},
+                {
+                    data: 'creation_date', 
+                    name: 'creation_date',
+                    orderable: false,
+                    searchable: false,
+                    render: function(created_at){
+                        let createdAt = new Date(created_at);
+                        return createdAt.toLocaleDateString();
+                    }
+                },
+                {
+                    data: 'action', 
+                    name: 'action', 
+                    orderable: false, 
+                    searchable: false
+                }
+            ]
+        });
+
+        $('#delete-process-btn').on('click', deleteProcess);
+        $('#criteria').on('change', function(){
+            //reset all inputs search
+            $("input[type='text'].search").val('');
+            stateSearch.setChoiceByValue('');
+            statusSearch.setChoiceByValue('');
+            poleSearch.setChoiceByValue('');
+            macroprocessSearch.setChoiceByValue('');
+            methodSearch.setChoiceByValue('');
+            //remove the active search
+            $('.search-container').removeClass('active');
+            //set the new active box
+            let criteria = $(this).val();
+            $('.'+criteria).closest('.search-container').addClass('active');
+            table.ajax.reload(null, false);
+
+        });
+        $("input[type='text'].search").on('keyup', function(){
+            table.ajax.reload(null, false);
+        });
+        $("select.search").on('change', function(){
+            table.ajax.reload(null, false);
+        });
     });
-    $("input[type='text'].search").on('keyup', function(){
-        table.ajax.reload(null, false);
-    });
-    $("select.search").on('change', function(){
-        table.ajax.reload(null, false);
-    });
+    
 
     function getData()
     {
@@ -237,26 +276,26 @@
         if(criteria == "all"){
             search = $('#allSearch').val();
         }
+        if(criteria == "name"){
+            search = $('#nameSearch').val();
+        }
         if(criteria == "reference"){
             search = $('#referenceSearch').val();
         }
-        if(criteria == "sponsor"){
-            search = $('#sponsorSearch').val();
+        if(criteria == "state"){
+            search = stateSearch.getValue().value;
         }
-        if(criteria == "amoa"){
-            search = $('#amoaSearch').val();
+        if(criteria == "pole"){
+            search = poleSearch.getValue().value;
         }
-        if(criteria == "year"){
-            search = yearSearch.getValue().value;
+        if(criteria == "macroprocess"){
+            search = macroprocessSearch.getValue().value;
+        }
+        if(criteria == "method"){
+            search = methodSearch.getValue().value;
         }
         if(criteria == "status"){
             search = status = statusSearch.getValue().value;
-        }
-        if(criteria == "natures"){
-            const natures = natureSearch.getValue().map(element => {
-                return parseInt(element.value);
-            });
-            search = JSON.stringify(natures);
         }
             return {
             search_type: search_type,
