@@ -73,6 +73,7 @@ Route::group([
         Route::group([
             'middleware' => ['permission:view-processes|view-process']
         ], function(){
+            Route::get('/processes/export', [ProcessController::class, 'export'])->name('processes.export');
             Route::post('/processes/list', [ProcessController::class, 'ajaxList']);
 
             Route::get('/processes/deleted', [ProcessController::class, 'deleted'])->name('processes.deleted.index');

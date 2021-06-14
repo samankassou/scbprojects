@@ -64,9 +64,9 @@ WithEvents
             'Chef de projet',
             'Date début',
             'Date fin prévisionnelle',
-            'Coût du projet(FCFA)',
+            'Coût du projet',
             'Statut',
-            'Etat d\'avancement(%)',
+            'Etat d\'avancement',
             'Gains/Impact sur SCB',
             'Documentation',
             'Facture(s)',
@@ -90,6 +90,11 @@ WithEvents
                 $event->sheet->getDelegate()->getStyle("B2:R2")->getAlignment()->setTextRotation(61);
                 $event->sheet->getDelegate()->getRowDimension(1)->setRowHeight(90);
                 $event->sheet->getDelegate()->getRowDimension(2)->setRowHeight(90);
+                $event->sheet->getDelegate()->getStyle('D3:E'.$highestRow)->getNumberFormat()->setFormatCode("dd/mm/yyyy h:mm:ss");
+                $event->sheet->getDelegate()->getStyle('F3:F'.$highestRow)->getNumberFormat()->setFormatCode("@");
+                $event->sheet->getDelegate()->getStyle('L3:M'.$highestRow)->getNumberFormat()->setFormatCode("dd/mm/yyyy");
+                $event->sheet->getDelegate()->getStyle('N3:N'.$highestRow)->getNumberFormat()->setFormatCode('#,##0_-FCFA');
+                $event->sheet->getDelegate()->getStyle('P3:P'.$highestRow)->getNumberFormat()->setFormatCode("0%");
 
                 $event->sheet->getDelegate()->getStyle($cellRange)->getAlignment()->setWrapText(true);
                 $event->sheet->getDelegate()->getStyle($cellRange)->applyFromArray([
@@ -134,7 +139,6 @@ WithEvents
     public function prepareRows($projects): array
     {
         return array_map(function($project){
-            $project->cost = number_format($project->cost, 0, '.', ' ');
             $project->natures = implode(', ', $project->natures->pluck('name')->toArray());
             return $project;
         }, $projects);
@@ -163,7 +167,7 @@ WithEvents
             $project->end_date->format('d/m/Y'),
             $project->cost,
             $project->status,
-            $project->progress,
+            $project->progress/100,
             $project->benefits,
             $project->documentation,
             $project->bills,
@@ -215,7 +219,7 @@ WithEvents
             'K' => 12,
             'L' => 12,
             'M' => 12,
-            'N' => 15,
+            'N' => 20,
             'O' => 13,
             'P' => 10,
             'Q' => 20,

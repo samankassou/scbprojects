@@ -243,6 +243,7 @@
         });
 
         $('#delete-process-btn').on('click', deleteProcess);
+        $('#export-btn').on('click', exportToExcel);
         $('#criteria').on('change', function(){
             //reset all inputs search
             $("input[type='text'].search").val('');
@@ -300,6 +301,13 @@
             return {
             search_type: search_type,
             search: search};
+    }
+
+    function exportToExcel()
+    {
+        let search_type = getData().search_type,
+        search = getData().search;
+        window.location = "/admin/processes/export?search_type="+search_type+"&search="+search;
     }
 
     function showDeleteProcessModal(id)

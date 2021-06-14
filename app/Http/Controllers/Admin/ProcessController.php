@@ -9,11 +9,13 @@ use App\Models\Method;
 use App\Models\Process;
 use App\Models\Macroprocess;
 use Illuminate\Http\Request;
+use App\Exports\ProcessesExport;
+use Yajra\DataTables\DataTables;
 use Illuminate\Support\Facades\App;
 use App\Http\Controllers\Controller;
+use Maatwebsite\Excel\Facades\Excel;
 use App\Http\Requests\StoreProcessRequest;
 use App\Http\Requests\UpdateProcessRequest;
-use Yajra\DataTables\DataTables;
 
 class ProcessController extends Controller
 {
@@ -73,6 +75,20 @@ class ProcessController extends Controller
         $domains = Domain::all();
         $entities = Entity::all();
         return view('admin.processes.create', compact('domains', 'entities'));
+    }
+
+    public function export(Request $request)
+    {
+        $processes = $this->processQuery($request)->get();
+        // $processes->load(['natures', 'modifications' => function($query){
+        //     $query->latest()->first();
+        // }]);
+        $processes->load(['method.macroprocess']);
+        $processes->each(function($process, $index){
+            $process->index = $index + 1;
+        });
+        $fileName = 'liste_des_procedures_'.today()->format('d-m-Y').'.xlsx';
+        return Excel::download(new ProcessesExport($processes), $fileName);
     }
 
     /**
