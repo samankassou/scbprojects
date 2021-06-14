@@ -246,6 +246,22 @@ class ProcessController extends Controller
     }
 
     /**
+     * Display the specified resource.
+     *
+     * @param  \App\Models\Project  $project
+     * @return \Illuminate\Http\Response
+     */
+    public function showDeleted($id)
+    {
+        $process = Process::onlyTrashed()
+        ->firstWhere('id', $id);
+        $process->load(['entities.pole']);
+        $polesIds = $process->entities->pluck('pole_id')->unique();
+        $poles = Pole::whereIn('id', $polesIds)->get();
+        return view('admin.processes.deleted.show', compact('process', 'poles'));
+    }
+
+    /**
      * Show the form for editing the specified resource.
      *
      * @param  \App\Models\Process  $process
@@ -330,6 +346,37 @@ class ProcessController extends Controller
         $process->delete();
 
         return response()->json(['message' => 'Process deleted!']);
+    }
+
+    /**
+     * Delete definitly the specified resource from storage.
+     *
+     * @param  \App\Models\Project  $project
+     * @return \Illuminate\Http\Response
+     */
+    public function delete($id)
+    {
+        $process = Process::onlyTrashed()
+        ->firstWhere('id', $id);
+        if($process){
+            $process->forceDelete();
+        }
+
+        return response()->json(['message' => 'Process deleted!']);
+    }
+
+    /**
+     * Restore the specified resource from storage.
+     *
+     * @param  \App\Models\Project  $project
+     * @return \Illuminate\Http\Response
+     */
+    public function restore($id)
+    {
+        Process::onlyTrashed()
+        ->findOrFail($id)->restore();
+
+        return response()->json(['message' => 'Process restored!']);
     }
 
     public function processQuery($request)

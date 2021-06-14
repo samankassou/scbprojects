@@ -43,7 +43,8 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    Voulez-vous vraiment supprimer?
+                    <p>Voulez-vous vraiment supprimer?</p>
+                    <p><em>Cette procédure sera supprimée définitivement</em></p>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-light-secondary" data-bs-dismiss="modal">
@@ -145,9 +146,8 @@
         .attr('disabled', true);
         let id = $('#delete-process-modal').data('id');
         $.ajax({
-            url: "/admin/processes/"+id,
+            url: "/admin/processes/delete/"+id,
             method: "POST",
-            data: {_method: "DELETE"},
             success: (response)=>{                
                 table.ajax.reload(null, false);
                 Toastify({
@@ -166,6 +166,30 @@
             complete: ()=>{
                 $('#delete-process-btn').removeClass('disabled').text('Supprimer').attr('disabled', false);
                 $('#delete-process-modal').modal('hide');
+            }
+        });
+        return false;
+    }
+
+    function restoreProcess(id)
+    {
+        $.ajax({
+            url: "/admin/processes/restore/"+id,
+            method: "POST",
+            success: (response)=>{                
+                table.ajax.reload(null, false);
+                Toastify({
+                    text: "Projet restauré avec succès!",
+                    duration: 3000,
+                    close:true,
+                    gravity:"top",
+                    position: "right",
+                    backgroundColor: "#4fbe87",
+                }).showToast();
+                
+            },
+            error: (response)=>{
+                console.log(response);
             }
         });
         return false;

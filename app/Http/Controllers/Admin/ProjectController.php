@@ -317,7 +317,7 @@ class ProjectController extends Controller
      */
     public function delete($id)
     {
-        $project = Project::withTrashed()
+        $project = Project::onlyTrashed()
         ->firstWhere('id', $id);
         if($project){
             $project->natures()->detach();
