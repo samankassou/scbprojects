@@ -80,9 +80,9 @@ class ProcessController extends Controller
     public function export(Request $request)
     {
         $processes = $this->processQuery($request)->get();
-        // $processes->load(['natures', 'modifications' => function($query){
-        //     $query->latest()->first();
-        // }]);
+        $processes->load(['process_modifications' => function($query){
+            $query->latest()->first();
+        }]);
         $processes->load(['method.macroprocess']);
         $processes->each(function($process, $index){
             $process->index = $index + 1;
@@ -132,7 +132,7 @@ class ProcessController extends Controller
             ->addIndexColumn()
             ->addColumn('action', function($process){
                 $actionBtns = "<a href=".route('admin.processes.show', $process->id)." class='btn btn-sm btn-primary' title='Détails'><i class='bi bi-eye'></i></a> ";
-                $actionBtns .= "<a href=".route('processes.pdf', $process->reference)." class='btn btn-sm btn-secondary' title='Imprimer'><i class='bi bi-printer'></i></a> ";
+                $actionBtns .= "<a target='_blank' href=".route('processes.pdf', $process->reference)." class='btn btn-sm btn-secondary' title='Imprimer'><i class='bi bi-printer'></i></a> ";
                 $actionBtns .= "<a href=".route('admin.processes.edit', $process->id)." class='btn btn-sm btn-warning' title='Editer'><i class='bi bi-pencil'></i></a> ";
                 $actionBtns .= "<button class='btn btn-sm btn-danger' onclick='showDeleteProcessModal(".$process->id.")' title='Supprimer'><i class='bi bi-trash'></i></button>";
                 return $actionBtns;
@@ -144,11 +144,11 @@ class ProcessController extends Controller
 
     public function search(Request $request)
     {
-        $process = Process::firstWhere('reference', $request->reference);
-        $success = $process ? true : false;
+        $processes = Process::where('reference', $request->reference)->get();
+        $success = $processes ? true : false;
         return response()->json([
             'success' => $success,
-            'process' => $process
+            'processes' => $processes
             ]);
     }
 
@@ -288,7 +288,6 @@ class ProcessController extends Controller
             "method_id"     => $request->method,
             "name"          => $request->name,
             "type"          => $request->type,
-            "reference"     => $request->reference,
             "version"       => $request->version,
             "creation_date" => $request->creation_date,
             "created_by"    => $request->created_by,
@@ -296,6 +295,7 @@ class ProcessController extends Controller
             "status"        => $request->status,
             "modifications" => $request->modifications,
         ]);
+        $process->reference = $request->reference;
         if($request->writing_date){
             $process->writing_date = $request->writing_date;
             $process->written_by   = $request->written_by;
@@ -328,6 +328,8 @@ class ProcessController extends Controller
         }
 
         $process->save();
+        
+        $process->process_modifications()->create(['user_id' => auth()->user()->id]);
         $process->entities()->sync($request->entities);
 
         return redirect()->route('admin.processes.index')->with('message', 'Procédure modifiée avec succès!');
@@ -359,6 +361,8 @@ class ProcessController extends Controller
         $process = Process::onlyTrashed()
         ->firstWhere('id', $id);
         if($process){
+            $process->process_modifications()->delete();
+            $process->entities()->detach();
             $process->forceDelete();
         }
 
@@ -389,6 +393,9 @@ class ProcessController extends Controller
             $query->orWhere('reference', 'LIKE', $search);
             $query->orWhere('state', 'LIKE', $search);
             $query->orWhere('status', 'LIKE', $search);
+        }
+        if($request->search_type == "name" && !empty($request->search)){
+            $query->where('name', 'LIKE', $search);
         }
         if($request->search_type == "reference" && !empty($request->search)){
             $query->where('reference', 'LIKE', $search);

@@ -38,6 +38,21 @@
 a:hover, a:active {
     background-color: red;
 }
+
+table {
+    font-family: arial, sans-serif;
+    width: 100%;
+}
+
+td, th {
+    border: 1px solid #b4b1b1;
+    text-align: left;
+    padding: 8px;
+}
+
+tr:nth-child(even) {
+    background-color: #dddddd;
+}
   </style>
 
   </head>
@@ -46,7 +61,7 @@ a:hover, a:active {
 <body>
   <!-- loader  -->
   <div class="loader_bg">
-    <div class="loader"><img src="{{ asset('front/images/loading.gif') }}" alt="#" /></div>
+    <div class="loader"><img src="{{ asset('front/images/loading.gif') }}"  alt="#" /></div>
   </div>
   <!-- end loader -->
   <!-- header -->
@@ -60,7 +75,7 @@ a:hover, a:active {
               <div class="full">
                 <div class="center-desk">
                   <div class="logo">
-                    <a href="/"><img src="{{ asset('images/logo.png') }}" alt="#" /></a>
+                    <a href="/"><img src="{{ asset('images/logo.png') }}" style="height: 55px" alt="#" /></a>
                   </div>
                 </div>
               </div>
@@ -111,8 +126,8 @@ a:hover, a:active {
                             </form>
                             <a href="/" id="d3" style="display: none">Retour</a><br>
                           <div id="result">
-                            <button id="d1" class="Search_btn" type="button" onclick="myFunction()">Rechercher un Projet</button>&nbsp;&nbsp;
-                            <button id="d2" class="Search_btn" type="button" onclick="mFunction()" style="float: right">Rechercher une Procédure</button>
+                            <button id="d1" class="Search_btn" type="button" onclick="myFunction()">Rechercher Projet</button>&nbsp;&nbsp;
+                            <button id="d2" class="Search_btn" type="button" onclick="mFunction()" style="float: right">Rechercher Procédure</button>
                            <hr>
                             <h1 class="btn">SCB Cameroun</h1>
                           <p>Lorem ipsum dolor sit am et, consec tetur adipi scing elit. Sed
@@ -154,7 +169,6 @@ a:hover, a:active {
   <script src="{{ asset('front/js/jquery.min.js') }}"></script>
   <script src="{{ asset('front/js/popper.min.js') }}"></script>
   <script src="{{ asset('front/js/bootstrap.bundle.min.js') }}"></script>
-  <script src="{{ asset('front/js/jquery-3.0.0.min.js') }}"></script>
   <script src="{{ asset('front/js/plugin.js') }}"></script>
   <!-- sidebar -->
   <script src="{{ asset('front/js/jquery.mCustomScrollbar.concat.min.js') }}"></script>
@@ -231,33 +245,40 @@ if(searchWord.length > 2){
     url: '/processes/search/'+searchWord,
     success: function(response){
       if(response.success){
-        let process = response.process;
+        let processes = response.processes;
+        let content = '';
+        
+        processes.forEach(process => {
+          content += `
+          <tr>
+              <td><h2>${process.name}</h2> </td>
+              <td><h2>${process.version}</h2></td>
+              <td><h2>${process.status}</h2></td>
+              <td><h2>${process.created_by}</h2></td>
+              <td>
+                  <button class="btn btn-light-primary"><a target="_blank" href="/processes/show/${process.reference}">Ouvrir</a></button>
+                  <button class="btn btn-light-primary"><a target="_blank" href="/processes/export/${process.reference}">Imprimer</a></button>
+                  <button class="btn btn-light-primary"></a></button>
+              </td>
+          </tr>
+          `;
+        });
         let html = `
           <div class="card">
             <div class="card-content">
               <div class="card-body">
-                <h2 class="card-title" style="text-align: center; text-decoration-color: rgb(0, 0, 0)"><strong>Détails de la procédure</strong></h2>
-                <h4 class="card-title" style= "text-align: center;">
-                  <div style= "text-align: left;"><strong>Intitulé:</strong><br></div>
-                  ${process.name}
-                </h4>
-                <h4 class="card-title" style= "text-align: center;">
-                  <div style= "text-align: left;"><strong>Version:</strong><br></div>
-                  ${process.version}
-                </h4>
-                <h4 class="card-title" style= "text-align: center;">
-                  <div style= "text-align: left;"><strong>Statut:</strong><br></div>
-                  ${process.status}
-                </h4>
-                <h4 class="card-title" style= "text-align: center;">
-                  <div style= "text-align: left;"><strong>Créée par:</strong><br></div>
-                  ${process.created_by}
-                </h4>
+                <h3 style="text-align: center;"><strong>Resultat de la recherche</strong></h3>
+                    <table>
+                    <tr>
+                        <th style="width: 15px"><h2>Intitulé</h2></th>
+                        <th><h2>Version</h2></th>
+                        <th><h2>Satut</h2></th>
+                        <th><h2>Créée par</h2></th>
+                        <th><h2>Options</h2>s</th>
+                    </tr>
+                    ${content}
+                    </table>
               </div>
-            </div>
-            <div class="card-footer d-flex justify-content-between">
-                <span><button class="btn btn-light-primary"><a target="_blank" href="/processes/show/${process.reference}">Ouvrir</a></button></span>
-                <button class="btn btn-light-primary"><a target="_blank" href="/processes/export/${process.reference}">Imprimer</a></button>
             </div>
           </div>
             `;

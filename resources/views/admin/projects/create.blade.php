@@ -1,4 +1,6 @@
-@extends('layouts.app', ['title' => 'Création d\'un projet'])
+@extends('layouts.app', [
+    'title' => 'Création d\'un projet',
+    'description' => "Formulaire d'ajout d'un projet dans le système"])
 @section('styles')
 @parent
 <link rel="stylesheet" href="{{ asset('mazer/assets/vendors/choices.js/choices.min.css') }}">
@@ -14,7 +16,8 @@
                 @csrf
                 <div class="row justify-content-center">
                     <div class="col-md-8">
-                        <label for="name">Nom:</label>
+                        <p><em>Les champs marqués d'un</em> (<span class="text-danger">*</span>) sont obligatoires</p>
+                        <label for="name">Nom:<sup class="text-danger">*</sup></label>
                         <div class="form-group">
                             <input type="text" name="name" value="{{ old('name') }}" class="form-control @error('name') is-invalid @enderror">
                             @error('name')
@@ -25,7 +28,7 @@
                             @enderror
                         </div>
 
-                        <label for="description">Description:</label>
+                        <label for="description">Description:<sup class="text-danger">*</sup></label>
                         <div class="form-group">
                             <textarea id="description" name="description" class="form-control @error('description') is-invalid @enderror" rows="3">{{ old('description') }}</textarea>
                             @error('description')
@@ -38,7 +41,7 @@
 
                         <div class="row">
                             <div class="col-md-6">
-                                <label for="start_date">Date début:</label>
+                                <label for="start_date">Date début:<sup class="text-danger">*</sup></label>
                                 <div class="form-group">
                                     <input id="start_date" type="date" name="start_date" value="{{ old('start_date') }}" class="form-control @error('start_date') is-invalid @enderror">
                                     @error('start_date')
@@ -63,7 +66,7 @@
                             </div>
                         </div>
 
-                        <label for="sponsor">Sponsor/MOA:</label>
+                        <label for="sponsor">Sponsor/MOA:<sup class="text-danger">*</sup></label>
                         <div class="form-group">
                             <input id="sponsor" type="text" name="sponsor" value="{{ old('sponsor') }}" class="form-control @error('sponsor') is-invalid @enderror">
                             @error('sponsor')
@@ -74,7 +77,7 @@
                             @enderror
                         </div>
 
-                        <label for="natures">Nature(s): </label>
+                        <label for="natures">Nature(s):<sup class="text-danger">*</sup> </label>
                         <div class="form-group">
                             <select id="natures" class="form-select choices multiple-remove @error('natures') is-invalid @enderror" multiple name="natures[]">
                                 @foreach ($natures as $nature)
@@ -104,7 +107,7 @@
                             @enderror
                         </div>
 
-                        <label for="initiative">Initiative:</label>
+                        <label for="initiative">Initiative:<sup class="text-danger">*</sup></label>
                         <div class="form-group">
                             <select id="initiative" class="form-select @error('initiative') is-invalid @enderror" name="initiative">
                                 <option value="local" {{ old('initiative') == "local" ? "selected" : "" }}>local</option>
@@ -118,7 +121,7 @@
                             @enderror
                         </div>
 
-                        <label for="amoa">AMOA:</label>
+                        <label for="amoa">AMOA:<sup class="text-danger">*</sup></label>
                         <div class="form-group">
                             <input id="amoa" type="text" name="amoa" value="{{ old('amoa') }}" class="form-control @error('amoa') is-invalid @enderror">
                             @error('amoa')
@@ -129,7 +132,7 @@
                             @enderror
                         </div>
 
-                        <label for="amoa">Progression(%):</label>
+                        <label for="amoa">Progression(%):<sup class="text-danger">*</sup></label>
                         <div class="form-group">
                             <input id="amoa" type="number" name="progress" value="{{ old('progress') }}" class="form-control @error('progress') is-invalid @enderror">
                             @error('progress')
@@ -151,7 +154,7 @@
                             @enderror
                         </div>
 
-                        <label for="manager">Chef de projet:</label>
+                        <label for="manager">Chef de projet:<sup class="text-danger">*</sup></label>
                         <div class="form-group">
                             <input id="manager" type="text" name="manager" value="{{ old('manager') }}" class="form-control @error('manager') is-invalid @enderror">
                             @error('manager')
@@ -173,7 +176,7 @@
                             @enderror
                         </div>
 
-                        <label for="status">Statut du projet:</label>
+                        <label for="status">Statut du projet:<sup class="text-danger">*</sup></label>
                         <div class="form-group">
                             <select id="status" class="form-select @error('status') is-invalid @enderror" name="status">
                                 <option value="en cours" {{ old('status') == "en cours" ? "selected" : "" }}>en cours</option>
@@ -189,7 +192,7 @@
                             @enderror
                         </div>
 
-                        <label for="benefits">Gains/Impact:</label>
+                        <label for="benefits">Gains/Impact:<sup class="text-danger">*</sup></label>
                         <div class="form-group">
                             <textarea id="benefits" name="benefits" class="form-control @error('benefits') is-invalid @enderror" rows="3">{{ old('benefits') }}</textarea>
                             @error('benefits')

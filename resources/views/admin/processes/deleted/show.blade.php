@@ -4,16 +4,6 @@
     <div class="card">
         <div class="card-header d-flex justify-content-between">
             <h4 class="card-title">Détails de la procédure "{{ $process->name }}"</h4>
-            <div>
-                <a href="{{ route('processes.pdf', $process->reference) }}" class="btn btn-outline-primary m-2">
-                    <i class="bi bi-printer"></i>
-                    <span>Imprimer</span>
-                </a>
-                <a href="{{ route('admin.processes.edit', $process->id) }}" class="btn btn-outline-primary m-2">
-                    <i class="bi bi-pencil"></i>
-                    <span>Editer</span>
-                </a>
-            </div>
         </div>
         <div class="card-body">
             <p><strong>Domaine: </strong>{{ $process->method->macroprocess->domain->name }}</p>

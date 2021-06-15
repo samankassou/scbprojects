@@ -33,7 +33,7 @@ class ProjectFactory extends Factory
             'moe'           => $this->faker->name(),
             'manager'       => $this->faker->name(),
             'cost'          => $this->faker->numberBetween(0, 1000000000),
-            'status'        => 'en cours',
+            'status'        => $this->faker->randomElement(['en cours', 'terminé', 'inachevé', 'en stand-by']),
             'progress'      => $this->faker->numberBetween(0, 80),
             'benefits'      => $this->faker->text(),
             'saved_by'      => User::all()->random()->id,

@@ -152,8 +152,8 @@ WithEvents
             $process->written_by,
             $process->verified_by,
             $process->approved_by,
-            $process->creation_date->format('d/m/Y'),
-            $process->name,
+            $process->process_modifications->count() ? $process->process_modifications[0]->created_at->format('d/m/Y à H:i:s') : $process->creation_date->format('d/m/Y à H:i:s'),
+            $process->process_modifications->count() ? $process->process_modifications[0]->author : null,
             $process->modifications
         ];
     }

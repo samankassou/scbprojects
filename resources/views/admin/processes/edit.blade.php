@@ -15,8 +15,8 @@
                 @csrf
                 <div class="row justify-content-center">
                     <div class="col-md-8">
-
-                        <label for="status">Domaine:</label>
+                        <p><em>Les champs marqués d'un</em> (<span class="text-danger">*</span>) sont obligatoires</p>
+                        <label for="status">Domaine:<sup class="text-danger">*</sup></label>
                         <div class="form-group">
                             <select id="domain" class="form-select @error('domain') is-invalid @enderror" name="domain">
                                 @foreach ($domains as $domain)
@@ -31,7 +31,7 @@
                             @enderror
                         </div>
 
-                        <label for="status">Macroprocessus:</label>
+                        <label for="status">Macroprocessus:<sup class="text-danger">*</sup></label>
                         <div class="form-group">
                             <select id="macroprocess" class="form-select @error('macroprocess') is-invalid @enderror" name="macroprocess">
                                 
@@ -44,7 +44,7 @@
                             @enderror
                         </div>
 
-                        <label for="method">Processus:</label>
+                        <label for="method">Processus:<sup class="text-danger">*</sup></label>
                         <div class="form-group">
                             <select id="method" class="form-select @error('method') is-invalid @enderror" name="method">
                                 
@@ -57,7 +57,7 @@
                             @enderror
                         </div>
 
-                        <label for="name">Intitulé:</label>
+                        <label for="name">Intitulé:<sup class="text-danger">*</sup></label>
                         <div class="form-group">
                             <input type="text" name="name" value="{{ old('name', $process->name) }}" class="form-control @error('name') is-invalid @enderror">
                             @error('name')
@@ -68,7 +68,7 @@
                             @enderror
                         </div>
 
-                        <label for="type">Type:</label>
+                        <label for="type">Type:<sup class="text-danger">*</sup></label>
                         <div class="form-group">
                             <select id="type" class="form-select @error('type') is-invalid @enderror" name="type">
                                 <option value="Note circulaire" {{ old('type', $process->type) == "Note circulaire" ? "selected" : "" }}>Note circulaire</option>
@@ -85,7 +85,7 @@
                             @enderror
                         </div>
 
-                        <label for="reference">Reférence:</label>
+                        <label for="reference">Reférence:<sup class="text-danger">*</sup></label>
                         <div class="form-group">
                             <input type="text" name="reference" value="{{ old('reference', $process->reference) }}" class="form-control @error('reference') is-invalid @enderror">
                             @error('reference')
@@ -96,7 +96,7 @@
                             @enderror
                         </div>
 
-                        <label for="version">No. de version:</label>
+                        <label for="version">No. de version:<sup class="text-danger">*</sup></label>
                         <div class="form-group">
                             <input type="text" name="version" value="{{ old('version', $process->version) }}" class="form-control @error('version') is-invalid @enderror">
                             @error('version')
@@ -107,7 +107,7 @@
                             @enderror
                         </div>
 
-                        <label for="entities">Entité(s) impactée(s):</label>
+                        <label for="entities">Entité(s) impactée(s):<sup class="text-danger">*</sup></label>
                         <div class="form-group">
                             <select id="entities" class="form-select @error('entities') is-invalid @enderror" multiple name="entities[]">
                                 @foreach ($entities as $entity)
@@ -124,7 +124,7 @@
 
                         <div class="row">
                             <div class="col-md-6">
-                                <label for="creation_date">Créée le:</label>
+                                <label for="creation_date">Créée le:<sup class="text-danger">*</sup></label>
                                 <div class="form-group">
                                     <input id="creation_date" type="date" name="creation_date" value="{{ old('creation_date', $process->creation_date->format('Y-m-d')) }}" class="form-control @error('creation_date') is-invalid @enderror">
                                     @error('creation_date')
@@ -136,7 +136,7 @@
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <label for="created_by">Par:</label>
+                                <label for="created_by">Par:<sup class="text-danger">*</sup></label>
                                 <div class="form-group">
                                     <input id="created_by" type="text" name="created_by" value="{{ old('created_by', $process->created_by) }}" class="form-control @error('created_by') is-invalid @enderror">
                                     @error('created_by')
@@ -241,7 +241,7 @@
                             @enderror
                         </div>
 
-                        <label for="state">Etat:</label>
+                        <label for="state">Etat:<sup class="text-danger">*</sup></label>
                         <div class="form-group">
                             <select id="state" class="form-select @error('state') is-invalid @enderror" name="state">
                                 <option value="Créé" @if(old('state', $process->state) == 'Créé') selected @endif>Créé</option>
@@ -255,7 +255,7 @@
                             @enderror
                         </div>
 
-                        <label for="status">Statut:</label>
+                        <label for="status">Statut:<sup class="text-danger">*</sup></label>
                         <div class="form-group">
                             <select id="status" class="form-select @error('status') is-invalid @enderror" name="status">
                                 <option value="En cours de rédaction" {{ old('status', $process->status) == "En cours de rédaction" ? "selected" : "" }}>En cours de rédaction</option>
@@ -274,7 +274,7 @@
                         </div>
 
                         <div class="reasons created" @if(!$process->reasons_for_creation) style="display: none" @endif>
-                            <label for="reasons_for_creation">Raison(s) de la création:</label>
+                            <label for="reasons_for_creation">Raison(s) de la création:<sup class="text-danger">*</sup></label>
                             <div class="form-group">
                                 <textarea id="reasons_for_creation" name="reasons_for_creation" class="form-control @error('reasons_for_creation') is-invalid @enderror" rows="3">{{ old('reasons_for_creation', $process->reasons_for_creation) }}</textarea>
                                 @error('reasons_for_creation')
@@ -287,7 +287,7 @@
                         </div>
 
                         <div class="reasons reviewed" @if(!$process->reasons_for_modification) style="display: none" @endif>
-                            <label for="reasons_for_modification">Raison(s) de la modification:</label>
+                            <label for="reasons_for_modification">Raison(s) de la modification:<sup class="text-danger">*</sup></label>
                             <div class="form-group">
                                 <textarea id="reasons_for_modification" name="reasons_for_modification" class="form-control @error('reasons_for_modification') is-invalid @enderror" rows="3">{{ old('reasons_for_modification', $process->reasons_for_modification) }}</textarea>
                                 @error('reasons_for_modification')

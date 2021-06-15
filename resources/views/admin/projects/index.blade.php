@@ -1,4 +1,6 @@
-@extends('layouts.datatable', ['title' => 'Projets'])
+@extends('layouts.datatable', 
+['title' => 'Projets', 
+'description' => 'Liste des projets enregistrés dans le système'])
 @section('styles')
 @parent
 <link rel="stylesheet" href="{{ asset('mazer/assets/vendors/choices.js/choices.min.css') }}">

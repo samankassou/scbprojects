@@ -87,7 +87,7 @@ class ProjectController extends Controller
             ->addIndexColumn()
             ->addColumn('action', function($project){
                 $actionBtns = "<a href=".route('admin.projects.show', $project->id)." class='btn btn-sm btn-primary' title='Détails'><i class='bi bi-eye'></i></a> ";
-                $actionBtns .= "<a href=".route('projects.pdf', $project->reference)." class='btn btn-sm btn-secondary' title='Imprimer'><i class='bi bi-printer'></i></a> ";
+                $actionBtns .= "<a target='_blank' href=".route('projects.pdf', $project->reference)." class='btn btn-sm btn-secondary' title='Imprimer'><i class='bi bi-printer'></i></a> ";
                 $actionBtns .= "<a href=".route('admin.projects.edit', $project->id)." class='btn btn-sm btn-warning' title='Editer'><i class='bi bi-pencil'></i></a> ";
                 $actionBtns .= "<button class='btn btn-sm btn-danger' onclick='showDeleteProjectModal(".$project->id.")' title='Supprimer'><i class='bi bi-trash'></i></button>";
                 return $actionBtns;
@@ -191,7 +191,7 @@ class ProjectController extends Controller
         if($request->bills){
             $project->bills = $request->bills;
         }
-        $project->reference = Str::upper(Str::random(3)).'-'.$project->start_year.'-'.$project->id;
+        $project->reference = castNumberId($project->id).'-'.Str::upper(Str::random(2)).'-'.$project->start_year;
         $project->save();
         $project->natures()->attach($request->natures);
                

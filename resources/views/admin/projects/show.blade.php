@@ -5,7 +5,7 @@
         <div class="card-header d-flex justify-content-between">
             <h4 class="card-title">Détails du projet "{{ $project->name }}"</h4>
             <div>
-                <a href="{{ route('projects.pdf', $project->reference) }}" class="btn btn-outline-primary m-2">
+                <a target="_blank" href="{{ route('projects.pdf', $project->reference) }}" class="btn btn-outline-primary m-2">
                     <i class="bi bi-printer"></i>
                     <span>Imprimer</span>
                 </a>

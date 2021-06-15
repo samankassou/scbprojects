@@ -50,6 +50,11 @@ class Process extends Model
         return $this->belongsTo(Method::class);
     }
 
+    public function process_modifications()
+    {
+        return $this->hasMany(ProcessModification::class);
+    }
+
     public function deleter()
     {
         return $this->belongsTo(User::class, 'deleted_by', 'id');

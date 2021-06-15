@@ -19,8 +19,8 @@ class ProcessSeeder extends Seeder
         Process::factory(10)
         ->create()
         ->each(function($process) use($entitiesIds){
-            $entitiesSelected = rand(1, 5);
-            $entities = $entitiesIds->random($entitiesSelected)->values();
+            $selectedEntities = rand(1, 5);
+            $entities = $entitiesIds->random($selectedEntities)->values();
             $process->entities()->attach($entities);
         });
     }

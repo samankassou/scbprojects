@@ -5,7 +5,7 @@
         <div class="card-header d-flex justify-content-between">
             <h4 class="card-title">Détails de la procédure "{{ $process->name }}"</h4>
             <div>
-                <a href="{{ route('processes.pdf', $process->reference) }}" class="btn btn-outline-primary m-2">
+                <a target="_blank" href="{{ route('processes.pdf', $process->reference) }}" class="btn btn-outline-primary m-2">
                     <i class="bi bi-printer"></i>
                     <span>Imprimer</span>
                 </a>
@@ -47,6 +47,17 @@
             <p><strong>Modification(s) apportée(s): </strong>{{ $process->modifications }}</p>
             @endif
             <p><strong>Annexes: </strong>{{ $process->appendices }}</p>
+            @if ($process->process_modifications->count())
+            <div>
+                <h4>Historique des modifications</h4>
+                @foreach ($process->process_modifications as $modification)
+                <p>
+                    le {{ $modification->created_at->format('d/m/Y') }} à  {{ $modification->created_at->format('H:i:s') }}
+                    par <strong>{{ $modification->author->name }}</strong>
+                </p>
+                @endforeach
+            </div>
+            @endif
         </div>
     </div>
 </section>
