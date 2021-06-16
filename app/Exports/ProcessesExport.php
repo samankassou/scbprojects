@@ -15,22 +15,23 @@ use Maatwebsite\Excel\Concerns\WithColumnWidths;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use Maatwebsite\Excel\Concerns\WithCustomStartCell;
 
-class ProcessesExport implements FromCollection,
-WithProperties,
-WithHeadings,
-WithCustomStartCell,
-WithMapping,
-WithColumnWidths,
-WithStyles,
-WithEvents
+class ProcessesExport implements
+    FromCollection,
+    WithProperties,
+    WithHeadings,
+    WithCustomStartCell,
+    WithMapping,
+    WithColumnWidths,
+    WithStyles,
+    WithEvents
 {
     public function __construct($processes)
     {
         $this->processes = $processes;
     }
     /**
-    * @return \Illuminate\Support\Collection
-    */
+     * @return \Illuminate\Support\Collection
+     */
     public function collection()
     {
         return $this->processes;
@@ -41,7 +42,7 @@ WithEvents
         return [
             'creator'        => auth()->user()->name,
             'lastModifiedBy' => auth()->user()->name,
-            'title'          => 'Liste des procédures du '.today()->format('d/m/Y'),
+            'title'          => 'Liste des procédures du ' . today()->format('d/m/Y'),
             'company'        => 'SCB Cameroun'
         ];
     }
@@ -54,12 +55,12 @@ WithEvents
     public function registerEvents(): array
     {
         return [
-            AfterSheet::class => function(AfterSheet $event){
+            AfterSheet::class => function (AfterSheet $event) {
                 $highestRow = $event->sheet->getDelegate()->getHighestRow();
                 $highestColumn = $event->sheet->getDelegate()->getHighestColumn();
-                $cellRange = 'A3:'.$highestColumn.''.$highestRow;
-                $hearders = "A2:$highestColumn"."2";
-                
+                $cellRange = 'A3:' . $highestColumn . '' . $highestRow;
+                $hearders = "A2:$highestColumn" . "2";
+
                 $event->sheet->getDelegate()->mergeCells("A1:B1");
                 $event->sheet->getDelegate()->mergeCells("C1:U1");
                 $event->sheet->getDelegate()->setCellValue("A1", today()->format('d/m/Y'));
@@ -125,7 +126,7 @@ WithEvents
 
     public function prepareRows($processes): array
     {
-        return array_map(function($process){
+        return array_map(function ($process) {
             $process->entities = implode(', ', $process->entities->pluck('name')->toArray());
             return $process;
         }, $processes);
@@ -153,7 +154,7 @@ WithEvents
             $process->verified_by,
             $process->approved_by,
             $process->process_modifications->count() ? $process->process_modifications[0]->created_at->format('d/m/Y à H:i:s') : $process->creation_date->format('d/m/Y à H:i:s'),
-            $process->process_modifications->count() ? $process->process_modifications[0]->author : null,
+            $process->process_modifications->count() ? $process->process_modifications[0]->author->name : null,
             $process->modifications
         ];
     }
@@ -213,5 +214,4 @@ WithEvents
             'U' => 25,
         ];
     }
-
 }

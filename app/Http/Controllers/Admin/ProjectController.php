@@ -57,7 +57,7 @@ class ProjectController extends Controller
         return response()->json([
             'success' => $success,
             'project' => $project
-            ]);
+        ]);
     }
 
     public function exportPdf(Request $request)
@@ -67,9 +67,8 @@ class ProjectController extends Controller
         $pdf = App::make('dompdf.wrapper');
         $pdf->getDomPDF()->set_option("enable_php", true);
         $pdf->loadView('admin.projects.pdf.show', compact('project'));
-        $fileName = 'projet_'.$project->reference.'_'.today()->format('d-m-Y').'.pdf';
+        $fileName = 'projet_' . $project->reference . '_' . today()->format('d-m-Y') . '.pdf';
         return $pdf->stream($fileName);
-
     }
 
     public function ajaxList(Request $request)
@@ -79,43 +78,41 @@ class ProjectController extends Controller
         $projects = $query->get();
         $projects->load(['writer']);
 
-        $projects->each(function($project){
+        $projects->each(function ($project) {
             $project->displayedNatures = implode(", ", $project->natures->pluck('name')->toArray());
         });
 
         return Datatables::of($projects)
             ->addIndexColumn()
-            ->addColumn('action', function($project){
-                $actionBtns = "<a href=".route('admin.projects.show', $project->id)." class='btn btn-sm btn-primary' title='Détails'><i class='bi bi-eye'></i></a> ";
-                $actionBtns .= "<a target='_blank' href=".route('projects.pdf', $project->reference)." class='btn btn-sm btn-secondary' title='Imprimer'><i class='bi bi-printer'></i></a> ";
-                $actionBtns .= "<a href=".route('admin.projects.edit', $project->id)." class='btn btn-sm btn-warning' title='Editer'><i class='bi bi-pencil'></i></a> ";
-                $actionBtns .= "<button class='btn btn-sm btn-danger' onclick='showDeleteProjectModal(".$project->id.")' title='Supprimer'><i class='bi bi-trash'></i></button>";
+            ->addColumn('action', function ($project) {
+                $actionBtns = "<a href=" . route('admin.projects.show', $project->id) . " class='btn btn-sm btn-primary' title='Détails'><i class='bi bi-eye'></i></a> ";
+                $actionBtns .= "<a target='_blank' href=" . route('projects.pdf', $project->reference) . " class='btn btn-sm btn-secondary' title='Imprimer'><i class='bi bi-printer'></i></a> ";
+                $actionBtns .= "<a href=" . route('admin.projects.edit', $project->id) . " class='btn btn-sm btn-warning' title='Editer'><i class='bi bi-pencil'></i></a> ";
+                $actionBtns .= "<button class='btn btn-sm btn-danger' onclick='showDeleteProjectModal(" . $project->id . ")' title='Supprimer'><i class='bi bi-trash'></i></button>";
                 return $actionBtns;
             })
             ->rawColumns(['action'])
             ->make(true);
-        
     }
 
     public function ajaxDeletedList(Request $request)
     {
         $projects = Project::onlyTrashed()->with(['natures', 'deleter'])->get();
         $user = auth()->user();
-        
+
 
         return Datatables::of($projects)
             ->addIndexColumn()
-            ->addColumn('action', function($project) use($user){
-                $actionBtns = "<a href=".route('admin.projects.deleted.show', $project->id)." class='btn btn-sm btn-primary' title='Détails'><i class='bi bi-eye'></i></a> ";
-                if($user->isAbleTo('restore-project')){
-                    $actionBtns .= "<button class='btn btn-sm btn-info' onclick='restoreProject(".$project->id.")' title='Restaurer'><i class='bi bi-cloud-upload'></i></button> ";
-                    $actionBtns .= "<button class='btn btn-sm btn-danger' onclick='showDeleteProjectModal(".$project->id.")' title='Supprimer'><i class='bi bi-trash'></i></button>";
+            ->addColumn('action', function ($project) use ($user) {
+                $actionBtns = "<a href=" . route('admin.projects.deleted.show', $project->id) . " class='btn btn-sm btn-primary' title='Détails'><i class='bi bi-eye'></i></a> ";
+                if ($user->isAbleTo('restore-project')) {
+                    $actionBtns .= "<button class='btn btn-sm btn-info' onclick='restoreProject(" . $project->id . ")' title='Restaurer'><i class='bi bi-cloud-upload'></i></button> ";
+                    $actionBtns .= "<button class='btn btn-sm btn-danger' onclick='showDeleteProjectModal(" . $project->id . ")' title='Supprimer'><i class='bi bi-trash'></i></button>";
                 }
                 return $actionBtns;
             })
             ->rawColumns(['action'])
             ->make(true);
-        
     }
 
     /**
@@ -126,13 +123,13 @@ class ProjectController extends Controller
     public function export(Request $request)
     {
         $projects = $this->projectQuery($request)->get();
-        $projects->load(['natures', 'modifications' => function($query){
+        $projects->load(['natures', 'modifications' => function ($query) {
             $query->latest()->first();
         }]);
-        $projects->each(function($project, $index){
+        $projects->each(function ($project, $index) {
             $project->index = $index + 1;
         });
-        $fileName = 'liste_des_projects_'.today()->format('d-m-Y').'.xlsx';
+        $fileName = 'liste_des_projects_' . today()->format('d-m-Y') . '.xlsx';
         return Excel::download(new ProjectsExport($projects), $fileName);
     }
 
@@ -169,33 +166,33 @@ class ProjectController extends Controller
             'benefits'    => $request->benefits,
             'saved_by'    => auth()->user()->id,
         ]);
-        
-        if($request->end_date){
+
+        if ($request->end_date) {
             $project->end_date = $request->end_date;
         }
 
-        if($request->cost){
+        if ($request->cost) {
             $project->cost = $request->cost;
         }
 
-        if($request->steps){
+        if ($request->steps) {
             $project->steps()->attach($request->steps);
         }
 
-        if($request->moe){
+        if ($request->moe) {
             $project->moe = $request->moe;
         }
-        if($request->documentation){
+        if ($request->documentation) {
             $project->documentation = $request->documentation;
         }
-        if($request->bills){
+        if ($request->bills) {
             $project->bills = $request->bills;
         }
-        $project->reference = castNumberId($project->id).'-'.Str::upper(Str::random(2)).'-'.$project->start_year;
+        $project->reference = castNumberId($project->id) . '-' . Str::upper(Str::random(2)) . '-' . $project->start_year;
         $project->save();
         $project->natures()->attach($request->natures);
-               
-        
+
+
         return redirect()->route('admin.projects.index')->with('message', 'Projet créé avec succès!');
     }
 
@@ -207,7 +204,7 @@ class ProjectController extends Controller
      */
     public function show(Project $project)
     {
-        $project->load(['modifications' => function($query){
+        $project->load(['modifications' => function ($query) {
             $query->latest();
         }]);
         return view('admin.projects.show', compact('project'));
@@ -222,7 +219,7 @@ class ProjectController extends Controller
     public function showDeleted($id)
     {
         $project = Project::onlyTrashed()
-        ->firstWhere('id', $id);
+            ->firstWhere('id', $id);
         return view('admin.projects.deleted.show', compact('project'));
     }
 
@@ -260,28 +257,28 @@ class ProjectController extends Controller
             'benefits'      => $request->benefits
         ]);
 
-        if($request->end_date){
+        if ($request->end_date) {
             $project->end_date = $request->end_date;
         }
 
-        if($request->cost){
+        if ($request->cost) {
             $project->cost = $request->cost;
         }
 
-        if($request->steps){
+        if ($request->steps) {
             $project->steps()->attach($request->steps);
         }
 
-        if($request->documentation){
+        if ($request->documentation) {
             $project->documentation = $request->documentation;
         }
-        if($request->moe){
+        if ($request->moe) {
             $project->moe = $request->moe;
         }
-        if($request->bills){
+        if ($request->bills) {
             $project->bills = $request->bills;
         }
-        if($request->progress){
+        if ($request->progress) {
             $project->progress = $request->progress;
         }
         $project->save();
@@ -291,7 +288,6 @@ class ProjectController extends Controller
         ]);
         $project->natures()->sync($request->natures);
         return redirect()->route('admin.projects.index')->with('message', 'Projet modifié avec succès!');
-
     }
 
     /**
@@ -318,8 +314,8 @@ class ProjectController extends Controller
     public function delete($id)
     {
         $project = Project::onlyTrashed()
-        ->firstWhere('id', $id);
-        if($project){
+            ->firstWhere('id', $id);
+        if ($project) {
             $project->natures()->detach();
             $project->steps()->detach();
             $project->forceDelete();
@@ -338,7 +334,7 @@ class ProjectController extends Controller
     public function restore($id)
     {
         Project::onlyTrashed()
-        ->findOrFail($id)->restore();
+            ->findOrFail($id)->restore();
 
         return response()->json(['message' => 'Project restored!']);
     }
@@ -346,44 +342,42 @@ class ProjectController extends Controller
     public function projectQuery($request)
     {
         $query = Project::query();
-        $search = "%".$request->search."%";
-        if($request->search_type == "all" && !empty($request->search))
-        {
+        $search = "%" . $request->search . "%";
+        if ($request->search_type == "all" && !empty($request->search)) {
             $query->where('amoa', 'LIKE', $search);
             $query->orWhere('sponsor', 'LIKE', $search);
             $query->orWhere('reference', 'LIKE', $search);
             $query->orWhere('status', 'LIKE', $search);
             $query->orWhere('name', 'LIKE', $search);
-            $query->orWhere(function($query) use($request){
+            $query->orWhere(function ($query) use ($request) {
                 $query->WhereYear('start_date', $request->search);
             });
-            $query->orWhere(function($query) use($search){
-                $query->whereHas('natures', function($query) use($search){
+            $query->orWhere(function ($query) use ($search) {
+                $query->whereHas('natures', function ($query) use ($search) {
                     $query->where('name', 'LIKE', $search);
                 });
             });
-
         }
-        if($request->search_type == "amoa" && !empty($request->search)){
+        if ($request->search_type == "amoa" && !empty($request->search)) {
             $query->where('amoa', 'LIKE', $search);
         }
-        if($request->search_type == "sponsor" && !empty($request->search)){
+        if ($request->search_type == "sponsor" && !empty($request->search)) {
             $query->where('sponsor', 'LIKE', $search);
         }
-        if($request->search_type == "reference" && !empty($request->search)){
+        if ($request->search_type == "reference" && !empty($request->search)) {
             $query->where('reference', 'LIKE', $search);
         }
-        if($request->search_type == "status" && !empty($request->search)){
+        if ($request->search_type == "status" && !empty($request->search)) {
             $query->where('status', $request->search);
         }
-        if($request->search_type == "year" && !empty($request->search)){
+        if ($request->search_type == "year" && !empty($request->search)) {
             $query->whereYear('start_date', $request->search);
         }
-        if($request->search_type == "natures"){
+        if ($request->search_type == "natures") {
             //get array of ids
             $natures = json_decode($request->search);
-            if(!empty($natures)){
-                $query->whereHas('natures', function($query)use($natures){
+            if (!empty($natures)) {
+                $query->whereHas('natures', function ($query) use ($natures) {
                     $query->whereIn('natures.id', $natures);
                 });
             }
@@ -391,5 +385,3 @@ class ProjectController extends Controller
         return $query;
     }
 }
-
-

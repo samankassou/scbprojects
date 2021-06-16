@@ -1,101 +1,199 @@
-
-  <head>
+<head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
-
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="{{ asset('front/css/bootstrap-4.0.0/dist/css/bootstrap.min.css') }}">
     <!-- Custom Style -->
     <link rel="stylesheet" href="{{ asset('front/css/bootstrap-4.0.0/style.css') }}">
-
     <title>Procédure {{ $process->reference }}</title>
+    <style>
+        .arrow {
+            margin-bottom: 4px;
+        }
+
+        .arrow.back {
+            text-align: right;
+        }
+
+        .inner-arrow {
+            padding-right: 10px;
+            height: 30px;
+            display: inline-block;
+            background-color: rgb(233, 125, 49);
+            text-align: center;
+
+            line-height: 30px;
+            vertical-align: middle;
+        }
+
+        .arrow.back .inner-arrow {
+            background-color: #ffbf06;
+            padding-right: 0;
+            padding-left: 10px;
+        }
+
+        .arrow:before,
+        .arrow:after {
+            content: '';
+            display: inline-block;
+            width: 0;
+            height: 0;
+            border: 15px solid transparent;
+            vertical-align: middle;
+        }
+
+        .arrow:before {
+            border-top-color: rgb(233, 125, 49);
+            border-bottom-color: rgb(233, 125, 49);
+            border-right-color: rgb(8, 8, 8);
+        }
+
+
+        .arrow:after {
+            border-left-color: rgb(233, 125, 49);
+        }
+
+        .arrow.back:after {
+            border-left-color: rgb(5, 5, 5);
+            border-top-color: rgb(233, 125, 49);
+            border-bottom-color: rgb(233, 125, 49);
+            border-right-color: transparent;
+        }
+
+        .arrow span {
+            display: inline-block;
+            width: 80px;
+            margin-right: 20px;
+            text-align: right;
+        }
+
+        .arrow.back span {
+            margin-right: 0;
+            margin-left: 20px;
+            text-align: left;
+        }
+    </style>
 </head>
+
 <body>
     <div class="my-5 page" size="A4">
         <div class="p-5">
             <section class="top-content bb d-flex justify-content-between">
                 <div class="logo">
-                    <img src="{{ asset('images/logo.png') }}" alt="" class="img-fluid">
+                    <img src="{{ asset('images/logo.png') }}" class="img-fluid">
                 </div>
-                <div class="top-left">
-                    <div class="graphic-path">
-                        <p>Ref-No:</p>
-                    </div>
-                    <div class="position-relative">
-                        <p><span>{{ $process->reference }}</span></p>
+                <div>
+                    <div class="arrow back">
+                        <div class="inner-arrow"><strong> Ref: </strong>{{ $process->reference }}</div>
                     </div>
                 </div>
             </section>
-            <section class="top-content bb d-flex justify-content-between">
-                <div class=" ">
-                    <h4><strong>Domaine:</strong></h4><h2 style="text-indent: 4em;"> {{ $process->method->macroprocess->domain->name }}</h2>
-                </div>
-            </section>
-            <section class="store-user mt-5">
-                <div class="top-left">
-                    <div class="row bb pb-3">
-                            <p><strong> Macroprocessus:&nbsp;</strong><span><h5> {{ $process->method->macroprocess->name }}</h5></span></p>
-                    </div>
-                    <div class="row extra-info pt-3">
-                            <p class="m-0 font-weight-bold"><strong>Processus:</strong></p>
-                            <p>{{ $process->method->name }}</p>
-                    </div>
-                    <div class="row extra-info pt-3">
-                        <p class="m-0 font-weight-bold"><strong> Intitulé:</strong></p>
-                        <p>{{ $process->name }}</p>
-                    </div>
-                    <div class="row extra-info pt-3">
-                        <p class="m-0 font-weight-bold"><strong>Type:</strong></p>
-                        <p>{{ $process->type }}</p>
-                    </div>
-                    <div class="row extra-info pt-3">
-                        <p class="m-0 font-weight-bold"><strong>No. de version:</strong></p>
-                        <p>{{ $process->version }}</p>
-                    </div>
-                    <div class="row extra-info pt-3">
-                        <p class="m-0 font-weight-bold"><strong>Pôle(s):</strong></p>
-                        <p></p>
-                    </div>
-                    <div class="row extra-info pt-3">
-                        <p class="m-0 font-weight-bold"><strong> Entité(s) impactée(s):</strong></p>
-                        <p>{{ implode(', ', $process->entities->pluck('name')->toArray()) }}</p>
-                    </div>
-                    
-                    <div class="row extra-info pt-3">
-                        <p class="m-0 font-weight-bold"><strong> Céée le:</strong></p>&nbsp;
-                        <p> {{ $process->creation_date->format('d/m/Y') }}</p><strong style="text-indent: 2em;" > Par:</strong></p>&nbsp;<p> {{ $process->created_by }}</p>
-                    </div>
-                    <div class="row extra-info pt-3">
-                        <p class="m-0 font-weight-bold"><strong> Redigée le:</strong></p>&nbsp;
-                        <p>{{ $process->writing_date->format('d/m/Y') }}</p><strong style="text-indent: 2em;" > Par:</strong></p>&nbsp;<p>{{ $process->written_by }}</p>
-                    </div>
-                    <div class="row extra-info pt-3">
-                        <p class="m-0 font-weight-bold"><strong> Validéé le:</strong></p>&nbsp;
-                        <p>{{ $process->verification_date->format('d/m/Y') }}</p><strong style="text-indent: 2em;" > Par:</strong></p>&nbsp;<p>{{ $process->verified_by }}</p>
-                    </div>
-                    <div class="row extra-info pt-3">
-                        <p class="m-0 font-weight-bold"><strong> Aprouvée le:</strong></p>&nbsp;
-                        <p>{{ $process->date_of_approval->format('d/m/Y') }}</p><strong style="text-indent: 2em;" > Par:</strong></p>&nbsp;<p>{{ $process->approved_by }}</p>
-                    </div>
-                    <div class="row extra-info pt-3">
-                        <p class="m-0 font-weight-bold"><strong>Etat:</strong></p>&nbsp;
-                        <p>{{ $process->status }}</p><strong style="text-indent: 2em;" ></p> 
-                            
-                            <p><strong>Raison de la création</strong></p><p>{{ $process->reasons_for_creation }}</p>
-                            <p><strong>Raison de la modification</strong></p><p>{{ $process->reasons_for_modification }}</p>
-                    <div class="row extra-info pt-3">
-                        <p class="m-0 font-weight-bold"><strong> Modification(s) apportée(s):</strong></p>
-                        <p>{{ $process->modifications }}</p>
-                    </div>
-                    <div class="row extra-info pt-3">
-                        <p class="m-0 font-weight-bold"><strong> Annexe(s):</strong></p>
-                        <p>{{ $process->appendices }}</p>
-                    </div>
-            
-
+            <div class="bb mt-3">
+                <p>
+                    <span class="font-weight-bold">Domaine:</span>
+                    {{ $process->method->macroprocess->domain->name }}
+                </p>
             </div>
+            <div class="bb mt-3">
+                <p>
+                    <span class="font-weight-bold">Macroprocessus:</span>
+                    {{ $process->method->macroprocess->name }}
+                </p>
+            </div>
+            <div class="bb mt-3">
+                <p>
+                    <span class="font-weight-bold">Processus:</span>
+                    {{ $process->method->name }}
+                </p>
+            </div>
+            <div class="bb mt-3">
+                <p>
+                    <span class="font-weight-bold">Procédure:</span>
+                    {{ $process->name }}
+                </p>
+            </div>
+            <section class="mt-3">
+                <p class="mt-3">
+                    <span class="font-weight-bold">Type:</span>
+                    {{ $process->type }}
+                </p>
+                <p class="mt-3">
+                    <span class="font-weight-bold">No. de version:</span>
+                    {{ $process->version }}
+                </p>
+                <p class="mt-3">
+                    <span class="font-weight-bold">Pôle(s):</span>
+                    {{ implode(', ', $poles->pluck('name')->toArray()) }}
+                </p>
+                <p class="mt-3">
+                    <span class="font-weight-bold">Entité(s) impactée(s):</span>
+                    {{ implode(', ', $process->entities->pluck('name')->toArray()) }}
+                </p>
+                <div class="row justify-content-between mt-3">
+                    <div class="col-md-6">
+                        <p>
+                            <span class="font-weight-bold"> Céée le:</span>
+                            {{ $process->creation_date->format('d/m/Y') }}
+                        </p>
+                        <p class="mt-3">
+                            <span class="font-weight-bold"> Redigée le:</span>
+                            {{ $process->writing_date->format('d/m/Y') }}
+                        </p>
+                        <p class="mt-3">
+                            <span class="font-weight-bold"> Vérifiée le:</span>
+                            {{ $process->verification_date->format('d/m/Y') }}
+                        </p>
+                        <p class="mt-3">
+                            <span class="font-weight-bold"> Aprouvée le:</span>
+                            {{ $process->date_of_approval->format('d/m/Y') }}
+                        </p>
+                    </div>
+                    <div class="col-md-6">
+                        <p>
+                            <span class="font-weight-bold">Créée Par:</span>
+                            {{ $process->created_by }}
+                        </p>
+                        <p class="mt-3">
+                            <span class="font-weight-bold">Rédigée Par:</span>
+                            {{ $process->written_by }}
+                        </p>
+                        <p class="mt-3">
+                            <span class="font-weight-bold">Vérifiée Par:</span>
+                            {{ $process->verified_by }}
+                        </p>
+                        <p class="mt-3">
+                            <span class="font-weight-bold">Approuvée Par:</span>
+                            {{ $process->approved_by }}
+                        </p>
+                    </div>
+                </div>
+                <div class="mt-3">
+                    <p>
+                        <span class="font-weight-bold">Etat:</span>
+                        {{ $process->state }}
+                    </p>
+                    <p class="mt-3">
+                        <span class="font-weight-bold">Statut:</span>
+                        {{ $process->status }}
+                    </p>
+                    <p class="mt-3">
+                        <span class="font-weight-bold">Raison de la création:</span>
+                        {{ $process->reasons_for_creation }}
+                    </p>
+                    <p class="mt-3">
+                        <span class="font-weight-bold">Raison de la modification:</span>
+                        {{ $process->reasons_for_modification }}
+                    </p>
+                    <p class="mt-3">
+                        <span class="font-weight-bold">Modification(s) apportée(s):</span>
+                        {{ $process->modifications }}
+                    </p>
+                    <p class="mt-3">
+                        <span class="font-weight-bold">Annexe(s):</span>
+                        {{ $process->appendices }}
+                    </p>
+                </div>
             </section>
         </div>
     </div>
 </body>
-

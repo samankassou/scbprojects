@@ -66,7 +66,7 @@
 @parent
 <script src="{{ asset('mazer/assets/vendors/choices.js/choices.min.js') }}"></script>
 <script>
-     let token = $('meta[name="csrf-token"]').attr('content');
+    let token = $('meta[name="csrf-token"]').attr('content');
     $(function () {
         $.ajaxSetup({
             headers: {

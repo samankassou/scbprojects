@@ -28,21 +28,24 @@
                     <div class="search-container active">
                         <div class="choices">
                             <div class="choices__inner">
-                                <input type="text" class="form-control all search choices__input" id="allSearch" placeholder="Rechercher une procédure...">
+                                <input type="text" class="form-control all search choices__input" id="allSearch"
+                                    placeholder="Rechercher une procédure...">
                             </div>
                         </div>
                     </div>
                     <div class="search-container">
                         <div class="choices">
                             <div class="choices__inner">
-                                <input type="text" class="form-control reference search choices__input" id="referenceSearch" placeholder="Entrez une reférence de procédure...">
+                                <input type="text" class="form-control reference search choices__input"
+                                    id="referenceSearch" placeholder="Entrez une reférence de procédure...">
                             </div>
                         </div>
                     </div>
                     <div class="search-container">
                         <div class="choices">
                             <div class="choices__inner">
-                                <input class="form-control name search choices__input" id="nameSearch" type="text" placeholder="Entrez un nom de procédure...">
+                                <input class="form-control name search choices__input" id="nameSearch" type="text"
+                                    placeholder="Entrez un nom de procédure...">
                             </div>
                         </div>
                     </div>
@@ -68,7 +71,7 @@
                         <select id="poleSearch" class="form-select pole search">
                             <option value="">Tous</option>
                             @foreach ($poles as $pole)
-                                <option value="{{ $pole->id }}">{{ $pole->name }}</option>
+                            <option value="{{ $pole->id }}">{{ $pole->name }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -76,13 +79,14 @@
                         <select id="macroprocessSearch" class="form-select macroprocess search">
                             <option value="">Tous</option>
                             @foreach ($macroprocesses as $macroprocess)
-                                <option value="{{ $macroprocess->id }}">
-                                    @if (($macroprocess->name == "Développement et pilotage de projets") || ($macroprocess->name == "Gestion des reportings"))
-                                    {{ $macroprocess->name }}({{ $macroprocess->domain->name }})
-                                    @else
-                                    {{ $macroprocess->name }}
-                                    @endif
-                                </option>
+                            <option value="{{ $macroprocess->id }}">
+                                @if (($macroprocess->name == "Développement et pilotage de projets") ||
+                                ($macroprocess->name == "Gestion des reportings"))
+                                {{ $macroprocess->name }}({{ $macroprocess->domain->name }})
+                                @else
+                                {{ $macroprocess->name }}
+                                @endif
+                            </option>
                             @endforeach
                         </select>
                     </div>
@@ -90,18 +94,18 @@
                         <select id="methodSearch" class="form-select method search">
                             <option value="">Tous</option>
                             @foreach ($methods as $method)
-                                <option value="{{ $method->id }}">{{ $method->name }}</option>
+                            <option value="{{ $method->id }}">{{ $method->name }}</option>
                             @endforeach
                         </select>
                     </div>
-                    
+
                 </div>
             </div>
             @if (session('message'))
-                <div class="alert alert-light-success alert-dismissible color-success">
-                    <i class="bi bi-check-circle"></i> {{ session('message') }}.
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
+            <div class="alert alert-light-success alert-dismissible color-success">
+                <i class="bi bi-check-circle"></i> {{ session('message') }}.
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
             @endif
             <div class="card-header d-flex justify-content-between">
                 <h2>Liste des procédures</h2>
@@ -114,7 +118,8 @@
                     </button>
                 </div>
                 <div>
-                    <a href="{{ route('admin.processes.create') }}" class="btn btn-sm btn-outline-primary"><i class="bi bi-plus"></i> Créer</a>
+                    <a href="{{ route('admin.processes.create') }}" class="btn btn-sm btn-outline-primary"><i
+                            class="bi bi-plus"></i> Créer</a>
                 </div>
             </div>
             <table class="table table-striped" id="processes-datatable" style="width: 100%">

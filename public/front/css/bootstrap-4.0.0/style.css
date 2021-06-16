@@ -45,12 +45,12 @@ body {
     margin: 0;
 }
 
-.top-left .graphic-path {
+.graphic-path {
     height: 40px;
     position: relative;
 }
 
-.top-left .graphic-path::before {
+.graphic-path::before {
     content: "";
     height: 20px;
     background-color: #f8b119;
@@ -61,7 +61,7 @@ body {
     z-index: 2;
 }
 
-.top-left .graphic-path::after {
+.graphic-path::after {
     content: "";
     height: 22px;
     width: 17px;

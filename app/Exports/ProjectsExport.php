@@ -17,22 +17,23 @@ use PhpOffice\PhpSpreadsheet\Style\Fill;
 use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
-class ProjectsExport implements FromCollection, 
-WithHeadings, 
-WithCustomStartCell,
-WithMapping,
-WithStyles,
-WithColumnWidths,
-WithProperties,
-WithEvents
+class ProjectsExport implements
+    FromCollection,
+    WithHeadings,
+    WithCustomStartCell,
+    WithMapping,
+    WithStyles,
+    WithColumnWidths,
+    WithProperties,
+    WithEvents
 {
     public function __construct($projects)
     {
         $this->projects = $projects;
     }
     /**
-    * @return \Illuminate\Support\Collection
-    */
+     * @return \Illuminate\Support\Collection
+     */
     public function collection()
     {
         return $this->projects;
@@ -43,7 +44,7 @@ WithEvents
         return [
             'creator'        => auth()->user()->name,
             'lastModifiedBy' => auth()->user()->name,
-            'title'          => 'Liste des projets du '.today()->format('d/m/Y'),
+            'title'          => 'Liste des projets du ' . today()->format('d/m/Y'),
             'company'        => 'SCB Cameroun'
         ];
     }
@@ -76,12 +77,12 @@ WithEvents
     public function registerEvents(): array
     {
         return [
-            AfterSheet::class => function(AfterSheet $event){
+            AfterSheet::class => function (AfterSheet $event) {
                 $highestRow = $event->sheet->getDelegate()->getHighestRow();
                 $highestColumn = $event->sheet->getDelegate()->getHighestColumn();
-                $cellRange = 'A3:'.$highestColumn.''.$highestRow;
-                $hearders = "A2:$highestColumn"."2";
-                
+                $cellRange = 'A3:' . $highestColumn . '' . $highestRow;
+                $hearders = "A2:$highestColumn" . "2";
+
                 $event->sheet->getDelegate()->mergeCells("A1:B1");
                 $event->sheet->getDelegate()->mergeCells("C1:S1");
                 $event->sheet->getDelegate()->setCellValue("A1", today()->format('d/m/Y'));
@@ -90,11 +91,11 @@ WithEvents
                 $event->sheet->getDelegate()->getStyle("B2:R2")->getAlignment()->setTextRotation(61);
                 $event->sheet->getDelegate()->getRowDimension(1)->setRowHeight(90);
                 $event->sheet->getDelegate()->getRowDimension(2)->setRowHeight(90);
-                $event->sheet->getDelegate()->getStyle('D3:E'.$highestRow)->getNumberFormat()->setFormatCode("dd/mm/yyyy h:mm:ss");
-                $event->sheet->getDelegate()->getStyle('F3:F'.$highestRow)->getNumberFormat()->setFormatCode("@");
-                $event->sheet->getDelegate()->getStyle('L3:M'.$highestRow)->getNumberFormat()->setFormatCode("dd/mm/yyyy");
-                $event->sheet->getDelegate()->getStyle('N3:N'.$highestRow)->getNumberFormat()->setFormatCode('#,##0_-FCFA');
-                $event->sheet->getDelegate()->getStyle('P3:P'.$highestRow)->getNumberFormat()->setFormatCode("0%");
+                $event->sheet->getDelegate()->getStyle('D3:E' . $highestRow)->getNumberFormat()->setFormatCode("dd/mm/yyyy h:mm:ss");
+                $event->sheet->getDelegate()->getStyle('F3:F' . $highestRow)->getNumberFormat()->setFormatCode("@");
+                $event->sheet->getDelegate()->getStyle('L3:M' . $highestRow)->getNumberFormat()->setFormatCode("dd/mm/yyyy");
+                $event->sheet->getDelegate()->getStyle('N3:N' . $highestRow)->getNumberFormat()->setFormatCode('#,##0_-FCFA');
+                $event->sheet->getDelegate()->getStyle('P3:P' . $highestRow)->getNumberFormat()->setFormatCode("0%");
 
                 $event->sheet->getDelegate()->getStyle($cellRange)->getAlignment()->setWrapText(true);
                 $event->sheet->getDelegate()->getStyle($cellRange)->applyFromArray([
@@ -138,7 +139,7 @@ WithEvents
 
     public function prepareRows($projects): array
     {
-        return array_map(function($project){
+        return array_map(function ($project) {
             $project->natures = implode(', ', $project->natures->pluck('name')->toArray());
             return $project;
         }, $projects);
@@ -167,7 +168,7 @@ WithEvents
             $project->end_date->format('d/m/Y'),
             $project->cost,
             $project->status,
-            $project->progress/100,
+            $project->progress / 100,
             $project->benefits,
             $project->documentation,
             $project->bills,
@@ -227,5 +228,4 @@ WithEvents
             'S' => 20,
         ];
     }
-
 }

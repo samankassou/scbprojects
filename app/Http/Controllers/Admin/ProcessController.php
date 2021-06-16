@@ -33,7 +33,7 @@ class ProcessController extends Controller
         return view('admin.processes.index', compact('processes', 'poles', 'macroprocesses', 'methods'));
     }
 
-    
+
     /**
      * Display a listing of the resource.
      *
@@ -49,20 +49,18 @@ class ProcessController extends Controller
     {
         $processes = Process::onlyTrashed()->with(['method.macroprocess', 'deleter'])->get();
         $user = auth()->user();
-
         return Datatables::of($processes)
             ->addIndexColumn()
-            ->addColumn('action', function($process) use($user){
-                $actionBtns = "<a href=".route('admin.processes.deleted.show', $process->id)." class='btn btn-sm btn-primary' title='Détails'><i class='bi bi-eye'></i></a> ";
-                if($user->isAbleTo('restore-process')){
-                    $actionBtns .= "<button class='btn btn-sm btn-info' onclick='restoreProcess(".$process->id.")' title='Restaurer'><i class='bi bi-cloud-upload'></i></button> ";
-                    $actionBtns .= "<button class='btn btn-sm btn-danger' onclick='showDeleteProcessModal(".$process->id.")' title='Supprimer'><i class='bi bi-trash'></i></button>";
+            ->addColumn('action', function ($process) use ($user) {
+                $actionBtns = "<a href=" . route('admin.processes.deleted.show', $process->id) . " class='btn btn-sm btn-primary' title='Détails'><i class='bi bi-eye'></i></a> ";
+                if ($user->isAbleTo('restore-process')) {
+                    $actionBtns .= "<button class='btn btn-sm btn-info' onclick='restoreProcess(" . $process->id . ")' title='Restaurer'><i class='bi bi-cloud-upload'></i></button> ";
+                    $actionBtns .= "<button class='btn btn-sm btn-danger' onclick='showDeleteProcessModal(" . $process->id . ")' title='Supprimer'><i class='bi bi-trash'></i></button>";
                 }
                 return $actionBtns;
             })
             ->rawColumns(['action'])
             ->make(true);
-        
     }
 
     /**
@@ -80,14 +78,14 @@ class ProcessController extends Controller
     public function export(Request $request)
     {
         $processes = $this->processQuery($request)->get();
-        $processes->load(['process_modifications' => function($query){
+        $processes->load(['process_modifications' => function ($query) {
             $query->latest()->first();
         }]);
         $processes->load(['method.macroprocess']);
-        $processes->each(function($process, $index){
+        $processes->each(function ($process, $index) {
             $process->index = $index + 1;
         });
-        $fileName = 'liste_des_procedures_'.today()->format('d-m-Y').'.xlsx';
+        $fileName = 'liste_des_procedures_' . today()->format('d-m-Y') . '.xlsx';
         return Excel::download(new ProcessesExport($processes), $fileName);
     }
 
@@ -118,28 +116,28 @@ class ProcessController extends Controller
     {
         $process = Process::firstWhere('reference', $request->reference);
         abort_if(!$process, 404, 'Reférence incorrecte ou process inexistant');
-        return view('admin.processes.show_by_ref', compact('process'));
+        $polesIds = $process->entities->pluck('pole_id')->unique();
+        $poles = Pole::whereIn('id', $polesIds)->get();
+        return view('admin.processes.show_by_ref', compact('process', 'poles'));
     }
 
     public function ajaxList(Request $request)
     {
         $query = $this->processQuery($request);
-
         $processes = $query->get();
         $processes->load(['entities.pole', 'method.macroprocess']);
 
         return Datatables::of($processes)
             ->addIndexColumn()
-            ->addColumn('action', function($process){
-                $actionBtns = "<a href=".route('admin.processes.show', $process->id)." class='btn btn-sm btn-primary' title='Détails'><i class='bi bi-eye'></i></a> ";
-                $actionBtns .= "<a target='_blank' href=".route('processes.pdf', $process->reference)." class='btn btn-sm btn-secondary' title='Imprimer'><i class='bi bi-printer'></i></a> ";
-                $actionBtns .= "<a href=".route('admin.processes.edit', $process->id)." class='btn btn-sm btn-warning' title='Editer'><i class='bi bi-pencil'></i></a> ";
-                $actionBtns .= "<button class='btn btn-sm btn-danger' onclick='showDeleteProcessModal(".$process->id.")' title='Supprimer'><i class='bi bi-trash'></i></button>";
+            ->addColumn('action', function ($process) {
+                $actionBtns = "<a href=" . route('admin.processes.show', $process->id) . " class='btn btn-sm btn-primary' title='Détails'><i class='bi bi-eye'></i></a> ";
+                $actionBtns .= "<a target='_blank' href=" . route('processes.pdf', $process->reference) . " class='btn btn-sm btn-secondary' title='Imprimer'><i class='bi bi-printer'></i></a> ";
+                $actionBtns .= "<a href=" . route('admin.processes.edit', $process->id) . " class='btn btn-sm btn-warning' title='Editer'><i class='bi bi-pencil'></i></a> ";
+                $actionBtns .= "<button class='btn btn-sm btn-danger' onclick='showDeleteProcessModal(" . $process->id . ")' title='Supprimer'><i class='bi bi-trash'></i></button>";
                 return $actionBtns;
             })
             ->rawColumns(['action'])
             ->make(true);
-        
     }
 
     public function search(Request $request)
@@ -149,7 +147,7 @@ class ProcessController extends Controller
         return response()->json([
             'success' => $success,
             'processes' => $processes
-            ]);
+        ]);
     }
 
     public function exportPdf(Request $request)
@@ -161,9 +159,8 @@ class ProcessController extends Controller
         $pdf = App::make('dompdf.wrapper');
         $pdf->getDomPDF()->set_option("enable_php", true);
         $pdf->loadView('admin.processes.pdf.show', compact('process', 'poles'));
-        $fileName = 'process_'.$process->reference.'_'.today()->format('d-m-Y').'.pdf';
+        $fileName = 'process_' . $process->reference . '_' . today()->format('d-m-Y') . '.pdf';
         return $pdf->stream($fileName);
-
     }
 
     /**
@@ -185,38 +182,38 @@ class ProcessController extends Controller
         $process->status        = $request->status;
         $process->method_id     = $request->method;
 
-        if($request->writing_date){
+        if ($request->writing_date) {
             $process->writing_date = $request->writing_date;
             $process->written_by   = $request->written_by;
         }
 
-        if($request->verification_date){
+        if ($request->verification_date) {
             $process->verification_date = $request->verification_date;
             $process->verified_by         = $request->verified_by;
         }
 
-        if($request->date_of_approval){
+        if ($request->date_of_approval) {
             $process->date_of_approval = $request->date_of_approval;
             $process->approved_by      = $request->approved_by;
         }
 
-        if($request->broadcasting_date){
+        if ($request->broadcasting_date) {
             $process->broadcasting_date = $request->broadcasting_date;
         }
 
-        if($request->reasons_for_creation){
+        if ($request->reasons_for_creation) {
             $process->reasons_for_creation = $request->reasons_for_creation;
         }
 
-        if($request->reasons_for_modification){
+        if ($request->reasons_for_modification) {
             $process->reasons_for_modification = $request->reasons_for_modification;
         }
 
-        if($request->modifications){
+        if ($request->modifications) {
             $process->modifications = $request->modifications;
         }
 
-        if($request->appendices){
+        if ($request->appendices) {
             $process->appendices = $request->appendices;
         }
 
@@ -224,8 +221,6 @@ class ProcessController extends Controller
         $process->entities()->attach($request->entities);
 
         return redirect()->route('admin.processes.index')->with('message', 'Procédure créée avec succès!');
-
-        
     }
 
     /**
@@ -236,7 +231,7 @@ class ProcessController extends Controller
      */
     public function show(Request $request, Process $process)
     {
-        if($request->ajax()){
+        if ($request->ajax()) {
             return response()->json(['process' => $process]);
         }
         $process->load(['entities.pole']);
@@ -254,7 +249,7 @@ class ProcessController extends Controller
     public function showDeleted($id)
     {
         $process = Process::onlyTrashed()
-        ->firstWhere('id', $id);
+            ->firstWhere('id', $id);
         $process->load(['entities.pole']);
         $polesIds = $process->entities->pluck('pole_id')->unique();
         $poles = Pole::whereIn('id', $polesIds)->get();
@@ -296,39 +291,39 @@ class ProcessController extends Controller
             "modifications" => $request->modifications,
         ]);
         $process->reference = $request->reference;
-        if($request->writing_date){
+        if ($request->writing_date) {
             $process->writing_date = $request->writing_date;
             $process->written_by   = $request->written_by;
         }
 
-        if($request->verification_date){
+        if ($request->verification_date) {
             $process->verification_date = $request->verification_date;
             $process->verified_by         = $request->verified_by;
         }
 
-        if($request->date_of_approval){
+        if ($request->date_of_approval) {
             $process->date_of_approval = $request->date_of_approval;
             $process->approved_by      = $request->approved_by;
         }
 
-        if($request->broadcasting_date){
+        if ($request->broadcasting_date) {
             $process->broadcasting_date = $request->broadcasting_date;
         }
 
-        if($request->reasons_for_creation){
+        if ($request->reasons_for_creation) {
             $process->reasons_for_creation = $request->reasons_for_creation;
         }
 
-        if($request->reasons_for_modification){
+        if ($request->reasons_for_modification) {
             $process->reasons_for_modification = $request->reasons_for_modification;
         }
 
-        if($request->appendices){
+        if ($request->appendices) {
             $process->appendices = $request->appendices;
         }
 
         $process->save();
-        
+
         $process->process_modifications()->create(['user_id' => auth()->user()->id]);
         $process->entities()->sync($request->entities);
 
@@ -359,8 +354,8 @@ class ProcessController extends Controller
     public function delete($id)
     {
         $process = Process::onlyTrashed()
-        ->firstWhere('id', $id);
-        if($process){
+            ->firstWhere('id', $id);
+        if ($process) {
             $process->process_modifications()->delete();
             $process->entities()->detach();
             $process->forceDelete();
@@ -378,7 +373,7 @@ class ProcessController extends Controller
     public function restore($id)
     {
         Process::onlyTrashed()
-        ->findOrFail($id)->restore();
+            ->findOrFail($id)->restore();
 
         return response()->json(['message' => 'Process restored!']);
     }
@@ -386,36 +381,35 @@ class ProcessController extends Controller
     public function processQuery($request)
     {
         $query = Process::query();
-        $search = "%".$request->search."%";
-        if($request->search_type == "all" && !empty($request->search))
-        {
+        $search = "%" . $request->search . "%";
+        if ($request->search_type == "all" && !empty($request->search)) {
             $query->where('name', 'LIKE', $search);
             $query->orWhere('reference', 'LIKE', $search);
             $query->orWhere('state', 'LIKE', $search);
             $query->orWhere('status', 'LIKE', $search);
         }
-        if($request->search_type == "name" && !empty($request->search)){
+        if ($request->search_type == "name" && !empty($request->search)) {
             $query->where('name', 'LIKE', $search);
         }
-        if($request->search_type == "reference" && !empty($request->search)){
+        if ($request->search_type == "reference" && !empty($request->search)) {
             $query->where('reference', 'LIKE', $search);
         }
-        if($request->search_type == "state" && !empty($request->search)){
+        if ($request->search_type == "state" && !empty($request->search)) {
             $query->where('state', $request->search);
         }
-        if($request->search_type == "status" && !empty($request->search)){
+        if ($request->search_type == "status" && !empty($request->search)) {
             $query->where('status', $request->search);
         }
-        if($request->search_type == "method" && !empty($request->search)){
+        if ($request->search_type == "method" && !empty($request->search)) {
             $query->where('method_id', $request->search);
         }
-        if($request->search_type == "pole" && !empty($request->search)){
-            $query->whereHas('entities', function($query) use($request){
+        if ($request->search_type == "pole" && !empty($request->search)) {
+            $query->whereHas('entities', function ($query) use ($request) {
                 $query->where('pole_id', $request->search);
             });
         }
-        if($request->search_type == "macroprocess" && !empty($request->search)){
-            $query->whereHas('method', function($query) use($request){
+        if ($request->search_type == "macroprocess" && !empty($request->search)) {
+            $query->whereHas('method', function ($query) use ($request) {
                 $query->where('macroprocess_id', $request->search);
             });
         }
