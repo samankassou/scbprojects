@@ -156,6 +156,7 @@ class ProcessController extends Controller
         abort_if(!$process, 404, 'Reférence incorrecte ou procédure inexistante');
         $polesIds = $process->last_version->entities->pluck('pole_id')->unique();
         $poles = Pole::whereIn('id', $polesIds)->get();
+        $process->load('versions');
         $pdf = App::make('dompdf.wrapper');
         $pdf->getDomPDF()->set_option("enable_php", true);
         $pdf->loadView('admin.processes.pdf.show', compact('process', 'poles'));
@@ -333,7 +334,7 @@ class ProcessController extends Controller
             $processVersion->save();
         } else {
             //create new version
-            $process->save([
+            $process->versions()->create([
                 'name'              => $request->name,
                 'version'           => $request->version,
                 'type'              => $request->type,

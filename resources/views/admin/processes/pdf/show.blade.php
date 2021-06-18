@@ -1,14 +1,56 @@
 <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
-
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="{{ asset('front/css/bootstrap-4.0.0/dst/css/bootstrap.min.css') }}">
-    <!-- Custom Style -->
-    <link rel="stylesheet" href="{{ asset('front/css/bootstrap-4.0.0/stle.css') }}">
-
     <title>Procédure: {{ $process->reference }}</title>
     <style>
+        /* Global styles */
+        body {
+            font-family: sans-serif;
+            font-size: 14px;
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+        }
+
+        section {
+            margin-top: 3rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table th,
+        table td {
+            border: 1px solid #000;
+            padding: 8px;
+        }
+
+        .flex {
+            display: flex;
+        }
+
+        .justify-center {
+            justify-content: center;
+        }
+
+        .align-center {
+            align-items: center;
+        }
+
+        .justify-between {
+            justify-content: space-between;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .underline {
+            text-decoration: underline;
+        }
+
         .arrow {
             margin-bottom: 4px;
         }
@@ -98,109 +140,95 @@
     <div id="footer">
         <div class="page-number"></div>
     </div>
-    <div class="my-5 page" size="A4">
-        <div class="p-5">
-            <section class="top-content bb d-flex justify-content-between">
-                <div class="logo">
-                    <img src="{{ asset('images/logo.png') }}" class="img-fluid">
-                    <div class="top-left" style="float: right">
-
-                        <div class="graphic-path">
-                            <div id="company">
-                                <div class="arrow back">
-                                    <div class="inner-arrow"><strong>No.Ref:&nbsp; {{ $process->reference }} </strong>
-                                    </div>
-                                </div>
-                            </div>
+    <section>
+        <div class="logo">
+            <img src="{{ asset('images/logo.png') }}" class="img-fluid">
+            <div style="float: right">
+                <div>
+                    <div id="company">
+                        <div class="arrow back">
+                            <div class="inner-arrow"><strong>No.Ref:&nbsp; {{ $process->reference }} </strong></div>
                         </div>
                     </div>
                 </div>
-
-            </section><br>
-            <hr>
-            <h2 style="text-align: center;"><strong>ORGANISATION ET PROJETS</strong></h2>
-            <hr>
-            <section class="top-content bb d-flex justify-content-between">
-                <div class="top-left">
-                    <h4><strong>Procédure:</strong></h4>&nbsp;&nbsp;&nbsp;&nbsp;<h2
-                        style="text-align: center; text-decoration: underline;">{{ $process->last_version->name }}</h2>
-                </div>
-            </section>
-            <section class="store-user mt-5">
-                <div class="col-10">
-                    <div class="row bb pb-3">
-                        <p><strong>Domaine: </strong><span>{{ $process->method->macroprocess->domain->name }}</span></p>
-                    </div>
-                    <div class="row extra-info pt-3">
-                        <p class="m-0 font-weight-bold"><strong>Macroprocessus:&nbsp;</strong></p>
-                        <p>{{ $process->method->macroprocess->name }}</p>
-                    </div>
-                    <div class="row extra-info pt-3">
-                        <p class="m-0 font-weight-bold"><strong> Processus: </strong></p>
-                        <p>{{ $process->method->name }}</p>
-                    </div>
-                    <div class="row extra-info pt-3">
-                        <p class="m-0 font-weight-bold"><strong>Intitulé: </strong></p>
-                        <p>{{ $process->last_version->name }}</p>
-                    </div>
-                    <div class="row extra-info pt-3">
-                        <p class="m-0 font-weight-bold"><strong>Type: </strong></p>
-                        <p>{{ $process->last_version->type }}</p>
-                    </div>
-                    <div class="row extra-info pt-3">
-                        <p class="m-0 font-weight-bold"><strong>No. de version:</strong></p>
-                        <p>{{ $process->last_version->version }}</p>
-                    </div>
-                    <div class="row extra-info pt-3">
-                        <p class="m-0 font-weight-bold"><strong>Pôle(s):</strong></p>
-                        <p>{{ implode(', ', $poles->pluck('name')->toArray()) }}</p>
-                    </div>
-                    <div class="row extra-info pt-3">
-                        <p class="m-0 font-weight-bold"><strong> Entité(s) impactée(s):</strong></p>
-                        <p>{{ implode(', ', $process->last_version->entities->pluck('name')->toArray()) }}</p>
-                    </div>
-                    <div class="row extra-info pt-3">
-                        <p class="m-0 font-weight-bold"><strong> Céée le:</strong></p>
-                        <p>{{ $process->last_version->creation_date->format('d/m/Y') }}</p>
-                    </div>
-                    <div class="row extra-info pt-3">
-                        <p class="m-0 font-weight-bold"><strong> Redigée le:</strong></p>
-                        <p>{{ optional($process->last_version->writing_date)->format('d/m/Y') }}.</p>
-                    </div>
-                    <div class="row extra-info pt-3">
-                        <p class="m-0 font-weight-bold"><strong> Vérifiée le:</strong></p>
-                        <p>{{ optional($process->last_version->verification_date)->format('d/m/Y') }}</p>
-                    </div>
-                    <div class="row extra-info pt-3">
-                        <p class="m-0 font-weight-bold"><strong> Aprouvée le:</strong></p>
-                        <p>{{ optional($process->last_version->date_of_approval)->format('d/m/Y') }}</p>
-                    </div>
-                    <div class="row extra-info pt-3">
-                        <p class="m-0 font-weight-bold"><strong> Etat:</strong></p>
-                        <p>{{ $process->last_version->state }}</p>
-                    </div>
-                    <div class="row extra-info pt-3">
-                        <p class="m-0 font-weight-bold"><strong>Raison de la création</strong></p>
-                        <p>{{ $process->last_version->reasons_for_creation }}</p>
-                    </div>
-                    <div class="row extra-info pt-3">
-                        <p class="m-0 font-weight-bold"><strong>Raison de la modification</strong></p>
-                        <p>{{ $process->last_version->reasons_for_modifications }}</p>
-                    </div>
-                    <div class="row extra-info pt-3">
-                        <p class="m-0 font-weight-bold"><strong>Modification(s) apportée(s):</strong></p>
-                        <p>{{ $process->last_version->modifications }}</p>
-                    </div>
-                    <div class="row extra-info pt-3">
-                        <p class="m-0 font-weight-bold"><strong>Annexe(s):</strong>
-                            <p>{{ $process->last_version->appendices }}</p>
-                        </p>
-
-                    </div>
-                </div>
-            </section>
+            </div>
         </div>
-    </div>
+    </section>
+    <section>
+        <P class="text-center underline">PROCEDURE</P>
+        <h3 class="text-center">{{ $process->last_version->name }}</h3>
+    </section>
+    <section>
+        <table>
+            <tr>
+                <td><strong>Entité(s) impactée(s):</strong></td>
+                <td>{{ implode(', ', $process->last_version->entities->pluck('name')->toArray()) }}</td>
+            </tr>
+            <tr>
+                <td><strong>Domaine d'activé:</strong></td>
+                <td>{{ $process->method->macroprocess->domain->name }}</td>
+            </tr>
+            <tr>
+                <td><strong>Référence de la procédure:</strong></td>
+                <td>{{ $process->reference }}</td>
+            </tr>
+            <tr>
+                <td><strong>Version courante:</strong></td>
+                <td>{{ $process->last_version->version }}</td>
+            </tr>
+            <tr>
+                <td><strong>Date de création:</strong></td>
+                <td>{{ $process->last_version->creation_date->format('d/m/Y') }}</td>
+            </tr>
+        </table>
+    </section>
+    <section>
+        <table>
+            <tr>
+                <td style="border: none"></td>
+                <td><strong>Nom(s)</strong></td>
+                <td><strong>Date</strong></td>
+            </tr>
+            <tr>
+                <td><strong>Rédacteur(s)</strong></td>
+                <td>{{ $process->last_version->written_by }}</td>
+                <td>{{ optional($process->last_version->writing_date)->format('d/m/Y') }}</td>
+            </tr>
+            <tr>
+                <td><strong>Vérificateur(s)</strong></td>
+                <td>{{ $process->last_version->verified_by }}</td>
+                <td>{{ optional($process->last_version->verification_date)->format('d/m/Y') }}</td>
+            </tr>
+            <tr>
+                <td><strong>Approbateur(s)</strong></td>
+                <td>{{ $process->last_version->approved_by }}</td>
+                <td>{{ optional($process->last_version->date_of_approval)->format('d/m/Y') }}</td>
+            </tr>
+        </table>
+    </section>
+    <section>
+        <h4 class="text-center">Historique des versions</h4>
+        <table>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Version</th>
+                    <th>Motif de la modification</th>
+                    <th>Acteur</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($process->versions as $version)
+                <tr>
+                    <td>{{ $version->creation_date->format('d/m/Y') }}</td>
+                    <td>{{ $version->version }}</td>
+                    <td>{{ $version->reasons_for_creation ?? $version->reasons_for_modification }}</td>
+                    <td>{{ $version->created_by }}</td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </section>
     <script type="text/php">
         if(isset($pdf)){
             $text = "Page {PAGE_NUM} / {PAGE_COUNT}";
