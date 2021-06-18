@@ -116,7 +116,7 @@ class ProcessController extends Controller
     {
         $process = Process::firstWhere('reference', $request->reference);
         abort_if(!$process, 404, 'Reférence incorrecte ou process inexistant');
-        $polesIds = $process->entities->pluck('pole_id')->unique();
+        $polesIds = $process->last_version->entities->pluck('pole_id')->unique();
         $poles = Pole::whereIn('id', $polesIds)->get();
         return view('admin.processes.show_by_ref', compact('process', 'poles'));
     }
@@ -125,7 +125,7 @@ class ProcessController extends Controller
     {
         $query = $this->processQuery($request);
         $processes = $query->get();
-        $processes->load(['entities.pole', 'method.macroprocess']);
+        $processes->load(['method.macroprocess']);
 
         return Datatables::of($processes)
             ->addIndexColumn()
@@ -154,7 +154,7 @@ class ProcessController extends Controller
     {
         $process = Process::firstWhere('reference', $request->reference);
         abort_if(!$process, 404, 'Reférence incorrecte ou procédure inexistante');
-        $polesIds = $process->entities->pluck('pole_id')->unique();
+        $polesIds = $process->last_version->entities->pluck('pole_id')->unique();
         $poles = Pole::whereIn('id', $polesIds)->get();
         $pdf = App::make('dompdf.wrapper');
         $pdf->getDomPDF()->set_option("enable_php", true);
@@ -171,54 +171,57 @@ class ProcessController extends Controller
      */
     public function store(StoreProcessRequest $request)
     {
-        $process                = new Process;
-        $process->name          = $request->name;
-        $process->reference     = $request->reference;
-        $process->type          = $request->type;
-        $process->version       = $request->version;
-        $process->creation_date = $request->creation_date;
-        $process->created_by    = $request->created_by;
-        $process->state         = $request->state;
-        $process->status        = $request->status;
-        $process->method_id     = $request->method;
-
+        $process = Process::create([
+            'reference' => $request->reference,
+            'method_id' => $request->method,
+        ]);
+        $processVersion = $process->versions()->create([
+            'name'          => $request->name,
+            'type'          => $request->type,
+            'version'       => $request->version,
+            'creation_date' => $request->creation_date,
+            'created_by'    => $request->created_by,
+            'state'         => $request->state,
+            'state'         => $request->state,
+            'status'        => $request->status,
+        ]);
         if ($request->writing_date) {
-            $process->writing_date = $request->writing_date;
-            $process->written_by   = $request->written_by;
+            $processVersion->writing_date = $request->writing_date;
+            $processVersion->written_by   = $request->written_by;
         }
 
         if ($request->verification_date) {
-            $process->verification_date = $request->verification_date;
-            $process->verified_by         = $request->verified_by;
+            $processVersion->verification_date = $request->verification_date;
+            $processVersion->verified_by         = $request->verified_by;
         }
 
         if ($request->date_of_approval) {
-            $process->date_of_approval = $request->date_of_approval;
-            $process->approved_by      = $request->approved_by;
+            $processVersion->date_of_approval = $request->date_of_approval;
+            $processVersion->approved_by      = $request->approved_by;
         }
 
         if ($request->broadcasting_date) {
-            $process->broadcasting_date = $request->broadcasting_date;
+            $processVersion->broadcasting_date = $request->broadcasting_date;
         }
 
         if ($request->reasons_for_creation) {
-            $process->reasons_for_creation = $request->reasons_for_creation;
+            $processVersion->reasons_for_creation = $request->reasons_for_creation;
         }
 
         if ($request->reasons_for_modification) {
-            $process->reasons_for_modification = $request->reasons_for_modification;
+            $processVersion->reasons_for_modification = $request->reasons_for_modification;
         }
 
         if ($request->modifications) {
-            $process->modifications = $request->modifications;
+            $processVersion->modifications = $request->modifications;
         }
 
         if ($request->appendices) {
-            $process->appendices = $request->appendices;
+            $processVersion->appendices = $request->appendices;
         }
 
-        $process->save();
-        $process->entities()->attach($request->entities);
+        $processVersion->save();
+        $processVersion->entities()->attach($request->entities);
 
         return redirect()->route('admin.processes.index')->with('message', 'Procédure créée avec succès!');
     }
@@ -234,8 +237,7 @@ class ProcessController extends Controller
         if ($request->ajax()) {
             return response()->json(['process' => $process]);
         }
-        $process->load(['entities.pole']);
-        $polesIds = $process->entities->pluck('pole_id')->unique();
+        $polesIds = $process->last_version->entities->pluck('pole_id')->unique();
         $poles = Pole::whereIn('id', $polesIds)->get();
         return view('admin.processes.show', compact('process', 'poles'));
     }
@@ -250,8 +252,7 @@ class ProcessController extends Controller
     {
         $process = Process::onlyTrashed()
             ->firstWhere('id', $id);
-        $process->load(['entities.pole']);
-        $polesIds = $process->entities->pluck('pole_id')->unique();
+        $polesIds = $process->last_version->entities->pluck('pole_id')->unique();
         $poles = Pole::whereIn('id', $polesIds)->get();
         return view('admin.processes.deleted.show', compact('process', 'poles'));
     }
@@ -264,7 +265,9 @@ class ProcessController extends Controller
      */
     public function edit(Process $process)
     {
-        $process->load(['method.macroprocess']);
+        $process->load(['method.macroprocess', 'versions' => function ($query) {
+            $query->latest()->first();
+        }, 'versions.entities']);
         $domains = Domain::all();
         $entities = Entity::all();
         return view('admin.processes.edit', compact('process', 'domains', 'entities'));
@@ -280,53 +283,102 @@ class ProcessController extends Controller
     public function update(UpdateProcessRequest $request, Process $process)
     {
         $process->update([
-            "method_id"     => $request->method,
-            "name"          => $request->name,
-            "type"          => $request->type,
-            "version"       => $request->version,
-            "creation_date" => $request->creation_date,
-            "created_by"    => $request->created_by,
-            "state"         => $request->state,
-            "status"        => $request->status,
-            "modifications" => $request->modifications,
+            "method_id" => $request->method,
+            "reference" => $request->reference
         ]);
-        $process->reference = $request->reference;
-        if ($request->writing_date) {
-            $process->writing_date = $request->writing_date;
-            $process->written_by   = $request->written_by;
-        }
+        if ($request->get('edit-type') == "edit") {
+            //update last version
+            $processVersion = $process->versions()->latest()->first();
+            $processVersion->update([
+                'name'              => $request->name,
+                'version'           => $request->version,
+                'type'              => $request->type,
+                'status'            => $request->status,
+                'state'             => $request->state,
+                'created_by'        => $request->created_by,
+                'creation_date'     => $request->creation_date,
+                'modifications'     => $request->modifications
+            ]);
+            $processVersion->entities()->sync($request->entities);
+            if ($request->writing_date) {
+                $processVersion->writing_date = $request->writing_date;
+                $processVersion->written_by   = $request->written_by;
+            }
 
-        if ($request->verification_date) {
-            $process->verification_date = $request->verification_date;
-            $process->verified_by         = $request->verified_by;
-        }
+            if ($request->verification_date) {
+                $processVersion->verification_date = $request->verification_date;
+                $processVersion->verified_by         = $request->verified_by;
+            }
 
-        if ($request->date_of_approval) {
-            $process->date_of_approval = $request->date_of_approval;
-            $process->approved_by      = $request->approved_by;
-        }
+            if ($request->date_of_approval) {
+                $processVersion->date_of_approval = $request->date_of_approval;
+                $processVersion->approved_by      = $request->approved_by;
+            }
 
-        if ($request->broadcasting_date) {
-            $process->broadcasting_date = $request->broadcasting_date;
-        }
+            if ($request->broadcasting_date) {
+                $processVersion->broadcasting_date = $request->broadcasting_date;
+            }
 
-        if ($request->reasons_for_creation) {
-            $process->reasons_for_creation = $request->reasons_for_creation;
-        }
+            if ($request->reasons_for_creation) {
+                $processVersion->reasons_for_creation = $request->reasons_for_creation;
+            }
 
-        if ($request->reasons_for_modification) {
-            $process->reasons_for_modification = $request->reasons_for_modification;
-        }
+            if ($request->reasons_for_modification) {
+                $processVersion->reasons_for_modification = $request->reasons_for_modification;
+            }
 
-        if ($request->appendices) {
-            $process->appendices = $request->appendices;
-        }
+            if ($request->appendices) {
+                $processVersion->appendices = $request->appendices;
+            }
+            $processVersion->save();
+        } else {
+            //create new version
+            $process->save([
+                'name'              => $request->name,
+                'version'           => $request->version,
+                'type'              => $request->type,
+                'status'            => $request->status,
+                'state'             => $request->state,
+                'created_by'        => $request->created_by,
+                'creation_date'     => $request->creation_date,
+                'modifications'     => $request->modifications
+            ]);
+            $processVersion = $process->versions()->latest()->first();
+            $processVersion->entities()->attach($request->entities);
+            if ($request->writing_date) {
+                $processVersion->writing_date = $request->writing_date;
+                $processVersion->written_by   = $request->written_by;
+            }
 
+            if ($request->verification_date) {
+                $processVersion->verification_date = $request->verification_date;
+                $processVersion->verified_by         = $request->verified_by;
+            }
+
+            if ($request->date_of_approval) {
+                $processVersion->date_of_approval = $request->date_of_approval;
+                $processVersion->approved_by      = $request->approved_by;
+            }
+
+            if ($request->broadcasting_date) {
+                $processVersion->broadcasting_date = $request->broadcasting_date;
+            }
+
+            if ($request->reasons_for_creation) {
+                $processVersion->reasons_for_creation = $request->reasons_for_creation;
+            }
+
+            if ($request->reasons_for_modification) {
+                $processVersion->reasons_for_modification = $request->reasons_for_modification;
+            }
+
+            if ($request->appendices) {
+                $processVersion->appendices = $request->appendices;
+            }
+            $processVersion->save();
+        }
         $process->save();
-
         $process->process_modifications()->create(['user_id' => auth()->user()->id]);
-        $process->entities()->sync($request->entities);
-
         return redirect()->route('admin.processes.index')->with('message', 'Procédure modifiée avec succès!');
     }
 
@@ -357,7 +409,11 @@ class ProcessController extends Controller
             ->firstWhere('id', $id);
         if ($process) {
             $process->process_modifications()->delete();
-            $process->entities()->detach();
+            $processVersions = $process->versions;
+            $processVersions->each(function ($processVersion) {
+                $processVersion->entities()->detach();
+            });
+            $process->versions()->delete();
             $process->forceDelete();
         }
 
@@ -372,9 +428,7 @@ class ProcessController extends Controller
      */
     public function restore($id)
     {
-        Process::onlyTrashed()
-            ->findOrFail($id)->restore();
-
+        Process::onlyTrashed()->findOrFail($id)->restore();
         return response()->json(['message' => 'Process restored!']);
     }
 
@@ -383,28 +437,36 @@ class ProcessController extends Controller
         $query = Process::query();
         $search = "%" . $request->search . "%";
         if ($request->search_type == "all" && !empty($request->search)) {
-            $query->where('name', 'LIKE', $search);
-            $query->orWhere('reference', 'LIKE', $search);
-            $query->orWhere('state', 'LIKE', $search);
-            $query->orWhere('status', 'LIKE', $search);
+            $query->where('reference', 'LIKE', $search);
+            $query->orWhereHas('versions', function ($query) use ($search) {
+                $query->where('name', 'LIKE', $search);
+                $query->orWhere('state', 'LIKE', $search);
+                $query->orWhere('status', 'LIKE', $search);
+            });
         }
         if ($request->search_type == "name" && !empty($request->search)) {
-            $query->where('name', 'LIKE', $search);
+            $query->whereHas('versions', function ($query) use ($search) {
+                $query->where('name', 'LIKE', $search);
+            });
         }
         if ($request->search_type == "reference" && !empty($request->search)) {
             $query->where('reference', 'LIKE', $search);
         }
         if ($request->search_type == "state" && !empty($request->search)) {
-            $query->where('state', $request->search);
+            $query->whereHas('versions', function ($query) use ($search) {
+                $query->where('state', 'LIKE', $search);
+            });
         }
         if ($request->search_type == "status" && !empty($request->search)) {
-            $query->where('status', $request->search);
+            $query->whereHas('versions', function ($query) use ($search) {
+                $query->where('status', 'LIKE', $search);
+            });
         }
         if ($request->search_type == "method" && !empty($request->search)) {
             $query->where('method_id', $request->search);
         }
         if ($request->search_type == "pole" && !empty($request->search)) {
-            $query->whereHas('entities', function ($query) use ($request) {
+            $query->whereHas('versions.entities', function ($query) use ($request) {
                 $query->where('pole_id', $request->search);
             });
         }

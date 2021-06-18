@@ -10,16 +10,9 @@ class Process extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $dates = [
-        'creation_date',
-        'writing_date',
-        'date_of_approval',
-        'verification_date',
-        'broadcasting_date'
-    ];
-
     protected $fillable = [
         'name',
+        'reference',
         'method_id',
         'version',
         'type',
@@ -40,9 +33,16 @@ class Process extends Model
         'appendices'
     ];
 
-    public function entities()
+    protected $appends = ['last_version'];
+
+    public function versions()
     {
-        return $this->belongsToMany(Entity::class);
+        return $this->hasMany(ProcessVersion::class, 'process_id');
+    }
+
+    public function getLastVersionAttribute()
+    {
+        return $this->versions()->latest()->first()->load('entities.pole');
     }
 
     public function method()

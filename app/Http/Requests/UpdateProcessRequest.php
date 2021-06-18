@@ -25,6 +25,7 @@ class UpdateProcessRequest extends FormRequest
     public function rules()
     {
         return [
+            'edit-type'                => 'required',
             'method'                   => 'required|exists:methods,id',
             'name'                     => 'required',
             'type'                     => 'required',

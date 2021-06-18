@@ -25,43 +25,46 @@
   <link rel="stylesheet" href="{{ asset('front/css/jquery.mCustomScrollbar.min.css') }}">
 
   <style type="text/css">
-            .bttn a:link, a:visited {
-    background-color: #f44336;
-    color: white;
-    padding: 14px 25px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-}
+    .bttn a:link,
+    a:visited {
+      background-color: #f44336;
+      color: white;
+      padding: 14px 25px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+    }
 
 
-a:hover, a:active {
-    background-color: red;
-}
+    a:hover,
+    a:active {
+      background-color: red;
+    }
 
-table {
-    font-family: arial, sans-serif;
-    width: 100%;
-}
+    table {
+      font-family: arial, sans-serif;
+      width: 100%;
+    }
 
-td, th {
-    border: 1px solid #b4b1b1;
-    text-align: left;
-    padding: 8px;
-}
+    td,
+    th {
+      border: 1px solid #b4b1b1;
+      text-align: left;
+      padding: 8px;
+    }
 
-tr:nth-child(even) {
-    background-color: #dddddd;
-}
+    tr:nth-child(even) {
+      background-color: #dddddd;
+    }
   </style>
 
-  </head>
+</head>
 <!-- body -->
 
 <body>
   <!-- loader  -->
   <div class="loader_bg">
-    <div class="loader"><img src="{{ asset('front/images/loading.gif') }}"  alt="#" /></div>
+    <div class="loader"><img src="{{ asset('front/images/loading.gif') }}" alt="#" /></div>
   </div>
   <!-- end loader -->
   <!-- header -->
@@ -82,87 +85,96 @@ tr:nth-child(even) {
             </div>
             <div class="col-xl-10 col-lg-8 col-md-8 col-sm-9">
 
-               <div class="menu-area">
+              <div class="menu-area">
                 <div class="limit-box">
                   <nav class="main-menu ">
                     <ul class="menu-area-main">
                       <li class="active"> <a href="/">Acceuil</a> </li>
                       @guest
-                          <li> <a href="{{ route('login') }}">Connexion</a> </li>
-                          <li> <a href="{{ route('login') }}"><img src="{{ asset('front/icon/logos.png') }}" alt="login" /></a></li>
+                      <li> <a href="{{ route('login') }}">Connexion</a> </li>
+                      <li> <a href="{{ route('login') }}"><img src="{{ asset('front/icon/logos.png') }}"
+                            alt="login" /></a></li>
                       @endguest
                       @auth
-                        <li> <a href="{{ route('dashboard') }}">Tableau de bord</a> </li>
+                      <li> <a href="{{ route('dashboard') }}">Tableau de bord</a> </li>
                       @endauth
-                     </ul>
-                   </nav>
-                 </div>
-               </div>
+                    </ul>
+                  </nav>
+                </div>
               </div>
-           </div>
-         </div>
-       </div>
-     </div>
-     <!-- end header inner -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- end header inner -->
 
-     <!-- end header -->
-     <section >
-        <div>
+    <!-- end header -->
+    <section>
+      <div>
         <div class="carousel-inner">
-            <div class="container-fluid padding_dd">
-              <div class="carousel-caption">
-                <div class="row">
-                  <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
-                    <div class="text-bg">
-                     <span>ORGANISATION ET PROJETS</span><hr>
-                     <p style="text-align: center"><strong>Choisir l'option de la Recherche</strong></p>
-                          <form id="search-form" class="Vegetable" style="display: none">
-                          <input id="search-input" class="Vegetable_fom" placeholder="Saisir la Référence du Projet" type="text" name=" Recherche">
-                          <button class="Search_btn">Recherche </button>
-                          </form>
-                          <form id="search-form1" class="Vegetable" style="display: none">
-                            <input id="search-input1" class="Vegetable_fom" placeholder="Saisir la Référence de la procédure" type="text" name=" Recherche">
-                            <button class="Search_btn">Recherche </button>
-                            </form>
-                            <a href="/" id="d3" style="display: none">Retour</a><br>
-                          <div id="result">
-                            <button id="d1" class="Search_btn" type="button" onclick="myFunction()">Rechercher Projet</button>&nbsp;&nbsp;
-                            <button id="d2" class="Search_btn" type="button" onclick="mFunction()" style="float: right">Rechercher Procédure</button>
-                           <hr>
-                            <h1 class="btn">SCB Cameroun</h1>
-                          <p>Lorem ipsum dolor sit am et, consec tetur adipi scing elit. Sed
-                              sodales enim ut rhoncus lorem ipsum ese terds. Lorem ipsum dolor sit
-                              am et, consec tetur adipi scing elit. Sed sodales enim ut rhoncus . </p>
-                          </div>
-                          </div><hr>
-                        </div>
-                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
-                       <div class="images_box">
-                          <figure><img src="{{ asset('front/images/3.jpg') }}"></figure><br>
-                          <div class="bttn">
-                          <span>Connexion:</span><br><br>
-                          <a href="{{ route('admin.processes.index') }}">Gestion Process</a>&nbsp;<a href="{{ route('admin.projects.index') }}">Gestion Projets</a><hr>
-                        </div>
-                        </div>
+          <div class="container-fluid padding_dd">
+            <div class="carousel-caption">
+              <div class="row">
+                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+                  <div class="text-bg">
+                    <span>ORGANISATION ET PROJETS</span>
+                    <hr>
+                    <p style="text-align: center"><strong>Choisir l'option de la Recherche</strong></p>
+                    <form id="search-form" class="Vegetable" style="display: none">
+                      <input id="search-input" class="Vegetable_fom" placeholder="Saisir la Référence du Projet"
+                        type="text" name=" Recherche">
+                      <button class="Search_btn">Recherche </button>
+                    </form>
+                    <form id="search-form1" class="Vegetable" style="display: none">
+                      <input id="search-input1" class="Vegetable_fom" placeholder="Saisir la Référence de la procédure"
+                        type="text" name=" Recherche">
+                      <button class="Search_btn">Recherche </button>
+                    </form>
+                    <a href="/" id="d3" style="display: none">Retour</a><br>
+                    <div id="result">
+                      <button id="d1" class="Search_btn" type="button" onclick="myFunction()">Rechercher
+                        Projet</button>&nbsp;&nbsp;
+                      <button id="d2" class="Search_btn" type="button" onclick="mFunction()"
+                        style="float: right">Rechercher Procédure</button>
+                      <hr>
+                      <h1 class="btn">SCB Cameroun</h1>
+                      <p>Lorem ipsum dolor sit am et, consec tetur adipi scing elit. Sed
+                        sodales enim ut rhoncus lorem ipsum ese terds. Lorem ipsum dolor sit
+                        am et, consec tetur adipi scing elit. Sed sodales enim ut rhoncus . </p>
+                    </div>
+                  </div>
+                  <hr>
+                </div>
+                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+                  <div class="images_box">
+                    <figure><img src="{{ asset('front/images/3.jpg') }}"></figure><br>
+                    <div class="bttn">
+                      <span>Connexion:</span><br><br>
+                      <a href="{{ route('admin.processes.index') }}">Gestion Process</a>&nbsp;<a
+                        href="{{ route('admin.projects.index') }}">Gestion Projets</a>
+                      <hr>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </section>
-</header>
-<!--  footer -->
-<footer>
-  <div class="footer ">
-    <div class="copyright">
-      <div class="container">
-        <p>Copyright © 2021 SCB Cameroun <a href="scbcameroun.net">All right reserved </a></p>
+      </div>
+    </section>
+  </header>
+  <!--  footer -->
+  <footer>
+    <div class="footer ">
+      <div class="copyright">
+        <div class="container">
+          <p>Copyright © 2021 SCB Cameroun <a href="scbcameroun.net">All right reserved </a></p>
+        </div>
       </div>
     </div>
-  </div>
-</footer>
-<!-- end footer -->
+  </footer>
+  <!-- end footer -->
 
 
   <!-- Javascript files-->
@@ -235,8 +247,8 @@ tr:nth-child(even) {
     });
   </script>
 
-<script>
-$(function(){
+  <script>
+    $(function(){
 $('#search-form1').on('submit', function(e){
 e.preventDefault();
 let searchWord = $('#search-input1').val();
@@ -251,10 +263,10 @@ if(searchWord.length > 2){
         processes.forEach(process => {
           content += `
           <tr>
-              <td><h2>${process.name}</h2> </td>
-              <td><h2>${process.version}</h2></td>
-              <td><h2>${process.status}</h2></td>
-              <td><h2>${process.created_by}</h2></td>
+              <td><h2>${process.last_version.name}</h2> </td>
+              <td><h2>${process.last_version.version}</h2></td>
+              <td><h2>${process.last_version.status}</h2></td>
+              <td><h2>${process.last_version.created_by}</h2></td>
               <td>
                   <button class="btn btn-light-primary"><a target="_blank" href="/processes/show/${process.reference}">Ouvrir</a></button>
                   <button class="btn btn-light-primary"><a target="_blank" href="/processes/export/${process.reference}">Imprimer</a></button>
@@ -300,10 +312,10 @@ if(searchWord.length > 2){
 }
 });
 });
-</script>
+  </script>
 
-    <script>
-        function myFunction() {
+  <script>
+    function myFunction() {
             var x = document.getElementById("search-form");
             var y = document.getElementById("search-form1");
             var a = document.getElementById("d1");
@@ -332,7 +344,7 @@ if(searchWord.length > 2){
                 b.style.display = "none";
             }
         }
-    </script>
+  </script>
 
 </body>
 

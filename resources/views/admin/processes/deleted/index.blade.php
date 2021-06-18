@@ -99,8 +99,8 @@
                 data: 'method.name', 
                 name: 'method.name'
             },
-            {data: 'name', name: 'name'},
-            {data: 'type', name: 'type'},
+            {data: 'last_version.name', name: 'name'},
+            {data: 'last_version.type', name: 'type'},
             {data: 'reference', name: 'reference'},
             {
                 data: 'deleted_at', 

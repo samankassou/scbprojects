@@ -27,6 +27,7 @@
             width: 100%;
             height: 100%;
         }
+
         .loader {
             height: 100%;
             width: 100%;
@@ -37,6 +38,7 @@
             justify-content: center;
             align-items: center;
         }
+
         .loader img {
             width: 280px;
         }
@@ -45,10 +47,11 @@
 
 <body>
     <!-- loader  -->
-  <div class="loader_bg">
-    <div class="loader"><img src="{{ asset('mazer/assets/vendors/svg-loaders/ball-triangle.svg') }}" class="me-4" style="width: 3rem" alt="audio"></div>
-  </div>
-  <!-- end loader -->
+    <div class="loader_bg">
+        <div class="loader"><img src="{{ asset('mazer/assets/vendors/svg-loaders/ball-triangle.svg') }}" class="me-4"
+                style="width: 3rem" alt="audio"></div>
+    </div>
+    <!-- end loader -->
     <div id="app">
         <div id="sidebar" class="active">
             <div class="sidebar-wrapper active">
@@ -80,22 +83,25 @@
                                 <span>Projets</span>
                             </a>
                             <ul class="submenu {{ request()->routeIs('admin.projects.*') ? 'active' : '' }}">
-                                <li class="submenu-item {{ request()->routeIs('admin.projects.index') ? 'active' : '' }}">
+                                <li
+                                    class="submenu-item {{ request()->routeIs('admin.projects.index') ? 'active' : '' }}">
                                     <a href="{{ route('admin.projects.index') }}">Liste des Projets</a>
                                 </li>
                                 @permission('create-project')
-                                <li class="submenu-item {{ request()->routeIs('admin.projects.create') ? 'active' : '' }}">
+                                <li
+                                    class="submenu-item {{ request()->routeIs('admin.projects.create') ? 'active' : '' }}">
                                     <a href="{{ route('admin.projects.create') }}">Créer un Projet</a>
                                 </li>
                                 @endpermission
-                                <li class="submenu-item {{ request()->routeIs('admin.projects.deleted.*') ? 'active' : '' }}">
+                                <li
+                                    class="submenu-item {{ request()->routeIs('admin.projects.deleted.*') ? 'active' : '' }}">
                                     <a href="{{ route('admin.projects.deleted.index') }}">Projets Supprimés</a>
                                 </li>
                             </ul>
                         </li>
                         @endpermission
-                        
-                        
+
+
                         @permission('view-processes')
                         <li class="sidebar-item  has-sub {{ request()->routeIs('admin.processes.*') ? 'active' : '' }}">
                             <a href="#" class='sidebar-link'>
@@ -103,22 +109,25 @@
                                 <span>Procédures</span>
                             </a>
                             <ul class="submenu {{ request()->routeIs('admin.processes.*') ? 'active' : '' }}">
-                                <li class="submenu-item {{ request()->routeIs('admin.processes.index') ? 'active' : '' }}">
+                                <li
+                                    class="submenu-item {{ request()->routeIs('admin.processes.index') ? 'active' : '' }}">
                                     <a href="{{ route('admin.processes.index') }}">Liste des Procédures</a>
                                 </li>
                                 @permission('create-process')
-                                <li class="submenu-item {{ request()->routeIs('admin.processes.create') ? 'active' : '' }}">
+                                <li
+                                    class="submenu-item {{ request()->routeIs('admin.processes.create') ? 'active' : '' }}">
                                     <a href="{{ route('admin.processes.create') }}">Créer une Procédure</a>
                                 </li>
                                 @endpermission
-                                <li class="submenu-item {{ request()->routeIs('admin.processes.deleted.*') ? 'active' : '' }}">
+                                <li
+                                    class="submenu-item {{ request()->routeIs('admin.processes.deleted.*') ? 'active' : '' }}">
                                     <a href="{{ route('admin.processes.deleted.index') }}">Procédures Supprimées</a>
                                 </li>
                             </ul>
                         </li>
                         @endpermission
-                        
-                        
+
+
                         @role('admin')
                         <li class="sidebar-item {{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
                             <a href="{{ route('admin.users.index') }}" class='sidebar-link'>
@@ -131,17 +140,18 @@
                         <li class="sidebar-item {{ request()->routeIs('admin.settings') ? 'active' : '' }}">
                             <a class="sidebar-link" href="{{ route('admin.settings') }}">
                                 <i class="icon-mid bi bi-gear-fill"></i>
-                                 <span>Parametres</span>
+                                <span>Parametres</span>
                             </a>
                         </li>
 
                         <li class="sidebar-item">
-                            <a onclick="event.preventDefault();document.getElementById('logoutForm').submit();" class="sidebar-link" href="#">
+                            <a onclick="event.preventDefault();document.getElementById('logoutForm').submit();"
+                                class="sidebar-link" href="#">
                                 <i class="icon-mid bi bi-box-arrow-left"></i>
-                                 <span>Se déconnecter</span>
+                                <span>Se déconnecter</span>
                             </a>
                         </li>
-                        
+
                     </ul>
                 </div>
                 <button class="sidebar-toggler btn x"><i data-feather="x"></i></button>
@@ -162,14 +172,15 @@
                         </button>
                         <div class="collapse navbar-collapse" id="navbarSupportedContent">
                             <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                                
+
                             </ul>
                             <div class="dropdown">
                                 <a href="#" data-bs-toggle="dropdown" aria-expanded="false">
                                     <div class="user-menu d-flex">
                                         <div class="user-name text-end me-3">
                                             <h6 class="mb-0 text-gray-600">{{ auth()->user()->name }}</h6>
-                                            <p class="mb-0 text-sm text-gray-600">{{ auth()->user()->roles[0]->display_name }}</p>
+                                            <p class="mb-0 text-sm text-gray-600">
+                                                {{ auth()->user()->roles[0]->display_name }}</p>
                                         </div>
                                         <div class="user-img d-flex align-items-center">
                                             <div class="avatar avatar-md">
@@ -182,9 +193,11 @@
                                     <li>
                                         <h6 class="dropdown-header">Bonjour, {{ auth()->user()->name }}!</h6>
                                     </li>
-                                    <li><a onclick="event.preventDefault();document.getElementById('logoutForm').submit();" class="dropdown-item" href="#"><i
+                                    <li><a onclick="event.preventDefault();document.getElementById('logoutForm').submit();"
+                                            class="dropdown-item" href="#"><i
                                                 class="icon-mid bi bi-box-arrow-left me-2"></i> Se déconnecter</a></li>
-                                    <form id="logoutForm" action="{{ route('logout') }}" method="POST" style="display: none">
+                                    <form id="logoutForm" action="{{ route('logout') }}" method="POST"
+                                        style="display: none">
                                         @csrf
                                     </form>
                                 </ul>
@@ -205,7 +218,7 @@
                             <div class="col-12 col-md-6 order-md-2 order-first">
                                 <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
                                     <ol class="breadcrumb">
-                                        <li class="breadcrumb-item"><a href="/">SCB</a></li>
+                                        <li class="breadcrumb-item"><a href="/">SCB Cameroun</a></li>
                                         <li class="breadcrumb-item active" aria-current="page">{{ $title }}
                                         </li>
                                     </ol>

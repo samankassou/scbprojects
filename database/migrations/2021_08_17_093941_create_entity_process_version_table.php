@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateEntityProcessTable extends Migration
+class CreateEntityProcessVersionTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,10 @@ class CreateEntityProcessTable extends Migration
      */
     public function up()
     {
-        Schema::create('entity_process', function (Blueprint $table) {
+        Schema::create('entity_process_version', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('entity_id')->constrained();
-            $table->foreignId('process_id')->constrained();
+            $table->foreignId('entity_id')->constrained('entities');
+            $table->foreignId('process_version_id')->constrained('process_versions');
             $table->timestamps();
         });
     }
@@ -28,6 +28,6 @@ class CreateEntityProcessTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('entity_process');
+        Schema::dropIfExists('entity_process_version');
     }
 }

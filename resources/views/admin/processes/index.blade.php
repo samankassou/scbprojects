@@ -223,13 +223,13 @@
                     data: 'method.name', 
                     name: 'method.name'
                 },
-                {data: 'name', name: 'name'},
-                {data: 'type', name: 'type'},
+                {data: 'last_version.name', name: 'name'},
+                {data: 'last_version.type', name: 'type'},
                 {data: 'reference', name: 'reference'},
-                {data: 'version', name: 'version'},
-                {data: 'status', name: 'status'},
+                {data: 'last_version.version', name: 'version'},
+                {data: 'last_version.status', name: 'status'},
                 {
-                    data: 'creation_date', 
+                    data: 'last_version.creation_date', 
                     name: 'creation_date',
                     orderable: false,
                     searchable: false,

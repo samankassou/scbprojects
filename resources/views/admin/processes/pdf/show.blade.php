@@ -111,9 +111,6 @@
                                     <div class="inner-arrow"><strong>No.Ref:&nbsp; {{ $process->reference }} </strong>
                                     </div>
                                 </div>
-                                <div class="arrow back">
-                                    <div class="inner-arrow">SCB Cameroun Tel: XXXXXXXXXXXX</div>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -126,7 +123,7 @@
             <section class="top-content bb d-flex justify-content-between">
                 <div class="top-left">
                     <h4><strong>Procédure:</strong></h4>&nbsp;&nbsp;&nbsp;&nbsp;<h2
-                        style="text-align: center; text-decoration: underline;">{{ $process->name }}</h2>
+                        style="text-align: center; text-decoration: underline;">{{ $process->last_version->name }}</h2>
                 </div>
             </section>
             <section class="store-user mt-5">
@@ -144,15 +141,15 @@
                     </div>
                     <div class="row extra-info pt-3">
                         <p class="m-0 font-weight-bold"><strong>Intitulé: </strong></p>
-                        <p>{{ $process->name }}</p>
+                        <p>{{ $process->last_version->name }}</p>
                     </div>
                     <div class="row extra-info pt-3">
                         <p class="m-0 font-weight-bold"><strong>Type: </strong></p>
-                        <p>{{ $process->type }}</p>
+                        <p>{{ $process->last_version->type }}</p>
                     </div>
                     <div class="row extra-info pt-3">
                         <p class="m-0 font-weight-bold"><strong>No. de version:</strong></p>
-                        <p>{{ $process->version }}</p>
+                        <p>{{ $process->last_version->version }}</p>
                     </div>
                     <div class="row extra-info pt-3">
                         <p class="m-0 font-weight-bold"><strong>Pôle(s):</strong></p>
@@ -160,43 +157,43 @@
                     </div>
                     <div class="row extra-info pt-3">
                         <p class="m-0 font-weight-bold"><strong> Entité(s) impactée(s):</strong></p>
-                        <p>{{ implode(', ', $process->entities->pluck('name')->toArray()) }}</p>
+                        <p>{{ implode(', ', $process->last_version->entities->pluck('name')->toArray()) }}</p>
                     </div>
                     <div class="row extra-info pt-3">
                         <p class="m-0 font-weight-bold"><strong> Céée le:</strong></p>
-                        <p>{{ $process->creation_date->format('d/m/Y') }}</p>
+                        <p>{{ $process->last_version->creation_date->format('d/m/Y') }}</p>
                     </div>
                     <div class="row extra-info pt-3">
                         <p class="m-0 font-weight-bold"><strong> Redigée le:</strong></p>
-                        <p>{{ optional($process->writing_date)->format('d/m/Y') }}.</p>
+                        <p>{{ optional($process->last_version->writing_date)->format('d/m/Y') }}.</p>
                     </div>
                     <div class="row extra-info pt-3">
                         <p class="m-0 font-weight-bold"><strong> Vérifiée le:</strong></p>
-                        <p>{{ optional($process->verification_date)->format('d/m/Y') }}</p>
+                        <p>{{ optional($process->last_version->verification_date)->format('d/m/Y') }}</p>
                     </div>
                     <div class="row extra-info pt-3">
                         <p class="m-0 font-weight-bold"><strong> Aprouvée le:</strong></p>
-                        <p>{{ optional($process->date_of_approval)->format('d/m/Y') }}</p>
+                        <p>{{ optional($process->last_version->date_of_approval)->format('d/m/Y') }}</p>
                     </div>
                     <div class="row extra-info pt-3">
                         <p class="m-0 font-weight-bold"><strong> Etat:</strong></p>
-                        <p>{{ $process->state }}</p>
+                        <p>{{ $process->last_version->state }}</p>
                     </div>
                     <div class="row extra-info pt-3">
                         <p class="m-0 font-weight-bold"><strong>Raison de la création</strong></p>
-                        <p>{{ $process->reasons_for_creation }}</p>
+                        <p>{{ $process->last_version->reasons_for_creation }}</p>
                     </div>
                     <div class="row extra-info pt-3">
                         <p class="m-0 font-weight-bold"><strong>Raison de la modification</strong></p>
-                        <p>{{ $process->reasons_for_modifications }}</p>
+                        <p>{{ $process->last_version->reasons_for_modifications }}</p>
                     </div>
                     <div class="row extra-info pt-3">
                         <p class="m-0 font-weight-bold"><strong>Modification(s) apportée(s):</strong></p>
-                        <p>{{ $process->modifications }}</p>
+                        <p>{{ $process->last_version->modifications }}</p>
                     </div>
                     <div class="row extra-info pt-3">
                         <p class="m-0 font-weight-bold"><strong>Annexe(s):</strong>
-                            <p>{{ $process->appendices }}</p>
+                            <p>{{ $process->last_version->appendices }}</p>
                         </p>
 
                     </div>

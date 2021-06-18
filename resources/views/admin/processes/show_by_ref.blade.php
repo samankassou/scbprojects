@@ -109,17 +109,17 @@
             <div class="bb mt-3">
                 <p>
                     <span class="font-weight-bold">Procédure:</span>
-                    {{ $process->name }}
+                    {{ $process->last_version->name }}
                 </p>
             </div>
             <section class="mt-3">
                 <p class="mt-3">
                     <span class="font-weight-bold">Type:</span>
-                    {{ $process->type }}
+                    {{ $process->last_version->type }}
                 </p>
                 <p class="mt-3">
                     <span class="font-weight-bold">No. de version:</span>
-                    {{ $process->version }}
+                    {{ $process->last_version->version }}
                 </p>
                 <p class="mt-3">
                     <span class="font-weight-bold">Pôle(s):</span>
@@ -127,70 +127,70 @@
                 </p>
                 <p class="mt-3">
                     <span class="font-weight-bold">Entité(s) impactée(s):</span>
-                    {{ implode(', ', $process->entities->pluck('name')->toArray()) }}
+                    {{ implode(', ', $process->last_version->entities->pluck('name')->toArray()) }}
                 </p>
                 <div class="row justify-content-between mt-3">
                     <div class="col-md-6">
                         <p>
                             <span class="font-weight-bold"> Céée le:</span>
-                            {{ $process->creation_date->format('d/m/Y') }}
+                            {{ $process->last_version->creation_date->format('d/m/Y') }}
                         </p>
                         <p class="mt-3">
                             <span class="font-weight-bold"> Redigée le:</span>
-                            {{ $process->writing_date->format('d/m/Y') }}
+                            {{ $process->last_version->writing_date->format('d/m/Y') }}
                         </p>
                         <p class="mt-3">
                             <span class="font-weight-bold"> Vérifiée le:</span>
-                            {{ $process->verification_date->format('d/m/Y') }}
+                            {{ $process->last_version->verification_date->format('d/m/Y') }}
                         </p>
                         <p class="mt-3">
                             <span class="font-weight-bold"> Aprouvée le:</span>
-                            {{ $process->date_of_approval->format('d/m/Y') }}
+                            {{ $process->last_version->date_of_approval->format('d/m/Y') }}
                         </p>
                     </div>
                     <div class="col-md-6">
                         <p>
                             <span class="font-weight-bold">Créée Par:</span>
-                            {{ $process->created_by }}
+                            {{ $process->last_version->created_by }}
                         </p>
                         <p class="mt-3">
                             <span class="font-weight-bold">Rédigée Par:</span>
-                            {{ $process->written_by }}
+                            {{ $process->last_version->written_by }}
                         </p>
                         <p class="mt-3">
                             <span class="font-weight-bold">Vérifiée Par:</span>
-                            {{ $process->verified_by }}
+                            {{ $process->last_version->verified_by }}
                         </p>
                         <p class="mt-3">
                             <span class="font-weight-bold">Approuvée Par:</span>
-                            {{ $process->approved_by }}
+                            {{ $process->last_version->approved_by }}
                         </p>
                     </div>
                 </div>
                 <div class="mt-3">
                     <p>
                         <span class="font-weight-bold">Etat:</span>
-                        {{ $process->state }}
+                        {{ $process->last_version->state }}
                     </p>
                     <p class="mt-3">
                         <span class="font-weight-bold">Statut:</span>
-                        {{ $process->status }}
+                        {{ $process->last_version->status }}
                     </p>
                     <p class="mt-3">
                         <span class="font-weight-bold">Raison de la création:</span>
-                        {{ $process->reasons_for_creation }}
+                        {{ $process->last_version->reasons_for_creation }}
                     </p>
                     <p class="mt-3">
                         <span class="font-weight-bold">Raison de la modification:</span>
-                        {{ $process->reasons_for_modification }}
+                        {{ $process->last_version->reasons_for_modification }}
                     </p>
                     <p class="mt-3">
                         <span class="font-weight-bold">Modification(s) apportée(s):</span>
-                        {{ $process->modifications }}
+                        {{ $process->last_version->modifications }}
                     </p>
                     <p class="mt-3">
                         <span class="font-weight-bold">Annexe(s):</span>
-                        {{ $process->appendices }}
+                        {{ $process->last_version->appendices }}
                     </p>
                 </div>
             </section>

@@ -127,7 +127,7 @@ class ProcessesExport implements
     public function prepareRows($processes): array
     {
         return array_map(function ($process) {
-            $process->entities = implode(', ', $process->entities->pluck('name')->toArray());
+            $process->entities = implode(', ', $process->last_version->entities->pluck('name')->toArray());
             return $process;
         }, $processes);
     }
@@ -138,24 +138,24 @@ class ProcessesExport implements
             $process->index,
             $process->method->macroprocess->name,
             $process->method->name,
-            $process->name,
-            $process->type,
+            $process->last_version->name,
+            $process->last_version->type,
             $process->reference,
-            $process->version,
+            $process->last_version->version,
             $process->entities,
-            $process->status,
-            $process->state,
-            $process->creation_date->format('d/m/Y'),
-            optional($process->writing_date)->format('d/m/Y'),
-            optional($process->verification_date)->format('d/m/Y'),
-            optional($process->date_of_approval)->format('d/m/Y'),
-            optional($process->broadcasting_date)->format('d/m/Y'),
-            $process->written_by,
-            $process->verified_by,
-            $process->approved_by,
-            $process->process_modifications->count() ? $process->process_modifications[0]->created_at->format('d/m/Y à H:i:s') : $process->creation_date->format('d/m/Y à H:i:s'),
+            $process->last_version->status,
+            $process->last_version->state,
+            $process->last_version->creation_date->format('d/m/Y'),
+            optional($process->last_version->writing_date)->format('d/m/Y'),
+            optional($process->last_version->verification_date)->format('d/m/Y'),
+            optional($process->last_version->date_of_approval)->format('d/m/Y'),
+            optional($process->last_version->broadcasting_date)->format('d/m/Y'),
+            $process->last_version->written_by,
+            $process->last_version->verified_by,
+            $process->last_version->approved_by,
+            $process->process_modifications->count() ? $process->process_modifications[0]->created_at->format('d/m/Y à H:i:s') : $process->last_version->creation_date->format('d/m/Y à H:i:s'),
             $process->process_modifications->count() ? $process->process_modifications[0]->author->name : null,
-            $process->modifications
+            $process->last_version->modifications
         ];
     }
 

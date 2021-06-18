@@ -20,39 +20,44 @@
             <p><strong>Domaine: </strong>{{ $process->method->macroprocess->domain->name }}</p>
             <p><strong>Macroprocessus: </strong>{{ $process->method->macroprocess->name }}</p>
             <p><strong>Processus: </strong>{{ $process->method->name }}</p>
-            <p><strong>Type: </strong>{{ $process->type }}</p>
+            <p><strong>Type: </strong>{{ $process->last_version->type }}</p>
             <p><strong>Reférence: </strong>{{ $process->reference }}</p>
-            <p><strong>No. version: </strong>{{ $process->version }}</p>
-            <p><strong>Intitulé: </strong>{{ $process->name }}</p>
-            <p><strong>Statut: </strong>{{ $process->status }}</p>
-            <p><strong>Date de création: </strong>{{ $process->creation_date->format('d/m/Y') }}, <strong>par:
-                </strong>{{ $process->created_by }}</p>
-            @if ($process->writing_date)
-            <p><strong>Date de rédaction: </strong>{{ $process->writing_date->format('d/m/Y') }}, <strong>par:
-                </strong>{{ $process->written_by }}</p>
+            <p><strong>No. version: </strong>{{ $process->last_version->version }}</p>
+            <p><strong>Intitulé: </strong>{{ $process->last_version->name }}</p>
+            <p><strong>Statut: </strong>{{ $process->last_version->status }}</p>
+            <p><strong>Date de création: </strong>{{ $process->last_version->creation_date->format('d/m/Y') }},
+                <strong>par:
+                </strong>{{ $process->last_version->created_by }}</p>
+            @if ($process->last_version->writing_date)
+            <p><strong>Date de rédaction: </strong>{{ $process->last_version->writing_date->format('d/m/Y') }},
+                <strong>par:
+                </strong>{{ $process->last_version->written_by }}</p>
             @endif
-            @if ($process->verification_date)
-            <p><strong>Date de validation: </strong>{{ $process->verification_date->format('d/m/Y') }}, <strong>par:
-                </strong>{{ $process->verified_by }}</p>
+            @if ($process->last_version->verification_date)
+            <p><strong>Date de validation: </strong>{{ $process->last_version->verification_date->format('d/m/Y') }},
+                <strong>par:
+                </strong>{{ $process->last_version->verified_by }}</p>
             @endif
-            @if ($process->date_of_approval)
-            <p><strong>Date d'approbation: </strong>{{ $process->date_of_approval->format('d/m/Y') }}, <strong>par:
-                </strong>{{ $process->approved_by }}</p>
+            @if ($process->last_version->date_of_approval)
+            <p><strong>Date d'approbation: </strong>{{ $process->last_version->date_of_approval->format('d/m/Y') }},
+                <strong>par:
+                </strong>{{ $process->last_version->approved_by }}</p>
             @endif
             <p><strong>Pôle(s): </strong>{{ implode(', ', $poles->pluck('name')->toArray()) }}</p>
-            <p><strong>Entité(s) impactée(s): </strong>{{ implode(', ', $process->entities->pluck('name')->toArray()) }}
+            <p><strong>Entité(s) impactée(s):
+                </strong>{{ implode(', ', $process->last_version->entities->pluck('name')->toArray()) }}
             </p>
-            <p><strong>Etat: </strong>{{ $process->state }}</p>
-            @if ($process->reasons_for_creation)
-            <p><strong>Motif de la création: </strong>{{ $process->reasons_for_creation }}</p>
+            <p><strong>Etat: </strong>{{ $process->last_version->state }}</p>
+            @if ($process->last_version->reasons_for_creation)
+            <p><strong>Motif de la création: </strong>{{ $process->last_version->reasons_for_creation }}</p>
             @endif
-            @if ($process->reasons_for_modification)
-            <p><strong>Motif de la modification: </strong>{{ $process->reasons_for_modification }}</p>
+            @if ($process->last_version->reasons_for_modification)
+            <p><strong>Motif de la modification: </strong>{{ $process->last_version->reasons_for_modification }}</p>
             @endif
-            @if ($process->modifications)
-            <p><strong>Modification(s) apportée(s): </strong>{{ $process->modifications }}</p>
+            @if ($process->last_version->modifications)
+            <p><strong>Modification(s) apportée(s): </strong>{{ $process->last_version->modifications }}</p>
             @endif
-            <p><strong>Annexes: </strong>{{ $process->appendices }}</p>
+            <p><strong>Annexes: </strong>{{ $process->last_version->appendices }}</p>
             @if ($process->process_modifications->count())
             <div>
                 <h4>Historique des modifications</h4>
