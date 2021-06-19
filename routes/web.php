@@ -101,7 +101,7 @@ Route::group([
             Route::post('/processes/list', [ProcessController::class, 'ajaxList']);
 
             Route::get('/processes/deleted', [ProcessController::class, 'deleted'])
-                ->name('processes.deleted.index')->middleware('permission:viewDeletedProcesses');
+                ->name('processes.deleted.index')->middleware('permission:viewDeleted-processes');
             Route::post('/processes/deleted', [ProcessController::class, 'ajaxDeletedList'])->name('processes.deleted');
             Route::get('/processes/deleted/{id}', [ProcessController::class, 'showDeleted'])->name('processes.deleted.show');
 

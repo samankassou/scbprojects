@@ -47,4 +47,35 @@ class StoreProcessRequest extends FormRequest
             'appendices'               => 'nullable|string',
         ];
     }
+
+    /**
+     * Get custom attributes for validator errors.
+     *
+     * @return array
+     */
+    public function attributes()
+    {
+        return [
+            'method'                   => 'Process',
+            'name'                     => 'Intitulé',
+            'type'                     => 'Type',
+            'reference'                => 'Reférence',
+            'version'                  => 'Version',
+            'entities'                 => 'Entités',
+            'creation_date'            => 'Date de création',
+            'created_by'               => 'Créée le',
+            'writing_date'             => 'Date de rédaction',
+            'written_by'               => 'Rédigée par',
+            'verification_date'        => 'Date de vérification',
+            'verified_by'              => 'Vérifiée par',
+            'date_of_approval'         => 'Date d\'approbation',
+            'approved_by'              => 'Approuvée par',
+            'state'                    => 'Etat',
+            'status'                   => 'Statut',
+            'broadcasting_date'        => 'Date de diffusion',
+            'reasons_for_creation'     => 'Raison de la création',
+            'reasons_for_modification' => 'Raison de la modification',
+            'appendices'               => 'Annexes'
+        ];
+    }
 }

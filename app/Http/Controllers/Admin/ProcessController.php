@@ -447,14 +447,18 @@ class ProcessController extends Controller
         if ($request->search_type == "all" && !empty($request->search)) {
             $query->where('reference', 'LIKE', $search);
             $query->orWhereHas('versions', function ($query) use ($search) {
+                $query->latest('updated_at')->limit(1);
                 $query->where('name', 'LIKE', $search);
                 $query->orWhere('state', 'LIKE', $search);
                 $query->orWhere('status', 'LIKE', $search);
+                $query->orWhere('type', 'LIKE', $search);
+                $query->orWhere('version', 'LIKE', $search);
             });
         }
         if ($request->search_type == "name" && !empty($request->search)) {
             $query->whereHas('versions', function ($query) use ($search) {
-                $query->where('name', 'LIKE', $search);
+                $query->latest('updated_at')->limit(1)
+                    ->where('name', 'LIKE', $search);
             });
         }
         if ($request->search_type == "reference" && !empty($request->search)) {
@@ -462,12 +466,14 @@ class ProcessController extends Controller
         }
         if ($request->search_type == "state" && !empty($request->search)) {
             $query->whereHas('versions', function ($query) use ($search) {
-                $query->where('state', 'LIKE', $search);
+                $query->latest('updated_at')->limit(1)
+                    ->where('state', 'LIKE', $search);
             });
         }
         if ($request->search_type == "status" && !empty($request->search)) {
             $query->whereHas('versions', function ($query) use ($search) {
-                $query->where('status', 'LIKE', $search);
+                $query->latest('updated_at')->limit(1)
+                    ->where('status', 'LIKE', $search);
             });
         }
         if ($request->search_type == "method" && !empty($request->search)) {
