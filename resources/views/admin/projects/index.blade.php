@@ -1,5 +1,5 @@
-@extends('layouts.datatable', 
-['title' => 'Projets', 
+@extends('layouts.datatable',
+['title' => 'Projets',
 'description' => 'Liste des projets enregistrés dans le système'])
 @section('styles')
 @parent
@@ -29,28 +29,32 @@
                     <div class="search-container active">
                         <div class="choices">
                             <div class="choices__inner">
-                                <input type="text" class="form-control all search choices__input" id="allSearch" placeholder="Rechercher un projet...">
+                                <input type="text" class="form-control all search choices__input" id="allSearch"
+                                    placeholder="Rechercher un projet...">
                             </div>
                         </div>
                     </div>
                     <div class="search-container">
                         <div class="choices">
                             <div class="choices__inner">
-                                <input class="form-control reference search choices__input" id="referenceSearch" type="text" placeholder="Entrez une reférence...">
+                                <input class="form-control reference search choices__input" id="referenceSearch"
+                                    type="text" placeholder="Entrez une reférence...">
                             </div>
                         </div>
                     </div>
                     <div class="search-container">
                         <div class="choices">
                             <div class="choices__inner">
-                                <input class="form-control amoa search choices__input" id="amoaSearch" type="text" placeholder="AMOA...">
+                                <input class="form-control amoa search choices__input" id="amoaSearch" type="text"
+                                    placeholder="AMOA...">
                             </div>
                         </div>
                     </div>
                     <div class="search-container">
                         <div class="choices">
                             <div class="choices__inner">
-                                <input class="form-control sponsor search choices__input" id="sponsorSearch" type="text" placeholder="Sponsor/MOA...">
+                                <input class="form-control sponsor search choices__input" id="sponsorSearch" type="text"
+                                    placeholder="Sponsor/MOA...">
                             </div>
                         </div>
                     </div>
@@ -75,18 +79,12 @@
                         <select id="natureSearch" class="form-select natures search" multiple>
                             <option placeholder>Choisir une ou plusieurs nature(s)</option>
                             @foreach ($natures as $nature)
-                                <option value="{{ $nature->id }}">{{ $nature->name }}</option>
+                            <option value="{{ $nature->id }}">{{ $nature->name }}</option>
                             @endforeach
                         </select>
                     </div>
                 </div>
             </div>
-            @if (session('message'))
-                <div class="alert alert-light-success alert-dismissible color-success">
-                    <i class="bi bi-check-circle"></i> {{ session('message') }}.
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            @endif
             <div class="card-header d-flex justify-content-between">
                 <h2>Liste des projets</h2>
             </div>
@@ -98,7 +96,8 @@
                     </button>
                 </div>
                 <div>
-                    <a href="{{ route('admin.projects.create') }}" class="btn btn-sm btn-outline-primary"><i class="bi bi-plus"></i> Créer</a>
+                    <a href="{{ route('admin.projects.create') }}" class="btn btn-sm btn-outline-primary"><i
+                            class="bi bi-plus"></i> Créer</a>
                 </div>
             </div>
             <table class="table table-striped" id="projects-datatable" style="width: 100%">
@@ -112,7 +111,7 @@
                         <th>Année</th>
                         <th>Nature(s)</th>
                         <th>Enregistré par</th>
-                        <th style="width: 140px">Options</th>
+                        <th style="width: 160px">Options</th>
                     </tr>
                 </thead>
             </table>
@@ -121,7 +120,8 @@
 </section>
 {{-- Delete project modal --}}
 <div class="modal-danger me-1 mb-1 d-inline-block">
-    <div class="modal fade text-left" id="delete-project-modal" tabindex="-1" aria-labelledby="myModalLabel120" aria-hidden="true" style="display: none;">
+    <div class="modal fade text-left" id="delete-project-modal" tabindex="-1" aria-labelledby="myModalLabel120"
+        aria-hidden="true" style="display: none;">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
             <form id="delete-project-form" class="modal-content">
                 <div class="modal-header bg-danger">

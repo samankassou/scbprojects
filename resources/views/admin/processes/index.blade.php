@@ -101,25 +101,24 @@
 
                 </div>
             </div>
-            @if (session('message'))
-            <div class="alert alert-light-success alert-dismissible color-success">
-                <i class="bi bi-check-circle"></i> {{ session('message') }}.
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-            @endif
             <div class="card-header d-flex justify-content-between">
                 <h2>Liste des procédures</h2>
             </div>
             <div class="d-flex justify-content-between mb-3">
                 <div>
+                    @permission('export-processes')
                     <button id="export-btn" class="btn btn-outline-primary m-2">
                         <i class='bi bi-file-spreadsheet'></i>
                         <span>Exporter(Excel)</span>
                     </button>
+                    @endpermission
                 </div>
                 <div>
-                    <a href="{{ route('admin.processes.create') }}" class="btn btn-sm btn-outline-primary"><i
-                            class="bi bi-plus"></i> Créer</a>
+                    @permission('create-process')
+                    <a href="{{ route('admin.processes.create') }}" class="btn btn-sm btn-outline-primary">
+                        <i class="bi bi-plus"></i> Créer
+                    </a>
+                    @endpermission
                 </div>
             </div>
             <table class="table table-striped" id="processes-datatable" style="width: 100%">
@@ -134,7 +133,7 @@
                         <th>Version</th>
                         <th>Statut</th>
                         <th>Date de création</th>
-                        <th style="width: 120px">Options</th>
+                        <th style="width: 160px">Options</th>
                     </tr>
                 </thead>
             </table>

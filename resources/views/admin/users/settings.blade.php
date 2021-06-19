@@ -23,12 +23,12 @@
                                         role="tab" aria-controls="home" aria-selected="true">Détails</a>
                                 </li>
                                 <li class="nav-item" role="presentation">
-                                    <a class="nav-link" id="profile-tab" data-bs-toggle="tab" href="#profile"
-                                        role="tab" aria-controls="profile" aria-selected="false">Modifier Infos</a>
+                                    <a class="nav-link" id="profile-tab" data-bs-toggle="tab" href="#profile" role="tab"
+                                        aria-controls="profile" aria-selected="false">Modifier Infos</a>
                                 </li>
                                 <li class="nav-item" role="presentation">
-                                    <a class="nav-link" id="contact-tab" data-bs-toggle="tab" href="#contact"
-                                        role="tab" aria-controls="contact" aria-selected="false">Gérer le mot de passe</a>
+                                    <a class="nav-link" id="contact-tab" data-bs-toggle="tab" href="#contact" role="tab"
+                                        aria-controls="contact" aria-selected="false">Gérer le mot de passe</a>
                                 </li>
                             </ul>
                             <div class="tab-content" id="myTabContent">
@@ -37,63 +37,75 @@
                                     <div class="my-4">
                                         <p class='my-2'><strong>Nom(s): </strong>{{ auth()->user()->name }}</p>
                                         <p class='my-2'><strong>Email: </strong>{{ auth()->user()->email }}</p>
-                                        <p class='my-2'><strong>Rôle: </strong>{{ auth()->user()->roles()->get()[0]->display_name }}</p>
-                                        <p class='my-2'><strong>Date de création: </strong>{{ auth()->user()->created_at->format('d/m/Y à H:i:s') }}</p>
+                                        <p class='my-2'><strong>Rôle:
+                                            </strong>{{ auth()->user()->roles()->get()[0]->display_name }}</p>
+                                        <p class='my-2'><strong>Date de création:
+                                            </strong>{{ auth()->user()->created_at->format('d/m/Y à H:i:s') }}</p>
                                     </div>
                                 </div>
-                                <div class="tab-pane fade" id="profile" role="tabpanel"
-                                    aria-labelledby="profile-tab">
+                                <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
                                     <div class="row my-4">
                                         <div class="col-md-6">
                                             <form action="#" id="user-form">
                                                 <div class="form-group">
-                                                    <input type="text" id="name" placeholder="Nom(s)" class="form-control" name="name" value="{{ auth()->user()->name }}">
+                                                    <input type="text" id="name" placeholder="Nom(s)"
+                                                        class="form-control" name="name"
+                                                        value="{{ auth()->user()->name }}">
                                                     <div class="invalid-feedback" id="name-error"></div>
                                                 </div>
-                                                
+
                                                 <div class="form-group">
-                                                    <input id="email" type="email" placeholder="Email" class="form-control" name="email" value="{{ auth()->user()->email }}">
+                                                    <input id="email" type="email" placeholder="Email"
+                                                        class="form-control" name="email"
+                                                        value="{{ auth()->user()->email }}">
                                                     <div class="invalid-feedback" id="email-error"></div>
                                                 </div>
-    
+
                                                 <div class="form-group">
-                                                    <button id="update-user-btn" type="button" class="btn btn-primary ml-1">
+                                                    <button id="update-user-btn" type="button"
+                                                        class="btn btn-primary ml-1">
                                                         <i class="bx bx-check d-block d-sm-none"></i>
                                                         <span class="d-none d-sm-block">Enregistrer</span>
                                                     </button>
                                                 </div>
-                            
+
                                             </form>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="tab-pane fade" id="contact" role="tabpanel"
-                                    aria-labelledby="contact-tab">
+                                <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
                                     <div class="row my-4">
                                         <div class="col-md-6">
                                             <form action="#" id="password-form">
                                                 <div class="form-group">
-                                                    <input type="password" id="actual_password" placeholder="Mot de passe actuel" class="form-control" name="actual-password">
+                                                    <input type="password" id="actual_password"
+                                                        placeholder="Mot de passe actuel" class="form-control"
+                                                        name="actual-password">
                                                     <div class="invalid-feedback" id="actual_password-error"></div>
                                                 </div>
-                                                
+
                                                 <div class="form-group">
-                                                    <input id="password" type="password" placeholder="Nouveau mot de passe" class="form-control" name="password">
+                                                    <input id="password" type="password"
+                                                        placeholder="Nouveau mot de passe" class="form-control"
+                                                        name="password">
                                                     <div class="invalid-feedback" id="password-error"></div>
                                                 </div>
-    
+
                                                 <div class="form-group">
-                                                    <input id="password_confirmation" type="password" placeholder="Confirmez le mot de passe" class="form-control" name="password_confirmation">
-                                                    <div class="invalid-feedback" id="password_confirmation-error"></div>
+                                                    <input id="password_confirmation" type="password"
+                                                        placeholder="Confirmez le mot de passe" class="form-control"
+                                                        name="password_confirmation">
+                                                    <div class="invalid-feedback" id="password_confirmation-error">
+                                                    </div>
                                                 </div>
-    
+
                                                 <div class="form-group">
-                                                    <button id="update-password-btn" type="button" class="btn btn-primary ml-1">
+                                                    <button id="update-password-btn" type="button"
+                                                        class="btn btn-primary ml-1">
                                                         <i class="bx bx-check d-block d-sm-none"></i>
                                                         <span class="d-none d-sm-block">Enregistrer</span>
                                                     </button>
                                                 </div>
-                            
                                             </form>
                                         </div>
                                     </div>

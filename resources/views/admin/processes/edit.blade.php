@@ -7,7 +7,7 @@
 <section class="section">
     <div class="card">
         <div class="card-header d-flex justify-content-between">
-            <h4 class="card-title">Modification de la procédure "{{ $process->versions[0]->name }}"</h4>
+            <h4 class="card-title">Modification de la procédure "{{ $process->last_version->name }}"</h4>
         </div>
         <div class="card-body">
             <form id="edit-form" data-process="{{ $process }}" data-old-method="{{ old('method') }}"
@@ -83,7 +83,7 @@
 
                         <label for="name">Intitulé:<sup class="text-danger">*</sup></label>
                         <div class="form-group">
-                            <input type="text" name="name" value="{{ old('name', $process->versions[0]->name) }}"
+                            <input type="text" name="name" value="{{ old('name', $process->last_version->name) }}"
                                 class="form-control @error('name') is-invalid @enderror">
                             @error('name')
                             <div class="invalid-feedback">
@@ -97,22 +97,22 @@
                         <div class="form-group">
                             <select id="type" class="form-select @error('type') is-invalid @enderror" name="type">
                                 <option value="Note circulaire"
-                                    {{ old('type', $process->versions[0]->type) == "Note circulaire" ? "selected" : "" }}>
+                                    {{ old('type', $process->last_version->type) == "Note circulaire" ? "selected" : "" }}>
                                     Note
                                     circulaire</option>
                                 <option value="Instruction à durée limitée"
-                                    {{ old('type', $process->versions[0]->type) == "Instruction à durée limitée" ? "selected" : "" }}>
+                                    {{ old('type', $process->last_version->type) == "Instruction à durée limitée" ? "selected" : "" }}>
                                     Instruction à durée limitée</option>
                                 <option value="Note de procédure"
-                                    {{ old('type', $process->versions[0]->type) == "Note de procédure" ? "selected" : "" }}>
+                                    {{ old('type', $process->last_version->type) == "Note de procédure" ? "selected" : "" }}>
                                     Note de
                                     procédure</option>
                                 <option value="Note de fonctionnement"
-                                    {{ old('type', $process->versions[0]->type) == "Note de fonctionnement" ? "selected" : "" }}>
+                                    {{ old('type', $process->last_version->type) == "Note de fonctionnement" ? "selected" : "" }}>
                                     Note
                                     de fonctionnement</option>
                                 <option value="Fiche de décision"
-                                    {{ old('type', $process->versions[0]->type) == "Fiche de décision" ? "selected" : "" }}>
+                                    {{ old('type', $process->last_version->type) == "Fiche de décision" ? "selected" : "" }}>
                                     Fiche de
                                     décision</option>
                             </select>
@@ -139,7 +139,7 @@
                         <label for="version">N<sup>o</sup> de version:<sup class="text-danger">*</sup></label>
                         <div class="form-group">
                             <input type="text" name="version"
-                                value="{{ old('version', $process->versions[0]->version) }}"
+                                value="{{ old('version', $process->last_version->version) }}"
                                 class="form-control @error('version') is-invalid @enderror">
                             @error('version')
                             <div class="invalid-feedback">
@@ -155,7 +155,7 @@
                                 name="entities[]">
                                 @foreach ($entities as $entity)
                                 <option value="{{ $entity->id }}"
-                                    {{ collect(old('entities', $process->versions[0]->entities->pluck('id')->toArray()))->contains($entity->id) ? "selected": "" }}>
+                                    {{ collect(old('entities', $process->last_version->entities->pluck('id')->toArray()))->contains($entity->id) ? "selected": "" }}>
                                     {{ $entity->name }}</option>
                                 @endforeach
                             </select>
@@ -172,7 +172,7 @@
                                 <label for="creation_date">Créée le:<sup class="text-danger">*</sup></label>
                                 <div class="form-group">
                                     <input id="creation_date" type="date" name="creation_date"
-                                        value="{{ old('creation_date', $process->versions[0]->creation_date->format('Y-m-d')) }}"
+                                        value="{{ old('creation_date', $process->last_version->creation_date->format('Y-m-d')) }}"
                                         class="form-control @error('creation_date') is-invalid @enderror">
                                     @error('creation_date')
                                     <div class="invalid-feedback">
@@ -186,7 +186,7 @@
                                 <label for="created_by">Par:<sup class="text-danger">*</sup></label>
                                 <div class="form-group">
                                     <input id="created_by" type="text" name="created_by"
-                                        value="{{ old('created_by', $process->versions[0]->created_by) }}"
+                                        value="{{ old('created_by', $process->last_version->created_by) }}"
                                         class="form-control @error('created_by') is-invalid @enderror">
                                     @error('created_by')
                                     <div class="invalid-feedback">
@@ -203,7 +203,7 @@
                                 <label for="writing_date">Redigée le:</label>
                                 <div class="form-group">
                                     <input id="writing_date" type="date" name="writing_date"
-                                        value="{{ old('writing_date', optional($process->versions[0]->writing_date)->format('Y-m-d')) }}"
+                                        value="{{ old('writing_date', optional($process->last_version->writing_date)->format('Y-m-d')) }}"
                                         class="form-control @error('writing_date') is-invalid @enderror">
                                     @error('writing_date')
                                     <div class="invalid-feedback">
@@ -217,7 +217,7 @@
                                 <label for="written_by">Par:</label>
                                 <div class="form-group">
                                     <input id="written_by" type="text" name="written_by"
-                                        value="{{ old('written_by', $process->versions[0]->written_by) }}"
+                                        value="{{ old('written_by', $process->last_version->written_by) }}"
                                         class="form-control @error('written_by') is-invalid @enderror">
                                     @error('written_by')
                                     <div class="invalid-feedback">
@@ -234,7 +234,7 @@
                                 <label for="verification_date">Vérifiée le:</label>
                                 <div class="form-group">
                                     <input id="verification_date" type="date" name="verification_date"
-                                        value="{{ old('verification_date', optional($process->versions[0]->verification_date)->format('Y-m-d')) }}"
+                                        value="{{ old('verification_date', optional($process->last_version->verification_date)->format('Y-m-d')) }}"
                                         class="form-control @error('verification_date') is-invalid @enderror">
                                     @error('verification_date')
                                     <div class="invalid-feedback">
@@ -248,7 +248,7 @@
                                 <label for="verified_by">Par:</label>
                                 <div class="form-group">
                                     <input id="verified_by" type="text" name="verified_by"
-                                        value="{{ old('verified_by', $process->versions[0]->verified_by) }}"
+                                        value="{{ old('verified_by', $process->last_version->verified_by) }}"
                                         class="form-control @error('verified_by') is-invalid @enderror">
                                     @error('verified_by')
                                     <div class="invalid-feedback">
@@ -265,7 +265,7 @@
                                 <label for="date_of_approval">Approuvée le:</label>
                                 <div class="form-group">
                                     <input id="date_of_approval" type="date" name="date_of_approval"
-                                        value="{{ old('date_of_approval', optional($process->versions[0]->date_of_approval)->format('Y-m-d')) }}"
+                                        value="{{ old('date_of_approval', optional($process->last_version->date_of_approval)->format('Y-m-d')) }}"
                                         class="form-control @error('date_of_approval') is-invalid @enderror">
                                     @error('date_of_approval')
                                     <div class="invalid-feedback">
@@ -279,7 +279,7 @@
                                 <label for="approved_by">Par:</label>
                                 <div class="form-group">
                                     <input id="approved_by" type="text" name="approved_by"
-                                        value="{{ old('approved_by', $process->versions[0]->approved_by) }}"
+                                        value="{{ old('approved_by', $process->last_version->approved_by) }}"
                                         class="form-control @error('approved_by') is-invalid @enderror">
                                     @error('approved_by')
                                     <div class="invalid-feedback">
@@ -294,7 +294,7 @@
                         <label for="broadcasting_date">Date de diffusion:</label>
                         <div class="form-group">
                             <input id="broadcasting_date" type="date"
-                                value="{{ old('broadcasting_date', optional($process->versions[0]->broadcasting_date)->format('Y-m-d')) }}"
+                                value="{{ old('broadcasting_date', optional($process->last_version->broadcasting_date)->format('Y-m-d')) }}"
                                 name="broadcasting_date"
                                 class="form-control @error('broadcasting_date') is-invalid @enderror">
                             @error('broadcasting_date')
@@ -308,10 +308,10 @@
                         <label for="state">Etat:<sup class="text-danger">*</sup></label>
                         <div class="form-group">
                             <select id="state" class="form-select @error('state') is-invalid @enderror" name="state">
-                                <option value="Créé" @if(old('state', $process->versions[0]->state) == 'Créé') selected
+                                <option value="Créé" @if(old('state', $process->last_version->state) == 'Créé') selected
                                     @endif>Créé
                                 </option>
-                                <option value="Revu" @if(old('state', $process->versions[0]->state) == 'Revu') selected
+                                <option value="Revu" @if(old('state', $process->last_version->state) == 'Revu') selected
                                     @endif>Revu
                                 </option>
                             </select>
@@ -327,24 +327,24 @@
                         <div class="form-group">
                             <select id="status" class="form-select @error('status') is-invalid @enderror" name="status">
                                 <option value="En cours de rédaction"
-                                    {{ old('status', $process->versions[0]->status) == "En cours de rédaction" ? "selected" : "" }}>
+                                    {{ old('status', $process->last_version->status) == "En cours de rédaction" ? "selected" : "" }}>
                                     En cours de rédaction</option>
                                 <option value="En cours de vérification"
-                                    {{ old('status', $process->versions[0]->status) == "En cours de vérification" ? "selected" : "" }}>
+                                    {{ old('status', $process->last_version->status) == "En cours de vérification" ? "selected" : "" }}>
                                     En cours de vérification</option>
                                 <option value="En cours d'approbation"
-                                    {{ old('status', $process->versions[0]->status) == "En cours d'approbation" ? "selected" : "" }}>
+                                    {{ old('status', $process->last_version->status) == "En cours d'approbation" ? "selected" : "" }}>
                                     En cours d'approbation</option>
                                 <option value="Existant"
-                                    {{ old('status', $process->versions[0]->status) == "Existant" ? "selected" : "" }}>
+                                    {{ old('status', $process->last_version->status) == "Existant" ? "selected" : "" }}>
                                     Existant
                                 </option>
                                 <option value="A Créer"
-                                    {{ old('status', $process->versions[0]->status) == "A Créer" ? "selected" : "" }}>A
+                                    {{ old('status', $process->last_version->status) == "A Créer" ? "selected" : "" }}>A
                                     Créer
                                 </option>
                                 <option value="Terminé"
-                                    {{ old('status', $process->versions[0]->status) == "Terminé" ? "selected" : "" }}>
+                                    {{ old('status', $process->last_version->status) == "Terminé" ? "selected" : "" }}>
                                     Terminé
                                 </option>
                             </select>
@@ -356,14 +356,14 @@
                             @enderror
                         </div>
 
-                        <div class="reasons created" @if(!$process->versions[0]->reasons_for_creation) style="display:
+                        <div class="reasons created" @if(!$process->last_version->reasons_for_creation) style="display:
                             none" @endif>
                             <label for="reasons_for_creation">Raison(s) de la création:<sup
                                     class="text-danger">*</sup></label>
                             <div class="form-group">
                                 <textarea id="reasons_for_creation" name="reasons_for_creation"
                                     class="form-control @error('reasons_for_creation') is-invalid @enderror"
-                                    rows="3">{{ old('reasons_for_creation', $process->versions[0]->reasons_for_creation) }}</textarea>
+                                    rows="3">{{ old('reasons_for_creation', $process->last_version->reasons_for_creation) }}</textarea>
                                 @error('reasons_for_creation')
                                 <div class="invalid-feedback">
                                     <i class="bx bx-radio-circle"></i>
@@ -373,7 +373,7 @@
                             </div>
                         </div>
 
-                        <div class="reasons reviewed" @if(!$process->versions[0]->reasons_for_modification)
+                        <div class="reasons reviewed" @if(!$process->last_version->reasons_for_modification)
                             style="display: none"
                             @endif>
                             <label for="reasons_for_modification">Raison(s) de la modification:<sup
@@ -381,7 +381,7 @@
                             <div class="form-group">
                                 <textarea id="reasons_for_modification" name="reasons_for_modification"
                                     class="form-control @error('reasons_for_modification') is-invalid @enderror"
-                                    rows="3">{{ old('reasons_for_modification', $process->versions[0]->reasons_for_modification) }}</textarea>
+                                    rows="3">{{ old('reasons_for_modification', $process->last_version->reasons_for_modification) }}</textarea>
                                 @error('reasons_for_modification')
                                 <div class="invalid-feedback">
                                     <i class="bx bx-radio-circle"></i>
@@ -395,7 +395,7 @@
                         <div class="form-group">
                             <textarea id="modifications" name="modifications"
                                 class="form-control @error('modifications') is-invalid @enderror"
-                                rows="3">{{ old('modifications', $process->versions[0]->modifications) }}</textarea>
+                                rows="3">{{ old('modifications', $process->last_version->modifications) }}</textarea>
                             @error('modifications')
                             <div class="invalid-feedback">
                                 <i class="bx bx-radio-circle"></i>
@@ -408,7 +408,7 @@
                         <div class="form-group">
                             <textarea id="appendices" name="appendices"
                                 class="form-control @error('appendices') is-invalid @enderror"
-                                rows="3">{{ old('appendices', $process->versions[0]->appendices) }}</textarea>
+                                rows="3">{{ old('appendices', $process->last_version->appendices) }}</textarea>
                             @error('appendices')
                             <div class="invalid-feedback">
                                 <i class="bx bx-radio-circle"></i>

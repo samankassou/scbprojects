@@ -34,13 +34,21 @@ class UserSeeder extends Seeder
             'password' => bcrypt('password'),
             'remember_token' => Str::random(10)
         ]);
+        $user = User::create([
+            'name' => 'Consultant',
+            'email' => 'consultant@scb.com',
+            'password' => bcrypt('password'),
+            'remember_token' => Str::random(10)
+        ]);
 
         $adminRole = Role::firstWhere('name', 'admin');
         $projectsWriterRole = Role::firstWhere('name', 'projects-writer');
         $processesWriterRole = Role::firstWhere('name', 'processes-writer');
-        
+        $userRole = Role::firstWhere('name', 'user');
+
         $admin->attachRole($adminRole);
         $projectsWriter->attachRole($projectsWriterRole);
         $processesWriter->attachRole($processesWriterRole);
+        $user->attachRole($userRole);
     }
 }

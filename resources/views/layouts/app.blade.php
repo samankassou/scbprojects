@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ $title??'inconnu' }} - SCB</title>
+    <title>{{ $title??'inconnu' }} - SCB Cameroun</title>
     <!-- favicon -->
     <link rel="icon" href="{{ asset('front/icon/2.jpg') }}" type="image/gif" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -119,10 +119,12 @@
                                     <a href="{{ route('admin.processes.create') }}">Créer une Procédure</a>
                                 </li>
                                 @endpermission
+                                @permission('viewDeleted-process')
                                 <li
                                     class="submenu-item {{ request()->routeIs('admin.processes.deleted.*') ? 'active' : '' }}">
                                     <a href="{{ route('admin.processes.deleted.index') }}">Procédures Supprimées</a>
                                 </li>
+                                @endpermission
                             </ul>
                         </li>
                         @endpermission
@@ -137,18 +139,26 @@
                         </li>
                         @endrole
 
+                        @permission('manage-account')
                         <li class="sidebar-item {{ request()->routeIs('admin.settings') ? 'active' : '' }}">
                             <a class="sidebar-link" href="{{ route('admin.settings') }}">
                                 <i class="icon-mid bi bi-gear-fill"></i>
                                 <span>Parametres</span>
                             </a>
                         </li>
+                        @endpermission
 
                         <li class="sidebar-item">
                             <a onclick="event.preventDefault();document.getElementById('logoutForm').submit();"
                                 class="sidebar-link" href="#">
                                 <i class="icon-mid bi bi-box-arrow-left"></i>
                                 <span>Se déconnecter</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" href="#">
+                                <i class="icon-mid bi bi-question"></i>
+                                <span>Guide</span>
                             </a>
                         </li>
 

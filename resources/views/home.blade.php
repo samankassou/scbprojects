@@ -25,6 +25,10 @@
   <link rel="stylesheet" href="{{ asset('front/css/jquery.mCustomScrollbar.min.css') }}">
 
   <style type="text/css">
+    html {
+      font-size: 12px !important;
+    }
+
     .bttn a:link,
     a:visited {
       background-color: #f44336;
@@ -42,13 +46,12 @@
     }
 
     table {
-      font-family: arial, sans-serif;
+      font-family: sans-serif;
       width: 100%;
     }
 
     td,
     th {
-      border: 1px solid #b4b1b1;
       text-align: left;
       padding: 8px;
     }
@@ -270,7 +273,6 @@ if(searchWord.length > 2){
               <td>
                   <button class="btn btn-light-primary"><a target="_blank" href="/processes/show/${process.reference}">Ouvrir</a></button>
                   <button class="btn btn-light-primary"><a target="_blank" href="/processes/export/${process.reference}">Imprimer</a></button>
-                  <button class="btn btn-light-primary"></a></button>
               </td>
           </tr>
           `;

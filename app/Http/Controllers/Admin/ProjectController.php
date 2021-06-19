@@ -246,29 +246,24 @@ class ProjectController extends Controller
     public function update(UpdateProjectRequest $request, Project $project)
     {
         $project->update([
-            'name'          => $request->name,
-            'description'   => $request->description,
-            'start_date'    => $request->start_date,
-            'sponsor'       => $request->sponsor,
-            'initiative'    => $request->initiative,
-            'amoa'          => $request->amoa,
-            'manager'       => $request->manager,
-            'status'        => $request->status,
-            'benefits'      => $request->benefits
+            'name'        => $request->name,
+            'description' => $request->description,
+            'start_date'  => $request->start_date,
+            'sponsor'     => $request->sponsor,
+            'initiative'  => $request->initiative,
+            'amoa'        => $request->amoa,
+            'progress'    => $request->progress,
+            'manager'     => $request->manager,
+            'status'      => $request->status,
+            'benefits'    => $request->benefits
         ]);
 
         if ($request->end_date) {
             $project->end_date = $request->end_date;
         }
-
         if ($request->cost) {
             $project->cost = $request->cost;
         }
-
-        if ($request->steps) {
-            $project->steps()->attach($request->steps);
-        }
-
         if ($request->documentation) {
             $project->documentation = $request->documentation;
         }
@@ -278,15 +273,10 @@ class ProjectController extends Controller
         if ($request->bills) {
             $project->bills = $request->bills;
         }
-        if ($request->progress) {
-            $project->progress = $request->progress;
-        }
         $project->save();
-        ProjectModification::create([
-            'user_id' => auth()->user()->id,
-            'project_id' => $project->id,
-        ]);
+        $project->steps()->sync($request->steps);
         $project->natures()->sync($request->natures);
+        $project->modifications()->create(['user_id' => auth()->user()->id]);
         return redirect()->route('admin.projects.index')->with('message', 'Projet modifié avec succès!');
     }
 

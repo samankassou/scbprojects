@@ -15,7 +15,8 @@ class PermissionSeeder extends Seeder
      */
     public function run()
     {
-        //create all permissions
+        //#######create all permissions############
+        //manage users permissions
         $viewUser = Permission::create([
             'name' => 'view-user',
             'display_name' => 'Consulter les détails d\'un utilisateur'
@@ -36,6 +37,7 @@ class PermissionSeeder extends Seeder
             'name' => 'delete-user',
             'display_name' => 'Supprimer un utilisateur'
         ]);
+        //manage projects permissions
         $viewProject = Permission::create([
             'name' => 'view-project',
             'display_name' => 'Consulter détails d\'un projet'
@@ -64,6 +66,7 @@ class PermissionSeeder extends Seeder
             'name' => 'restore-project',
             'display_name' => 'Restaurer un projet'
         ]);
+        //manage processes permissions
         $viewProcess = Permission::create([
             'name' => 'view-process',
             'display_name' => 'Consulter les détails d\'une procédure'
@@ -92,11 +95,35 @@ class PermissionSeeder extends Seeder
             'name' => 'restore-process',
             'display_name' => 'Restaurer une procédure'
         ]);
+        $forceDeleteProcess = Permission::create([
+            'name' => 'forceDelete-process',
+            'display_name' => 'Supprimer définitivement une procédure'
+        ]);
+        $viewDeletedProcess = Permission::create([
+            'name' => 'viewDeleted-process',
+            'display_name' => 'Voir une procédure supprimée'
+        ]);
+        $viewDeletedProcesses = Permission::create([
+            'name' => 'viewDeleted-processes',
+            'display_name' => 'Voir une liste de procédures supprimées'
+        ]);
+        $ViewProcessModificationsHistory = Permission::create([
+            'name' => 'ViewProcessModificationsHistory',
+            'display_name' => 'Voir l\'historique des modifications d\'une procédure'
+        ]);
 
+        $manageAccount = Permission::create([
+            'name' => 'manage-account',
+            'display_name' => 'Gérer son profil'
+        ]);
+
+        //retrieve all roles
         $adminRole = Role::firstWhere('name', 'admin');
         $projectsWriterRole = Role::firstWhere('name', 'projects-writer');
         $processesWriterRole = Role::firstWhere('name', 'processes-writer');
+        $userRole = Role::firstWhere('name', 'user');
 
+        //assign permissions to every role
         $adminRole->attachPermissions([
             $viewUser,
             $viewUsers,
@@ -110,13 +137,18 @@ class PermissionSeeder extends Seeder
             $exportProjects,
             $deleteProject,
             $restoreProject,
-            $restoreProcess,
             $viewProcess,
             $viewProcesses,
+            $viewDeletedProcess,
+            $viewDeletedProcesses,
             $createProcess,
             $editProcess,
             $exportProcesses,
-            $deleteProcess
+            $deleteProcess,
+            $forceDeleteProcess,
+            $restoreProcess,
+            $ViewProcessModificationsHistory,
+            $manageAccount
         ]);
 
         $projectsWriterRole->attachPermissions([
@@ -125,13 +157,24 @@ class PermissionSeeder extends Seeder
             $createProject,
             $editProject,
             $exportProjects,
+            $manageAccount
         ]);
 
         $processesWriterRole->attachPermissions([
             $viewProcess,
             $viewProcesses,
+            $viewDeletedProcess,
+            $viewDeletedProcesses,
             $createProcess,
             $editProcess,
+            $exportProcesses,
+            $deleteProcess,
+            $ViewProcessModificationsHistory,
+            $manageAccount
+        ]);
+        $userRole->attachPermissions([
+            $viewProcess,
+            $viewProcesses,
             $exportProcesses,
         ]);
     }

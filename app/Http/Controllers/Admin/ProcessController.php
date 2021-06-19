@@ -55,6 +55,8 @@ class ProcessController extends Controller
                 $actionBtns = "<a href=" . route('admin.processes.deleted.show', $process->id) . " class='btn btn-sm btn-primary' title='Détails'><i class='bi bi-eye'></i></a> ";
                 if ($user->isAbleTo('restore-process')) {
                     $actionBtns .= "<button class='btn btn-sm btn-info' onclick='restoreProcess(" . $process->id . ")' title='Restaurer'><i class='bi bi-cloud-upload'></i></button> ";
+                }
+                if ($user->isAbleTo('forceDelete-process')) {
                     $actionBtns .= "<button class='btn btn-sm btn-danger' onclick='showDeleteProcessModal(" . $process->id . ")' title='Supprimer'><i class='bi bi-trash'></i></button>";
                 }
                 return $actionBtns;
@@ -126,14 +128,19 @@ class ProcessController extends Controller
         $query = $this->processQuery($request);
         $processes = $query->get();
         $processes->load(['method.macroprocess']);
+        $user = auth()->user();
 
         return Datatables::of($processes)
             ->addIndexColumn()
-            ->addColumn('action', function ($process) {
+            ->addColumn('action', function ($process) use ($user) {
                 $actionBtns = "<a href=" . route('admin.processes.show', $process->id) . " class='btn btn-sm btn-primary' title='Détails'><i class='bi bi-eye'></i></a> ";
                 $actionBtns .= "<a target='_blank' href=" . route('processes.pdf', $process->reference) . " class='btn btn-sm btn-secondary' title='Imprimer'><i class='bi bi-printer'></i></a> ";
-                $actionBtns .= "<a href=" . route('admin.processes.edit', $process->id) . " class='btn btn-sm btn-warning' title='Editer'><i class='bi bi-pencil'></i></a> ";
-                $actionBtns .= "<button class='btn btn-sm btn-danger' onclick='showDeleteProcessModal(" . $process->id . ")' title='Supprimer'><i class='bi bi-trash'></i></button>";
+                if ($user->isAbleTo('edit-process')) {
+                    $actionBtns .= "<a href=" . route('admin.processes.edit', $process->id) . " class='btn btn-sm btn-warning' title='Editer'><i class='bi bi-pencil'></i></a> ";
+                }
+                if ($user->isAbleTo('delete-process')) {
+                    $actionBtns .= "<button class='btn btn-sm btn-danger' onclick='showDeleteProcessModal(" . $process->id . ")' title='Supprimer'><i class='bi bi-trash'></i></button>";
+                }
                 return $actionBtns;
             })
             ->rawColumns(['action'])

@@ -64,9 +64,13 @@ Route::group([
         'as' => 'admin.',
         'prefix' => 'admin',
     ], function () {
-        Route::get('/settings', [UserController::class, 'settings'])->name('settings');
-        Route::post('/settings/update', [UserController::class, 'updateInfos'])->name('settings.update');
-        Route::post('/settings/updatePassword', [UserController::class, 'updatePassword'])->name('settings.update.password');
+        Route::group([
+            'middleware' => 'permission:manage-account'
+        ], function () {
+            Route::get('/settings', [UserController::class, 'settings'])->name('settings');
+            Route::post('/settings/update', [UserController::class, 'updateInfos'])->name('settings.update');
+            Route::post('/settings/updatePassword', [UserController::class, 'updatePassword'])->name('settings.update.password');
+        });
         Route::group([
             'middleware' => ['permission:view-project|view-projects']
         ], function () {
@@ -96,7 +100,8 @@ Route::group([
             Route::get('/processes/export', [ProcessController::class, 'export'])->name('processes.export');
             Route::post('/processes/list', [ProcessController::class, 'ajaxList']);
 
-            Route::get('/processes/deleted', [ProcessController::class, 'deleted'])->name('processes.deleted.index');
+            Route::get('/processes/deleted', [ProcessController::class, 'deleted'])
+                ->name('processes.deleted.index')->middleware('permission:viewDeletedProcesses');
             Route::post('/processes/deleted', [ProcessController::class, 'ajaxDeletedList'])->name('processes.deleted');
             Route::get('/processes/deleted/{id}', [ProcessController::class, 'showDeleted'])->name('processes.deleted.show');
 

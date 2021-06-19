@@ -13,6 +13,22 @@
             border-bottom: 3px solid #ccc;
         }
 
+        .progress {
+            background-color: #000;
+            border-radius: 8px;
+            padding: 3px;
+        }
+
+        .progress>div {
+            background-color: #ffbf06;
+            height: 20px;
+            border-radius: 8px;
+        }
+
+        .progress>div {
+            text-align: center;
+        }
+
         /* Top Section */
         .top-content {
             padding-bottom: 15px;
@@ -114,21 +130,32 @@
                 </div>
             </div>
         </section>
+        <div class="bb"></div>
         <div class="bb mt-3">
             <h3 class="text-center">
                 ORGANISATION ET PROJETS
             </h3>
         </div>
-        <div class="bb mt-3">
+        <div class="mt-3">
             <p>
                 <span class="font-weight-bold">Projet:</span>
                 {{ $project->name }}
             </p>
         </div>
-        <div class="bb mt-3">
+        <div class="mt-3">
             <p>
-                <span class="font-weight-bold">Date du Début et de la Fin:</span>
-                {{ $project->start_date->format('d/m/Y') }} - {{ $project->end_date->format('d/m/Y') }}
+                <span class="font-weight-bold">Date Début - Date Fin:</span>
+                {{ $project->start_date->format('d/m/Y') }} - {{ optional($project->end_date)->format('d/m/Y') }}
+            </p>
+        </div>
+        <div class="mt-3">
+            <p>
+                <span class="font-weight-bold">Progression:</span>
+                <div class="progress">
+                    <div style="width: {{ $project->progress }}%">
+                        <span>{{ $project->progress }}%</span>
+                    </div>
+                </div>
             </p>
         </div>
         <section class="mt-3">
@@ -147,7 +174,11 @@
             </p>
             <p class="mt-3">
                 <span class="font-weight-bold">Etape(s) réalisée(s):</span>
-                {{ implode(', ', $project->steps->pluck('name')->toArray()) }}
+                <ul>
+                    @foreach ($project->steps as $step)
+                    <li>{{ $step->name }}</li>
+                    @endforeach
+                </ul>
             </p>
             <div class="mt-3">
                 <p>

@@ -8,7 +8,8 @@
     <div class="card">
         <div class="card-header d-flex justify-content-between">
             <h4 class="card-title">Liste des comptes</h4>
-            <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#create-user-modal"><i class="bi bi-plus"></i> Ajouter</button>
+            <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#create-user-modal"><i
+                    class="bi bi-plus"></i> Ajouter</button>
         </div>
         <div class="card-body">
             <table class="table table-striped" id="users-datatable" style="width: 100%">
@@ -27,7 +28,8 @@
     </div>
 </section>
 {{-- Create user modal --}}
-<div class="modal fade text-left" id="create-user-modal" tabindex="-1" aria-labelledby="myModalLabel33" aria-hidden="true" style="display: none;">
+<div class="modal fade text-left" id="create-user-modal" tabindex="-1" aria-labelledby="myModalLabel33"
+    aria-hidden="true" style="display: none;">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -42,7 +44,7 @@
                         <input type="text" id="name" placeholder="Nom(s)" class="form-control" name="name">
                         <div class="invalid-feedback" id="name-error"></div>
                     </div>
-                    
+
                     <div class="form-group">
                         <input id="email" type="email" placeholder="Email" class="form-control" name="email">
                         <div class="invalid-feedback" id="email-error"></div>
@@ -53,7 +55,7 @@
                         <select class="choices" name="role" id="role">
                             <option value="">Choisir un rôle</option>
                             @foreach ($usersRoles as $role)
-                                <option value="{{ $role->id }}">{{ $role->display_name }}</option>
+                            <option value="{{ $role->id }}">{{ $role->display_name }}</option>
                             @endforeach
                         </select>
                         <div class="invalid-feedback" id="role-error"></div>
@@ -76,7 +78,8 @@
 </div>
 {{--! Create user modal --}}
 {{-- Edit user modal --}}
-<div class="modal fade text-left" id="edit-user-modal" tabindex="-1" aria-labelledby="myModalLabel33" aria-hidden="true" style="display: none;">
+<div class="modal fade text-left" id="edit-user-modal" tabindex="-1" aria-labelledby="myModalLabel33" aria-hidden="true"
+    style="display: none;">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -91,7 +94,7 @@
                         <input type="text" id="edit-name" placeholder="Nom(s)" class="form-control" name="name">
                         <div class="invalid-feedback" id="edit-name-error"></div>
                     </div>
-                    
+
                     <div class="form-group">
                         <input id="edit-email" type="email" placeholder="Email" class="form-control" name="email">
                         <div class="invalid-feedback" id="edit-email-error"></div>
@@ -102,7 +105,7 @@
                         <select name="role" id="edit-role">
                             <option value="">Choisir un rôle</option>
                             @foreach ($usersRoles as $role)
-                                <option value="{{ $role->id }}">{{ $role->display_name }}</option>
+                            <option value="{{ $role->id }}">{{ $role->display_name }}</option>
                             @endforeach
                         </select>
                         <div class="invalid-feedback" id="edit-role-error"></div>
@@ -154,7 +157,8 @@
 {{--!  User infos modal --}}
 {{-- Delete user modal --}}
 <div class="modal-danger me-1 mb-1 d-inline-block">
-    <div class="modal fade text-left" id="delete-user-modal" tabindex="-1" aria-labelledby="myModalLabel120" aria-hidden="true" style="display: none;">
+    <div class="modal fade text-left" id="delete-user-modal" tabindex="-1" aria-labelledby="myModalLabel120"
+        aria-hidden="true" style="display: none;">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
             <div class="modal-content">
                 <div class="modal-header bg-danger">

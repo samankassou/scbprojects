@@ -3,17 +3,19 @@
 <section class="section">
     <div class="card">
         <div class="card-header d-flex justify-content-between">
-            <h4 class="card-title">Détails de la procédure "{{ $process->name }}"</h4>
+            <h4 class="card-title">Détails de la procédure "{{ $process->last_version->name }}"</h4>
             <div>
                 <a target="_blank" href="{{ route('processes.pdf', $process->reference) }}"
                     class="btn btn-outline-primary m-2">
                     <i class="bi bi-printer"></i>
                     <span>Imprimer</span>
                 </a>
+                @permission('edit-process')
                 <a href="{{ route('admin.processes.edit', $process->id) }}" class="btn btn-outline-primary m-2">
                     <i class="bi bi-pencil"></i>
                     <span>Editer</span>
                 </a>
+                @endpermission
             </div>
         </div>
         <div class="card-body">
@@ -34,7 +36,7 @@
                 </strong>{{ $process->last_version->written_by }}</p>
             @endif
             @if ($process->last_version->verification_date)
-            <p><strong>Date de validation: </strong>{{ $process->last_version->verification_date->format('d/m/Y') }},
+            <p><strong>Date de vérification: </strong>{{ $process->last_version->verification_date->format('d/m/Y') }},
                 <strong>par:
                 </strong>{{ $process->last_version->verified_by }}</p>
             @endif
@@ -58,18 +60,57 @@
             <p><strong>Modification(s) apportée(s): </strong>{{ $process->last_version->modifications }}</p>
             @endif
             <p><strong>Annexes: </strong>{{ $process->last_version->appendices }}</p>
+            <section>
+                <h4 class="text-center">Historique des versions</h4>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Version</th>
+                            <th>Motif de la modification</th>
+                            <th>Acteur</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($process->versions as $version)
+                        <tr>
+                            <td>{{ $version->creation_date->format('d/m/Y') }}</td>
+                            <td>{{ $version->version }}</td>
+                            <td>{{ $version->reasons_for_creation ?? $version->reasons_for_modification }}</td>
+                            <td>{{ $version->created_by }}</td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </section>
+            @permission('ViewProcessModificationsHistory')
             @if ($process->process_modifications->count())
-            <div>
-                <h4>Historique des modifications</h4>
-                @foreach ($process->process_modifications as $modification)
-                <p>
-                    le {{ $modification->created_at->format('d/m/Y') }} à
-                    {{ $modification->created_at->format('H:i:s') }}
-                    par <strong>{{ $modification->author->name }}</strong>
-                </p>
-                @endforeach
-            </div>
+            <section>
+                <h4 class="text-center">Historique des modifications</h4>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Auteur</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($process->process_modifications as $modification)
+                        <tr>
+                            <td>
+                                le {{ $modification->created_at->format('d/m/Y') }} à
+                                {{ $modification->created_at->format('H:i:s') }}
+                            </td>
+                            <td>
+                                <strong>{{ $modification->author->name }}</strong>
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </section>
             @endif
+            @endpermission
         </div>
     </div>
 </section>

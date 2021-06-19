@@ -31,6 +31,7 @@ class UpdateProjectRequest extends FormRequest
             'sponsor'       => 'required',
             'initiative'    => 'required',
             'amoa'          => 'required',
+            'progress'      => 'required',
             'moe'           => 'nullable',
             'natures'       => 'required|array',
             'natures.*'     => 'nullable|exists:natures,id',

@@ -18,6 +18,7 @@ class RoleSeeder extends Seeder
             ['name' => 'admin', 'display_name' => 'Administrateur'],
             ['name' => 'projects-writer', 'display_name' => 'Saisisseur Projets'],
             ['name' => 'processes-writer', 'display_name' => 'Saisisseur Procédures'],
+            ['name' => 'user', 'display_name' => 'Consultant']
         ]);
     }
 }

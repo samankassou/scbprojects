@@ -10,4 +10,16 @@
 <script src="{{ asset('vendor/datatables/js/dataTables.responsive.min.js') }}"></script>
 <script src="{{ asset('vendor/datatables/js/dataTables.bootstrap5.min.js') }}"></script>
 <script src="{{ asset('mazer/assets/vendors/toastify/toastify.js') }}"></script>
+@if (session('message'))
+<script>
+    Toastify({
+    text: "{{ session('message') }}",
+    duration: 3000,
+    close:true,
+    gravity:"top",
+    position: "right",
+    backgroundColor: "#4fbe87",
+    }).showToast();
+</script>
+@endif
 @endsection
