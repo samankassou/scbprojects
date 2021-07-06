@@ -33,7 +33,7 @@
             <p><strong>Chef de projet</strong>: {{ $project->manager }}</p>
             <p><strong>Statut</strong>: {{ $project->status }}</p>
             <p><strong>Date de début</strong>: {{ $project->start_date->format('d/m/Y') }}</p>
-            <p><strong>Date de fin</strong>: {{ $project->end_date->format('d/m/Y') }}</p>
+            <p><strong>Date de fin</strong>: {{ optional($project->end_date)->format('d/m/Y') }}</p>
             <p><strong>Documentation du projet</strong>: {{ $project->documentation }}</p>
             <p><strong>Facture</strong>: {{ $project->bills }}</p>
             <p><strong>Gains/Impact</strong>: {{ $project->benefits }}</p>

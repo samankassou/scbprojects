@@ -151,7 +151,7 @@
                 </div>
                 <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
                   <div class="images_box">
-                    <figure><img src="{{ asset('front/images/3.jpg') }}"></figure><br>
+                    <figure><img src="{{ asset('front/images/bg.JPG') }}"></figure><br>
                     <div class="bttn">
                       <span>Connexion:</span><br><br>
                       <a href="{{ route('admin.processes.index') }}">Gestion Process</a>&nbsp;<a
@@ -262,7 +262,7 @@ if(searchWord.length > 2){
       if(response.success){
         let processes = response.processes;
         let content = '';
-        
+
         processes.forEach(process => {
           content += `
           <tr>

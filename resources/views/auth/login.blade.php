@@ -23,7 +23,7 @@
 			<form class="form-login" action="{{ route('login') }}" method="POST">
 				@csrf
 				<h2 class="form-login-heading">CONNEXION</h2><br>
-				<p class="centered"><a href="/"><img src="{{ asset('front/images/3.jpg') }}" class="img-circle"
+				<p class="centered"><a href="/"><img src="{{ asset('front/images/bg.JPG') }}" class="img-circle"
 							width="199"></a>
 				</p>
 

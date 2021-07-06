@@ -241,6 +241,13 @@
         $('#delete-user-btn').on('click', deleteUser);
         $('#save-user-btn').on('click', saveUser);
         $('#update-user-btn').on('click', updateUser);
+        $('#user-infos-modal').on('hide.bs.modal', function(){
+           $('#user-infos-modal .name').text('');
+            $('#user-infos-modal .email').text('');
+            $('#user-infos-modal .role').text('');
+            $('#user-infos-modal .created_at').text('');
+            $('#user-infos-modal .updated_at').text('');
+        });
         $('#create-user-modal, #edit-user-modal').on('hide.bs.modal', function(e){
             resetModal(e);
         });
@@ -349,7 +356,6 @@
                 url: "/admin/users/"+id+"/toggleStatus",
                 dataType: "JSON",
                 success: function(response){
-                    console.log(response);
                     table.ajax.reload(null, false);
                     let message = response.user.status ? "Compte activé avec succès!" : "Compte désactivé avec succès!";
                     Toastify({

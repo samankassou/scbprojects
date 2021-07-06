@@ -1,8 +1,6 @@
 <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="{{ asset('front/css/bootstrap-4.0.0/dist/css/bootstrap.css') }}">
     <title>Projet {{ $project->reference }}</title>
     <style>
         body {
@@ -122,7 +120,6 @@
     <div>
         <section class="row bb">
             <div class="logo col-md-6">
-                <img src="{{ asset('images/logo.png') }}" class="img-fluid">
             </div>
             <div class="float-right">
                 <div class="arrow back">
